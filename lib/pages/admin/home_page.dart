@@ -22,7 +22,7 @@ class _AdminHomePageState extends State<AdminHomePage> {
 
   // Daftar halaman yang akan ditampilkan di IndexedStack
   final List<Widget> _pages = [
-    const HomeAdminPageContent(), // Beranda Admin
+    const HomeAdminPage(), // Beranda Admin
     const TrackAdminPageContent(), // Track Admin
     const InfoAdminPageContent(), // Info Admin
     const AccountAdminPageContent(), // Akun Admin

@@ -7,6 +7,7 @@ import 'package:shared_preferences/shared_preferences.dart'; // Import shared_pr
 import 'package:flutter_application_1/pages/admin/home_page.dart'; // Import Admin Home Page
 import 'package:flutter_application_1/pages/employee/home_page.dart'; // Import Employee Home Page
 import 'package:flutter_application_1/pages/auth/login_page.dart'; // Import Login Page
+import 'package:intl/date_symbol_data_local.dart';
 
 void main() {
   runApp(const MyApp());
@@ -20,7 +21,8 @@ class MyApp extends StatefulWidget {
 }
 
 class _MyAppState extends State<MyApp> {
-  Widget _initialPage = const CircularProgressIndicator(); // Tampilkan loading saat memeriksa token
+  Widget _initialPage =
+      const CircularProgressIndicator(); // Tampilkan loading saat memeriksa token
 
   @override
   void initState() {

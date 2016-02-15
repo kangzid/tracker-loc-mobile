@@ -2,10 +2,11 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 class AuthStorage {
   // Keys untuk user
-  static const String _tokenKey = 'auth_token';
+  static const String _tokenKey = 'token';
   static const String _userIdKey = 'user_id';
   static const String _userNameKey = 'user_name';
   static const String _userEmailKey = 'user_email';
+  static const String _userRoleKey = 'user_role';
 
   // Keys untuk employee
   static const String _employeeDbIdKey = 'employee_db_id'; // PK employees.id
@@ -29,6 +30,7 @@ class AuthStorage {
       await prefs.setInt(_userIdKey, user['id']);
       await prefs.setString(_userNameKey, user['name']);
       await prefs.setString(_userEmailKey, user['email']);
+      await prefs.setString(_userRoleKey, user['role']);
     }
     if (employee != null) {
       // simpan id numerik employee (PK di tabel employees)
@@ -68,6 +70,7 @@ class AuthStorage {
     await prefs.remove(_userIdKey);
     await prefs.remove(_userNameKey);
     await prefs.remove(_userEmailKey);
+    await prefs.remove(_userRoleKey);
 
     await prefs.remove(_employeeDbIdKey);
     await prefs.remove(_employeeIdKey);
