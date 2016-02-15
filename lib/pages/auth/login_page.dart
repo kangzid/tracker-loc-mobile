@@ -23,6 +23,30 @@ class _LoginPageState extends State<LoginPage> {
   bool _obscurePassword = true;
 
   static const String _baseUrl = 'https://locatrack.zalfyan.my.id/api';
+  
+  @override
+  void initState() {
+    super.initState();
+    _checkAutoLogin();
+  }
+  
+  Future<void> _checkAutoLogin() async {
+    final bool isLoggedIn = await AuthStorage().isLoggedIn();
+    if (isLoggedIn && mounted) {
+      final data = await AuthStorage().getLoginData();
+      final String? role = data['user']?['role'];
+      
+      if (role == 'admin') {
+        Navigator.of(context).pushReplacement(
+          MaterialPageRoute(builder: (context) => const AdminHomePage()),
+        );
+      } else if (role == 'employee') {
+        Navigator.of(context).pushReplacement(
+          MaterialPageRoute(builder: (context) => const EmployeeHomePage()),
+        );
+      }
+    }
+  }
 
   Future<void> _login() async {
     setState(() {

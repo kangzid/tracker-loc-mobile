@@ -1,4 +1,5 @@
 import 'package:shared_preferences/shared_preferences.dart';
+import 'dart:async';
 
 class AuthStorage {
   // Keys untuk user
@@ -14,6 +15,12 @@ class AuthStorage {
       'employee_employee_id'; // kode pegawai (EMP001)
   static const String _employeeDepartmentKey = 'employee_department';
   static const String _employeePositionKey = 'employee_position';
+  
+  // Key untuk login time
+  static const String _loginTimeKey = 'login_time';
+  
+  // Timer untuk auto logout
+  static Timer? _logoutTimer;
 
   /// Simpan data login dari API
   Future<void> saveLoginData(Map<String, dynamic> data) async {
@@ -42,6 +49,10 @@ class AuthStorage {
           _employeeDepartmentKey, employee['department'] ?? '');
       await prefs.setString(_employeePositionKey, employee['position'] ?? '');
     }
+    
+    // Simpan waktu login dan mulai timer auto logout
+    await prefs.setInt(_loginTimeKey, DateTime.now().millisecondsSinceEpoch);
+    _startAutoLogoutTimer();
   }
 
   /// Ambil data login
@@ -76,5 +87,53 @@ class AuthStorage {
     await prefs.remove(_employeeIdKey);
     await prefs.remove(_employeeDepartmentKey);
     await prefs.remove(_employeePositionKey);
+    await prefs.remove(_loginTimeKey);
+    
+    // Cancel timer
+    _logoutTimer?.cancel();
+    _logoutTimer = null;
+  }
+  
+  /// Cek apakah user masih login dan belum expired
+  Future<bool> isLoggedIn() async {
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
+    final String? token = prefs.getString(_tokenKey);
+    final int? loginTime = prefs.getInt(_loginTimeKey);
+    
+    if (token == null || loginTime == null) {
+      return false;
+    }
+    
+    // Cek apakah sudah lebih dari 20 jam (72000000 milliseconds)
+    final int currentTime = DateTime.now().millisecondsSinceEpoch;
+    final int timeDiff = currentTime - loginTime;
+    const int twentyHoursInMs = 20 * 60 * 60 * 1000;
+    
+    if (timeDiff > twentyHoursInMs) {
+      await clearLoginData();
+      return false;
+    }
+    
+    return true;
+  }
+  
+  /// Mulai timer auto logout setelah 20 jam
+  void _startAutoLogoutTimer() {
+    _logoutTimer?.cancel();
+    
+    // Timer 20 jam = 20 * 60 * 60 detik
+    const Duration twentyHours = Duration(hours: 20);
+    
+    _logoutTimer = Timer(twentyHours, () async {
+      await clearLoginData();
+    });
+  }
+  
+  /// Fungsi logout dengan callback untuk navigasi
+  Future<void> logout(Function? onLogout) async {
+    await clearLoginData();
+    if (onLogout != null) {
+      onLogout();
+    }
   }
 }

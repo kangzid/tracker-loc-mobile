@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_application_1/pages/auth/auth_storage.dart';
+import 'package:flutter_application_1/utils/logout_helper.dart';
 import 'package:hugeicons/hugeicons.dart';
 
 class AccountEmployeePage extends StatefulWidget {
@@ -203,7 +204,6 @@ class _AccountEmployeePageState extends State<AccountEmployeePage> {
             ),
 
             const SizedBox(height: 24),
-
             // Logout Button
             SizedBox(
               width: double.infinity,
@@ -215,12 +215,7 @@ class _AccountEmployeePageState extends State<AccountEmployeePage> {
                     borderRadius: BorderRadius.circular(8),
                   ),
                 ),
-                onPressed: () async {
-                  await AuthStorage().clearLoginData();
-                  if (mounted) {
-                    Navigator.pushReplacementNamed(context, '/login');
-                  }
-                },
+                onPressed: () => LogoutHelper.showLogoutDialog(context),
                 icon: const Icon(Icons.logout, color: Colors.white),
                 label: const Text(
                   "Logout",
