@@ -136,9 +136,9 @@ class _LoginPageState extends State<LoginPage> {
                 ),
               ),
               const SizedBox(height: 20),
-              // Judul (Lorem Ipsum)
+              // Judul
               const Text(
-                "Lorem Ipsum Dolor Sit Amet",
+                "StaffTracker",
                 style: TextStyle(
                   fontSize: 20,
                   fontWeight: FontWeight.bold,
@@ -147,9 +147,9 @@ class _LoginPageState extends State<LoginPage> {
                 textAlign: TextAlign.center,
               ),
               const SizedBox(height: 10),
-              // Subjudul (Lorem Ipsum)
+              // Subjudul
               const Text(
-                "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Curabitur vitae ligula id neque.",
+                "Pantau lokasi karyawan dan kendaraan secara real-time dengan mudah dan akurat.",
                 style: TextStyle(
                   fontSize: 14,
                   color: Colors.grey,
