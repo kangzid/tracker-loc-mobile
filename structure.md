@@ -6,31 +6,43 @@ tracker-loc-mobile
 │   │   └── Default
 │   │       ├── AutofillStrikeDatabase
 │   │       │   ├── LOCK
-│   │       │   └── LOG
+│   │       │   ├── LOG
+│   │       │   └── LOG.old
 │   │       ├── blob_storage
-│   │       │   └── 5e3bd7d8-51b6-4d1e-a176-be439f26a9a3
+│   │       │   ├── 300b1465-1ab6-4a65-ba42-71c7156ca36e
+│   │       │   ├── 5e3bd7d8-51b6-4d1e-a176-be439f26a9a3
+│   │       │   ├── 63f67359-d95a-4981-98ac-eb030ffab579
+│   │       │   ├── af09ced8-78bd-425e-bd9b-efc6d1f99829
+│   │       │   └── bd83c22e-8ce1-45a4-881e-2aeceb546564
 │   │       ├── BudgetDatabase
 │   │       │   ├── LOCK
-│   │       │   └── LOG
+│   │       │   ├── LOG
+│   │       │   └── LOG.old
 │   │       ├── chrome_cart_db
 │   │       │   ├── LOCK
-│   │       │   └── LOG
+│   │       │   ├── LOG
+│   │       │   └── LOG.old
 │   │       ├── ClientCertificates
 │   │       │   ├── LOCK
-│   │       │   └── LOG
+│   │       │   ├── LOG
+│   │       │   └── LOG.old
 │   │       ├── commerce_subscription_db
 │   │       │   ├── LOCK
-│   │       │   └── LOG
+│   │       │   ├── LOG
+│   │       │   └── LOG.old
 │   │       ├── discount_infos_db
 │   │       │   ├── LOCK
-│   │       │   └── LOG
+│   │       │   ├── LOG
+│   │       │   └── LOG.old
 │   │       ├── discounts_db
 │   │       │   ├── LOCK
-│   │       │   └── LOG
+│   │       │   ├── LOG
+│   │       │   └── LOG.old
 │   │       ├── Download Service
 │   │       │   ├── EntryDB
 │   │       │   │   ├── LOCK
-│   │       │   │   └── LOG
+│   │       │   │   ├── LOG
+│   │       │   │   └── LOG.old
 │   │       │   └── Files
 │   │       ├── Extension Rules
 │   │       │   ├── 000003.log
@@ -49,20 +61,24 @@ tracker-loc-mobile
 │   │       │   ├── CURRENT
 │   │       │   ├── LOCK
 │   │       │   ├── LOG
+│   │       │   ├── LOG.old
 │   │       │   └── MANIFEST-000001
 │   │       ├── Feature Engagement Tracker
 │   │       │   ├── AvailabilityDB
 │   │       │   │   ├── LOCK
-│   │       │   │   └── LOG
+│   │       │   │   ├── LOG
+│   │       │   │   └── LOG.old
 │   │       │   └── EventDB
 │   │       │       ├── LOCK
-│   │       │       └── LOG
+│   │       │       ├── LOG
+│   │       │       └── LOG.old
 │   │       ├── GCM Store
 │   │       │   ├── Encryption
 │   │       │   │   ├── 000003.log
 │   │       │   │   ├── CURRENT
 │   │       │   │   ├── LOCK
 │   │       │   │   ├── LOG
+│   │       │   │   ├── LOG.old
 │   │       │   │   └── MANIFEST-000001
 │   │       │   ├── 000003.log
 │   │       │   ├── CURRENT
@@ -75,10 +91,13 @@ tracker-loc-mobile
 │   │       │       ├── CURRENT
 │   │       │       ├── LOCK
 │   │       │       ├── LOG
+│   │       │       ├── LOG.old
 │   │       │       └── MANIFEST-000001
 │   │       ├── Network
+│   │       │   ├── 64d4f15b-9575-4ab2-b7ab-4345fe00751d.tmp
 │   │       │   ├── Cookies
 │   │       │   ├── Cookies-journal
+│   │       │   ├── db509976-6216-4557-931b-ed5f40f0b20a.tmp
 │   │       │   ├── Network Persistent State
 │   │       │   ├── NetworkDataMigrated
 │   │       │   ├── Reporting and NEL
@@ -88,13 +107,16 @@ tracker-loc-mobile
 │   │       │   └── Trust Tokens-journal
 │   │       ├── optimization_guide_hint_cache_store
 │   │       │   ├── LOCK
-│   │       │   └── LOG
+│   │       │   ├── LOG
+│   │       │   └── LOG.old
 │   │       ├── parcel_tracking_db
 │   │       │   ├── LOCK
-│   │       │   └── LOG
+│   │       │   ├── LOG
+│   │       │   └── LOG.old
 │   │       ├── PersistentOriginTrials
 │   │       │   ├── LOCK
-│   │       │   └── LOG
+│   │       │   ├── LOG
+│   │       │   └── LOG.old
 │   │       ├── Safe Browsing Network
 │   │       │   ├── NetworkDataMigrated
 │   │       │   ├── Safe Browsing Cookies
@@ -102,37 +124,55 @@ tracker-loc-mobile
 │   │       ├── Segmentation Platform
 │   │       │   ├── SegmentInfoDB
 │   │       │   │   ├── LOCK
-│   │       │   │   └── LOG
+│   │       │   │   ├── LOG
+│   │       │   │   └── LOG.old
 │   │       │   ├── SignalDB
 │   │       │   │   ├── LOCK
-│   │       │   │   └── LOG
+│   │       │   │   ├── LOG
+│   │       │   │   └── LOG.old
 │   │       │   └── SignalStorageConfigDB
 │   │       │       ├── LOCK
-│   │       │       └── LOG
+│   │       │       ├── LOG
+│   │       │       └── LOG.old
 │   │       ├── Service Worker
 │   │       │   ├── Database
 │   │       │   │   ├── 000003.log
 │   │       │   │   ├── CURRENT
 │   │       │   │   ├── LOCK
 │   │       │   │   ├── LOG
+│   │       │   │   ├── LOG.old
 │   │       │   │   └── MANIFEST-000001
 │   │       │   └── ScriptCache
 │   │       │       ├── index-dir
 │   │       │       │   └── the-real-index
 │   │       │       ├── 2cc80dabc69f58b6_0
 │   │       │       ├── 4cb013792b196a35_0
+│   │       │       ├── 67a473248953641b_0
+│   │       │       ├── b6c28cea6ed9dfc1_0
+│   │       │       ├── ba23d8ecda68de77_0
 │   │       │       ├── f1cdccba37924bda_0
 │   │       │       ├── f1cdccba37924bda_1
+│   │       │       ├── fa813c9ad67834ac_0
 │   │       │       └── index
 │   │       ├── Session Storage
 │   │       │   ├── 000003.log
 │   │       │   ├── CURRENT
 │   │       │   ├── LOCK
 │   │       │   ├── LOG
+│   │       │   ├── LOG.old
 │   │       │   └── MANIFEST-000001
 │   │       ├── Sessions
 │   │       │   ├── Session_13403714093074055
-│   │       │   └── Tabs_13403715649477735
+│   │       │   ├── Session_13403770772073177
+│   │       │   ├── Session_13403771653678986
+│   │       │   ├── Session_13403772903367139
+│   │       │   ├── Session_13403772921160334
+│   │       │   ├── Session_13403931493918718
+│   │       │   ├── Tabs_13403715649477735
+│   │       │   ├── Tabs_13403770772231008
+│   │       │   ├── Tabs_13403771653784896
+│   │       │   ├── Tabs_13403772778000249
+│   │       │   └── Tabs_13403931494120718
 │   │       ├── Shared Dictionary
 │   │       │   ├── cache
 │   │       │   │   ├── index-dir
@@ -146,17 +186,22 @@ tracker-loc-mobile
 │   │       │   │   ├── CURRENT
 │   │       │   │   ├── LOCK
 │   │       │   │   ├── LOG
+│   │       │   │   ├── LOG.old
 │   │       │   │   └── MANIFEST-000001
 │   │       │   ├── 000003.log
+│   │       │   ├── 000004.log
+│   │       │   ├── 000005.ldb
 │   │       │   ├── CURRENT
 │   │       │   ├── LOCK
 │   │       │   ├── LOG
+│   │       │   ├── LOG.old
 │   │       │   └── MANIFEST-000001
 │   │       ├── Site Characteristics Database
 │   │       │   ├── 000003.log
 │   │       │   ├── CURRENT
 │   │       │   ├── LOCK
 │   │       │   ├── LOG
+│   │       │   ├── LOG.old
 │   │       │   └── MANIFEST-000001
 │   │       ├── Sync Data
 │   │       │   └── LevelDB
@@ -164,6 +209,7 @@ tracker-loc-mobile
 │   │       │       ├── CURRENT
 │   │       │       ├── LOCK
 │   │       │       ├── LOG
+│   │       │       ├── LOG.old
 │   │       │       └── MANIFEST-000001
 │   │       ├── WebStorage
 │   │       │   ├── QuotaManager
@@ -177,6 +223,7 @@ tracker-loc-mobile
 │   │       ├── BrowsingTopicsSiteData-journal
 │   │       ├── BrowsingTopicsState
 │   │       ├── DIPS
+│   │       ├── DIPS-wal
 │   │       ├── Favicons
 │   │       ├── Favicons-journal
 │   │       ├── heavy_ad_intervention_opt_out.db
@@ -185,6 +232,7 @@ tracker-loc-mobile
 │   │       ├── History-journal
 │   │       ├── LOCK
 │   │       ├── LOG
+│   │       ├── LOG.old
 │   │       ├── Login Data
 │   │       ├── Login Data For Account
 │   │       ├── Login Data For Account-journal
@@ -199,6 +247,7 @@ tracker-loc-mobile
 │   │       ├── ServerCertificate
 │   │       ├── ServerCertificate-journal
 │   │       ├── SharedStorage
+│   │       ├── SharedStorage-wal
 │   │       ├── Shortcuts
 │   │       ├── Shortcuts-journal
 │   │       ├── Top Sites
@@ -208,6 +257,8 @@ tracker-loc-mobile
 │   │       └── Web Data-journal
 │   ├── dartpad
 │   │   └── web_plugin_registrant.dart
+│   ├── extension_discovery
+│   │   └── vs_code.json
 │   ├── flutter_build
 │   │   └── 8e1e28085a6c252568562c8c5e5eda16
 │   │       ├── .filecache
@@ -318,7 +369,14 @@ tracker-loc-mobile
 │   └── images
 │       ├── .placeholder
 │       ├── benner-home.png
-│       └── icon-apk.png
+│       ├── icon-apk.png
+│       ├── icon-menu1.png
+│       ├── icon-menu2.png
+│       ├── icon-menu3.png
+│       ├── icon-menu4.png
+│       ├── icon-menu5.png
+│       ├── icon-menu6.png
+│       └── pas-foto.png
 ├── ios
 │   ├── Flutter
 │   │   ├── AppFrameworkInfo.plist
@@ -402,6 +460,9 @@ tracker-loc-mobile
 │   │       │   ├── info_employee.dart
 │   │       │   ├── presence_employee.dart
 │   │       │   └── track_employee.dart
+│   │       ├── storage
+│   │       │   ├── presence_storage.dart
+│   │       │   └── track_storage.dart
 │   │       └── home_page.dart
 │   └── main.dart
 ├── linux

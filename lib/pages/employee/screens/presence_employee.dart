@@ -5,7 +5,7 @@ import 'package:geolocator/geolocator.dart';
 import 'package:latlong2/latlong.dart';
 import 'package:http/http.dart' as http;
 import 'package:flutter_application_1/pages/auth/auth_storage.dart';
-import 'package:flutter_application_1/pages/employee/storage/presence_storage.dart'; // ✅ tambah import
+import 'package:flutter_application_1/pages/employee/storage/presence_storage.dart';
 
 class PresenceEmployeePage extends StatefulWidget {
   const PresenceEmployeePage({super.key});
@@ -63,6 +63,59 @@ class _PresenceEmployeePageState extends State<PresenceEmployeePage> {
     }
   }
 
+// ✅ Cek lokasi sebelum presensi
+  Future<bool> _checkLocationBeforeAttendance() async {
+    if (_token == null) return false;
+
+    final url = Uri.parse(
+        'https://locatrack.zalfyan.my.id/api/attendances/check-location');
+    try {
+      final response = await http.post(
+        url,
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': 'Bearer $_token',
+        },
+        body: jsonEncode({
+          "latitude": _currentLatLng.latitude,
+          "longitude": _currentLatLng.longitude,
+        }),
+      );
+
+      if (response.statusCode == 200) {
+        final result = jsonDecode(response.body);
+        if (result['is_in_office'] == true) {
+          return true;
+        } else {
+          // ❌ Di luar area kantor
+          if (mounted) {
+            showDialog(
+              context: context,
+              builder: (ctx) => AlertDialog(
+                title: const Text("Lokasi Tidak Valid"),
+                content: Text(
+                    result['message'] ?? "Anda berada di luar area kantor."),
+                actions: [
+                  TextButton(
+                    onPressed: () => Navigator.pop(ctx),
+                    child: const Text("OK"),
+                  ),
+                ],
+              ),
+            );
+          }
+          return false;
+        }
+      } else {
+        debugPrint("Check location failed: ${response.body}");
+        return false;
+      }
+    } catch (e) {
+      debugPrint("Error check-location: $e");
+      return false;
+    }
+  }
+
   Future<void> _getCurrentLocation() async {
     try {
       bool serviceEnabled = await Geolocator.isLocationServiceEnabled();
@@ -106,6 +159,11 @@ class _PresenceEmployeePageState extends State<PresenceEmployeePage> {
   Future<void> _sendAttendance(String type) async {
     if (_token == null) return;
 
+    // ✅ 1. Cek lokasi kantor dulu
+    final isInsideOffice = await _checkLocationBeforeAttendance();
+    if (!isInsideOffice) return;
+
+    // ✅ 2. Lanjut kirim presensi
     final url = Uri.parse('https://locatrack.zalfyan.my.id/api/attendances');
     try {
       final response = await http.post(
@@ -132,18 +190,52 @@ class _PresenceEmployeePageState extends State<PresenceEmployeePage> {
             if (type == "check_out") _hasCheckedOut = true;
           });
 
-          // ✅ simpan ke storage
           await PresenceStorage().saveLastPresence(successMsg);
-
           _fetchTodayAttendance();
+
+          // ✅ Pop-up sukses (mirip gaya alert error)
+          showDialog(
+            context: context,
+            builder: (ctx) => AlertDialog(
+              title: const Text(
+                "Presensi Berhasil",
+                style:
+                    TextStyle(fontWeight: FontWeight.bold, color: Colors.green),
+              ),
+              content: Text(
+                type == "check_in"
+                    ? "Check-in berhasil! Selamat bekerja 👏"
+                    : "Check-out berhasil! Terima kasih atas kerja hari ini 🙌",
+              ),
+              actions: [
+                TextButton(
+                  onPressed: () => Navigator.pop(ctx),
+                  child: const Text("OK"),
+                ),
+              ],
+            ),
+          );
         } else {
           debugPrint("ERROR: ${response.body}");
-          if (!(type == "check_in" && _hasCheckedIn) &&
-              !(type == "check_out" && _hasCheckedOut)) {
-            setState(() {
-              _lastActionStatus = "Gagal $type (${response.statusCode})";
-            });
-          }
+          setState(() {
+            _lastActionStatus = "Gagal $type (${response.statusCode})";
+          });
+
+          // ❌ Pop-up gagal (mirip lokasi tidak valid)
+          showDialog(
+            context: context,
+            builder: (ctx) => AlertDialog(
+              title: const Text("Presensi Gagal"),
+              content: Text(
+                  "Terjadi kesalahan saat $type. (${response.statusCode})"),
+              actions: [
+                TextButton(
+                  onPressed: () => Navigator.pop(ctx),
+                  child: const Text("OK"),
+                ),
+              ],
+            ),
+          );
         }
       }
     } catch (e) {
@@ -151,6 +243,20 @@ class _PresenceEmployeePageState extends State<PresenceEmployeePage> {
         setState(() {
           _lastActionStatus = "Error network";
         });
+        showDialog(
+          context: context,
+          builder: (ctx) => AlertDialog(
+            title: const Text("Kesalahan Jaringan"),
+            content:
+                const Text("Tidak dapat terhubung ke server, coba lagi nanti."),
+            actions: [
+              TextButton(
+                onPressed: () => Navigator.pop(ctx),
+                child: const Text("OK"),
+              ),
+            ],
+          ),
+        );
       }
     }
   }

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import '../../auth/auth_storage.dart'; // Import auth_storage.dart
+import 'attendance_employee.dart';
 
 class HomeEmployeePage extends StatefulWidget {
   const HomeEmployeePage({super.key});
@@ -208,48 +209,102 @@ class _HomeEmployeePageState extends State<HomeEmployeePage> {
                   ),
 
                   Padding(
-                    padding: const EdgeInsets.only(
-                        top: 28,
-                        left: 4,
-                        right: 4), // turun dikit + kanan kiri rata
+                    padding: const EdgeInsets.only(top: 28, left: 4, right: 4),
                     child: Wrap(
-                      spacing: 8, // jarak horizontal antar item
-                      runSpacing: 8, // jarak vertikal antar baris
-                      alignment: WrapAlignment.start, // biar rata ke kiri
+                      spacing: 8,
+                      runSpacing: 8,
+                      alignment: WrapAlignment.start,
                       children: [
+                        // 1️⃣ Kehadiran
                         SizedBox(
                           width: MediaQuery.of(context).size.width / 3 - 20,
                           child: _buildMenuColumn(
-                              "assets/images/icon-menu1.png", "Menu 1"),
+                            "assets/images/icon-menu1.png",
+                            "Kehadiran",
+                            () {
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) =>
+                                      const AttendanceEmployeePage(),
+                                ),
+                              );
+                            },
+                          ),
                         ),
+
+                        // 2️⃣ Menu 2
                         SizedBox(
                           width: MediaQuery.of(context).size.width / 3 - 20,
                           child: _buildMenuColumn(
-                              "assets/images/icon-menu2.png", "Menu 2"),
+                            "assets/images/icon-menu2.png",
+                            "Menu 2",
+                            () {
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                const SnackBar(content: Text("Menu 2 diklik")),
+                              );
+                            },
+                          ),
                         ),
+
+                        // 3️⃣ Menu 3
                         SizedBox(
                           width: MediaQuery.of(context).size.width / 3 - 20,
                           child: _buildMenuColumn(
-                              "assets/images/icon-menu3.png", "Menu 3"),
+                            "assets/images/icon-menu3.png",
+                            "Menu 3",
+                            () {
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                const SnackBar(content: Text("Menu 3 diklik")),
+                              );
+                            },
+                          ),
                         ),
+
+                        // 4️⃣ Menu 4
                         SizedBox(
                           width: MediaQuery.of(context).size.width / 3 - 20,
                           child: _buildMenuColumn(
-                              "assets/images/icon-menu4.png", "Menu 4"),
+                            "assets/images/icon-menu4.png",
+                            "Menu 4",
+                            () {
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                const SnackBar(content: Text("Menu 4 diklik")),
+                              );
+                            },
+                          ),
                         ),
+
+                        // 5️⃣ Menu 5
                         SizedBox(
                           width: MediaQuery.of(context).size.width / 3 - 20,
                           child: _buildMenuColumn(
-                              "assets/images/icon-menu5.png", "Menu 5"),
+                            "assets/images/icon-menu5.png",
+                            "Menu 5",
+                            () {
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                const SnackBar(content: Text("Menu 5 diklik")),
+                              );
+                            },
+                          ),
                         ),
+
+                        // 6️⃣ Menu 6
                         SizedBox(
                           width: MediaQuery.of(context).size.width / 3 - 20,
                           child: _buildMenuColumn(
-                              "assets/images/icon-menu6.png", "Menu 6"),
+                            "assets/images/icon-menu6.png",
+                            "Menu 6",
+                            () {
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                const SnackBar(content: Text("Menu 6 diklik")),
+                              );
+                            },
+                          ),
                         ),
                       ],
                     ),
-                  ),
+                  )
                 ],
               ),
             );
@@ -260,23 +315,19 @@ class _HomeEmployeePageState extends State<HomeEmployeePage> {
     );
   }
 
-  Widget _buildMenuCard(String assetPath) {
+  Widget _buildMenuCard(String assetPath, VoidCallback onTap) {
     return SizedBox(
       width: 80,
       height: 80,
       child: Card(
-        elevation: 1, // kasih sedikit shadow biar elegan
+        elevation: 1,
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(20),
         ),
         color: Colors.white,
         child: InkWell(
           borderRadius: BorderRadius.circular(20),
-          onTap: () {
-            ScaffoldMessenger.of(context).showSnackBar(
-              SnackBar(content: Text('Menu tapped: $assetPath')),
-            );
-          },
+          onTap: onTap, // 🔥 Panggil callback di sini
           child: Center(
             child: Image.asset(
               assetPath,
@@ -290,18 +341,18 @@ class _HomeEmployeePageState extends State<HomeEmployeePage> {
     );
   }
 
-  Widget _buildMenuColumn(String assetPath, String title) {
+  Widget _buildMenuColumn(String assetPath, String title, VoidCallback onTap) {
     return Column(
       mainAxisSize: MainAxisSize.min,
       children: [
-        _buildMenuCard(assetPath), // kotak menu
+        _buildMenuCard(assetPath, onTap),
         const SizedBox(height: 6),
         Text(
           title,
           textAlign: TextAlign.center,
           style: const TextStyle(
             fontSize: 12,
-            fontWeight: FontWeight.normal, // tidak bold
+            fontWeight: FontWeight.normal,
             color: Colors.black87,
           ),
         ),
