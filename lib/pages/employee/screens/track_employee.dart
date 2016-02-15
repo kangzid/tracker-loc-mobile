@@ -6,6 +6,7 @@ import 'package:latlong2/latlong.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:http/http.dart' as http;
 import 'package:flutter_application_1/pages/auth/auth_storage.dart';
+import 'package:flutter_application_1/pages/employee/storage/track_storage.dart';
 
 class TrackEmployeeScreen extends StatefulWidget {
   const TrackEmployeeScreen({super.key});
@@ -34,6 +35,16 @@ class _TrackEmployeeScreenState extends State<TrackEmployeeScreen> {
   void initState() {
     super.initState();
     _loadUserDataAndInitialLocation();
+    _loadLastStatus(); // ambil dari storage
+  }
+
+  Future<void> _loadLastStatus() async {
+    final saved = await TrackStorage().getLastLocation();
+    if (saved != null) {
+      setState(() {
+        _lastUpdateStatus = saved;
+      });
+    }
   }
 
   @override
@@ -164,20 +175,29 @@ class _TrackEmployeeScreenState extends State<TrackEmployeeScreen> {
       );
 
       if (mounted) {
-        setState(() {
-          if (response.statusCode == 201 || response.statusCode == 200) {
-            _lastUpdateStatus =
-                "Sukses: ${DateTime.now().toLocal().toString().substring(11, 19)}";
-          } else {
-            _lastUpdateStatus = "Gagal: ${response.statusCode}";
-          }
-        });
+        if (response.statusCode == 201 || response.statusCode == 200) {
+          final status =
+              "Sukses: ${DateTime.now().toLocal().toString().substring(11, 19)}";
+          setState(() {
+            _lastUpdateStatus = status;
+          });
+          // simpan ke storage
+          await TrackStorage().saveLastLocation(status);
+        } else {
+          final status = "Gagal: ${response.statusCode}";
+          setState(() {
+            _lastUpdateStatus = status;
+          });
+          await TrackStorage().saveLastLocation(status);
+        }
       }
     } catch (e) {
       if (mounted) {
+        const status = "Error: Network";
         setState(() {
-          _lastUpdateStatus = "Error: Network";
+          _lastUpdateStatus = status;
         });
+        await TrackStorage().saveLastLocation(status);
       }
     }
   }

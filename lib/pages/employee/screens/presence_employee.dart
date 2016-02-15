@@ -5,6 +5,7 @@ import 'package:geolocator/geolocator.dart';
 import 'package:latlong2/latlong.dart';
 import 'package:http/http.dart' as http;
 import 'package:flutter_application_1/pages/auth/auth_storage.dart';
+import 'package:flutter_application_1/pages/employee/storage/presence_storage.dart'; // ✅ tambah import
 
 class PresenceEmployeePage extends StatefulWidget {
   const PresenceEmployeePage({super.key});
@@ -33,6 +34,7 @@ class _PresenceEmployeePageState extends State<PresenceEmployeePage> {
   void initState() {
     super.initState();
     _loadUserDataAndInitialLocation();
+    _loadLastPresenceFromStorage(); // ✅ baca dari storage
   }
 
   Future<void> _loadUserDataAndInitialLocation() async {
@@ -50,6 +52,15 @@ class _PresenceEmployeePageState extends State<PresenceEmployeePage> {
     _updateMarker(_currentLatLng);
     _getCurrentLocation();
     _fetchTodayAttendance();
+  }
+
+  Future<void> _loadLastPresenceFromStorage() async {
+    final saved = await PresenceStorage().getLastPresence();
+    if (saved != null) {
+      setState(() {
+        _lastActionStatus = saved;
+      });
+    }
   }
 
   Future<void> _getCurrentLocation() async {
@@ -112,17 +123,21 @@ class _PresenceEmployeePageState extends State<PresenceEmployeePage> {
 
       if (mounted) {
         if (response.statusCode == 200 || response.statusCode == 201) {
-          setState(() {
-            _lastActionStatus =
-                "Sukses $type: ${DateTime.now().toLocal().toString().substring(11, 19)}";
+          final successMsg =
+              "Sukses $type: ${DateTime.now().toLocal().toString().substring(11, 19)}";
 
+          setState(() {
+            _lastActionStatus = successMsg;
             if (type == "check_in") _hasCheckedIn = true;
             if (type == "check_out") _hasCheckedOut = true;
           });
+
+          // ✅ simpan ke storage
+          await PresenceStorage().saveLastPresence(successMsg);
+
           _fetchTodayAttendance();
         } else {
           debugPrint("ERROR: ${response.body}");
-          // jangan update status gagal kalau memang sudah pernah presensi
           if (!(type == "check_in" && _hasCheckedIn) &&
               !(type == "check_out" && _hasCheckedOut)) {
             setState(() {

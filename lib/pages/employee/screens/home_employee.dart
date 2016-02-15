@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:hugeicons/hugeicons.dart';
 import '../../auth/auth_storage.dart'; // Import auth_storage.dart
 
 class HomeEmployeePage extends StatefulWidget {
@@ -82,12 +81,12 @@ class _HomeEmployeePageState extends State<HomeEmployeePage> {
                       ),
                       const CircleAvatar(
                         radius: 30,
-                        backgroundColor: Colors.grey,
-                        child:
-                            Icon(Icons.person, color: Colors.white, size: 30),
+                        backgroundImage:
+                            AssetImage("assets/images/pas-foto.png"),
                       ),
                     ],
                   ),
+
                   const SizedBox(height: 24),
 
                   // Banner Slider
@@ -149,61 +148,107 @@ class _HomeEmployeePageState extends State<HomeEmployeePage> {
 
                   const SizedBox(height: 24),
 
-                  // Grid Menu
-                  Text(
-                    'Fitur Utama',
-                    style: const TextStyle(
-                      fontSize: 18,
-                      fontWeight: FontWeight.bold,
-                      color: Colors.black,
-                    ),
-                  ),
-                  const SizedBox(height: 16),
-                  GridView.count(
-                    shrinkWrap: true,
-                    physics: const NeverScrollableScrollPhysics(),
-                    crossAxisCount: 3, // Changed to 3 columns
-                    childAspectRatio: 1.0, // Adjusted for more square boxes
-                    crossAxisSpacing: 8, // Reduced spacing
-                    mainAxisSpacing: 8, // Reduced spacing
+                  // Fake Widget untuk Tugas
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      _buildMenuColumn(
-                          HugeIcon(
-                              icon: HugeIcons.strokeRoundedHome01,
-                              size: 40,
-                              color: Colors.blue),
-                          'MENU1'),
-                      _buildMenuColumn(
-                          HugeIcon(
-                              icon: HugeIcons.strokeRoundedSettings01,
-                              size: 40,
-                              color: Colors.blue),
-                          'MENU2'),
-                      _buildMenuColumn(
-                          HugeIcon(
-                              icon: HugeIcons.strokeRoundedChart01,
-                              size: 40,
-                              color: Colors.blue),
-                          'MENU3'),
-                      _buildMenuColumn(
-                          HugeIcon(
-                              icon: HugeIcons.strokeRoundedChart01,
-                              size: 40,
-                              color: Colors.blue),
-                          'MENU4'),
-                      _buildMenuColumn(
-                          HugeIcon(
-                              icon: HugeIcons.strokeRoundedCalendar01,
-                              size: 40,
-                              color: Colors.blue),
-                          'MENU5'),
-                      _buildMenuColumn(
-                          HugeIcon(
-                              icon: HugeIcons.strokeRoundedChart01,
-                              size: 40,
-                              color: Colors.blue),
-                          'MENU6'),
+                      Expanded(
+                        child: Card(
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(12),
+                          ),
+                          elevation: 2,
+                          child: Padding(
+                            padding: const EdgeInsets.symmetric(
+                                vertical: 8, horizontal: 12), // <--- diperkecil
+                            child: Column(
+                              children: const [
+                                Text("Tugas Hari Ini",
+                                    style: TextStyle(
+                                        fontSize: 14, color: Colors.black54)),
+                                SizedBox(
+                                    height: 4), // jarak teks & angka diperkecil
+                                Text("3",
+                                    style: TextStyle(
+                                        fontSize: 22, // sedikit kecil
+                                        fontWeight: FontWeight.bold,
+                                        color: Colors.blue)),
+                              ],
+                            ),
+                          ),
+                        ),
+                      ),
+                      const SizedBox(width: 8), // diperkecil dari 12
+                      Expanded(
+                        child: Card(
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(12),
+                          ),
+                          elevation: 2,
+                          child: Padding(
+                            padding: const EdgeInsets.symmetric(
+                                vertical: 8, horizontal: 12),
+                            child: Column(
+                              children: const [
+                                Text("Tugas Selesai",
+                                    style: TextStyle(
+                                        fontSize: 14, color: Colors.black54)),
+                                SizedBox(height: 4),
+                                Text("5",
+                                    style: TextStyle(
+                                        fontSize: 22,
+                                        fontWeight: FontWeight.bold,
+                                        color: Colors.green)),
+                              ],
+                            ),
+                          ),
+                        ),
+                      ),
                     ],
+                  ),
+
+                  Padding(
+                    padding: const EdgeInsets.only(
+                        top: 28,
+                        left: 4,
+                        right: 4), // turun dikit + kanan kiri rata
+                    child: Wrap(
+                      spacing: 8, // jarak horizontal antar item
+                      runSpacing: 8, // jarak vertikal antar baris
+                      alignment: WrapAlignment.start, // biar rata ke kiri
+                      children: [
+                        SizedBox(
+                          width: MediaQuery.of(context).size.width / 3 - 20,
+                          child: _buildMenuColumn(
+                              "assets/images/icon-menu1.png", "Menu 1"),
+                        ),
+                        SizedBox(
+                          width: MediaQuery.of(context).size.width / 3 - 20,
+                          child: _buildMenuColumn(
+                              "assets/images/icon-menu2.png", "Menu 2"),
+                        ),
+                        SizedBox(
+                          width: MediaQuery.of(context).size.width / 3 - 20,
+                          child: _buildMenuColumn(
+                              "assets/images/icon-menu3.png", "Menu 3"),
+                        ),
+                        SizedBox(
+                          width: MediaQuery.of(context).size.width / 3 - 20,
+                          child: _buildMenuColumn(
+                              "assets/images/icon-menu4.png", "Menu 4"),
+                        ),
+                        SizedBox(
+                          width: MediaQuery.of(context).size.width / 3 - 20,
+                          child: _buildMenuColumn(
+                              "assets/images/icon-menu5.png", "Menu 5"),
+                        ),
+                        SizedBox(
+                          width: MediaQuery.of(context).size.width / 3 - 20,
+                          child: _buildMenuColumn(
+                              "assets/images/icon-menu6.png", "Menu 6"),
+                        ),
+                      ],
+                    ),
                   ),
                 ],
               ),
@@ -215,49 +260,48 @@ class _HomeEmployeePageState extends State<HomeEmployeePage> {
     );
   }
 
-  Widget _buildMenuCard(Widget iconWidget) {
+  Widget _buildMenuCard(String assetPath) {
     return SizedBox(
-      width: 80, // Fixed width for the card
-      height: 80, // Fixed height for the card to make it square
+      width: 80,
+      height: 80,
       child: Card(
-        elevation:
-            0, // <--- Change this to 0 to remove the shadow, or a higher number for more shadow
+        elevation: 1, // kasih sedikit shadow biar elegan
         shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(
-                25)), // <--- Change '0' to adjust roundedness (e.g., 8 for slightly rounded, 20 for more rounded)
-        color: const Color.fromARGB(255, 255, 255, 255),
+          borderRadius: BorderRadius.circular(20),
+        ),
+        color: Colors.white,
         child: InkWell(
+          borderRadius: BorderRadius.circular(20),
           onTap: () {
             ScaffoldMessenger.of(context).showSnackBar(
-              SnackBar(content: Text('Menu tapped!')),
+              SnackBar(content: Text('Menu tapped: $assetPath')),
             );
           },
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              SizedBox(
-                width: 40, // Keep icon size consistent
-                height: 40, // Keep icon size consistent
-                child: iconWidget,
-              ),
-            ],
+          child: Center(
+            child: Image.asset(
+              assetPath,
+              width: 40,
+              height: 40,
+              fit: BoxFit.contain,
+            ),
           ),
         ),
       ),
     );
   }
 
-  Widget _buildMenuColumn(Widget iconWidget, String title) {
+  Widget _buildMenuColumn(String assetPath, String title) {
     return Column(
+      mainAxisSize: MainAxisSize.min,
       children: [
-        _buildMenuCard(iconWidget), // Card is now fixed size
-        const SizedBox(height: 4),
+        _buildMenuCard(assetPath), // kotak menu
+        const SizedBox(height: 6),
         Text(
           title,
           textAlign: TextAlign.center,
           style: const TextStyle(
-            fontSize: 12, // Smaller font size for outside text
-            fontWeight: FontWeight.bold,
+            fontSize: 12,
+            fontWeight: FontWeight.normal, // tidak bold
             color: Colors.black87,
           ),
         ),

@@ -5,7 +5,7 @@
 
     <!-- Untuk mengganti nama aplikasi, ubah nilai pada android:label di bawah -->
     <application
-        android:label="NgetrackIn"
+        android:label="StaffTrace"
         android:name="${applicationName}"
         android:icon="@mipmap/launcher_icon">
         <activity
