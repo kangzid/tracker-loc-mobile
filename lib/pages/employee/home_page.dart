@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_application_1/pages/employee/widgets/account_employee.dart';
-import 'package:flutter_application_1/pages/employee/widgets/home_employee.dart';
-import 'package:flutter_application_1/pages/employee/widgets/info_employee.dart';
-import 'package:flutter_application_1/pages/employee/widgets/presence_employee.dart';
-import 'package:flutter_application_1/pages/employee/widgets/track_employee.dart';
+import 'package:flutter_application_1/pages/employee/screens/account_employee.dart';
+import 'package:flutter_application_1/pages/employee/screens/home_employee.dart';
+import 'package:flutter_application_1/pages/employee/screens/info_employee.dart';
+import 'package:flutter_application_1/pages/employee/screens/presence_employee.dart';
+import 'package:flutter_application_1/pages/employee/screens/track_employee.dart';
 import 'package:hugeicons/hugeicons.dart';
 
 class EmployeeHomePage extends StatefulWidget {

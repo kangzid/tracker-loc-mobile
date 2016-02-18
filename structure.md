@@ -194,6 +194,11 @@ flutter_application_1
 ├── lib
 │   ├── pages
 │   │   ├── admin
+│   │   │   ├── widgets
+│   │   │   │   ├── account_admin.dart
+│   │   │   │   ├── info_admin.dart
+│   │   │   │   └── track_admin.dart
+│   │   │   ├── home_admin.dart
 │   │   │   └── home_page.dart
 │   │   ├── auth
 │   │   │   └── login_page.dart

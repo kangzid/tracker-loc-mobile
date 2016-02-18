@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:hugeicons/hugeicons.dart'; // Import HugeIcons
 import 'package:flutter_application_1/pages/admin/home_admin.dart';
-import 'package:flutter_application_1/pages/admin/widgets/track_admin.dart';
-import 'package:flutter_application_1/pages/admin/widgets/info_admin.dart';
-import 'package:flutter_application_1/pages/admin/widgets/account_admin.dart';
+import 'package:flutter_application_1/pages/admin/screens/track_admin.dart';
+import 'package:flutter_application_1/pages/admin/screens/info_admin.dart';
+import 'package:flutter_application_1/pages/admin/screens/account_admin.dart';
 
 /// Halaman Wrapper untuk Admin.
 ///
