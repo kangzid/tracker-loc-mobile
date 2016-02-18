@@ -4,9 +4,9 @@
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
-import 'package:shared_preferences/shared_preferences.dart';
 import 'package:flutter_application_1/pages/admin/home_page.dart';
 import 'package:flutter_application_1/pages/employee/home_page.dart';
+import 'package:flutter_application_1/pages/auth/auth_storage.dart'; // Import auth_storage.dart
 
 class LoginPage extends StatefulWidget {
   const LoginPage({super.key});
@@ -55,12 +55,11 @@ class _LoginPageState extends State<LoginPage> {
 
       if (response.statusCode == 200) {
         final responseData = jsonDecode(response.body);
-        final String token = responseData['token'];
-        final String role = responseData['user']['role'];
+        final String role =
+            responseData['user']['role']; // Keep role for navigation logic
 
-        final SharedPreferences prefs = await SharedPreferences.getInstance();
-        await prefs.setString('token', token);
-        await prefs.setString('user_role', role);
+        // Save login data using AuthStorage
+        await AuthStorage().saveLoginData(responseData);
 
         if (role == 'admin') {
           Navigator.of(context).pushReplacement(
@@ -209,7 +208,7 @@ class _LoginPageState extends State<LoginPage> {
                                 ),
                               )
                             : const Text(
-                                'Masuk Portal',
+                                'Masuk Sistem',
                                 style: TextStyle(color: Colors.white),
                               ),
                       ),
