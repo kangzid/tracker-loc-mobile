@@ -29,7 +29,7 @@ class _HomeEmployeePageState extends State<HomeEmployeePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.white,
+      backgroundColor: const Color.fromARGB(255, 244, 249, 251),
       extendBodyBehindAppBar: true,
       appBar: AppBar(
         backgroundColor: Colors.transparent,
@@ -167,12 +167,42 @@ class _HomeEmployeePageState extends State<HomeEmployeePage> {
                     crossAxisSpacing: 8, // Reduced spacing
                     mainAxisSpacing: 8, // Reduced spacing
                     children: [
-                      _buildMenuColumn(HugeIcon(icon: HugeIcons.strokeRoundedHome01, size: 40, color: Colors.blue), 'MENU1'),
-                      _buildMenuColumn(HugeIcon(icon: HugeIcons.strokeRoundedSettings01, size: 40, color: Colors.blue), 'MENU2'),
-                      _buildMenuColumn(HugeIcon(icon: HugeIcons.strokeRoundedChart01, size: 40, color: Colors.blue), 'MENU3'),
-                      _buildMenuColumn(HugeIcon(icon: HugeIcons.strokeRoundedChart01, size: 40, color: Colors.blue), 'MENU4'),
-                      _buildMenuColumn(HugeIcon(icon: HugeIcons.strokeRoundedCalendar01, size: 40, color: Colors.blue), 'MENU5'),
-                      _buildMenuColumn(HugeIcon(icon: HugeIcons.strokeRoundedChart01, size: 40, color: Colors.blue), 'MENU6'),
+                      _buildMenuColumn(
+                          HugeIcon(
+                              icon: HugeIcons.strokeRoundedHome01,
+                              size: 40,
+                              color: Colors.blue),
+                          'MENU1'),
+                      _buildMenuColumn(
+                          HugeIcon(
+                              icon: HugeIcons.strokeRoundedSettings01,
+                              size: 40,
+                              color: Colors.blue),
+                          'MENU2'),
+                      _buildMenuColumn(
+                          HugeIcon(
+                              icon: HugeIcons.strokeRoundedChart01,
+                              size: 40,
+                              color: Colors.blue),
+                          'MENU3'),
+                      _buildMenuColumn(
+                          HugeIcon(
+                              icon: HugeIcons.strokeRoundedChart01,
+                              size: 40,
+                              color: Colors.blue),
+                          'MENU4'),
+                      _buildMenuColumn(
+                          HugeIcon(
+                              icon: HugeIcons.strokeRoundedCalendar01,
+                              size: 40,
+                              color: Colors.blue),
+                          'MENU5'),
+                      _buildMenuColumn(
+                          HugeIcon(
+                              icon: HugeIcons.strokeRoundedChart01,
+                              size: 40,
+                              color: Colors.blue),
+                          'MENU6'),
                     ],
                   ),
                 ],
@@ -190,8 +220,12 @@ class _HomeEmployeePageState extends State<HomeEmployeePage> {
       width: 80, // Fixed width for the card
       height: 80, // Fixed height for the card to make it square
       child: Card(
-        elevation: 2,
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+        elevation:
+            0, // <--- Change this to 0 to remove the shadow, or a higher number for more shadow
+        shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(
+                25)), // <--- Change '0' to adjust roundedness (e.g., 8 for slightly rounded, 20 for more rounded)
+        color: const Color.fromARGB(255, 255, 255, 255),
         child: InkWell(
           onTap: () {
             ScaffoldMessenger.of(context).showSnackBar(
