@@ -1,4 +1,8 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <!-- Izin untuk mengakses lokasi GPS -->
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+
     <!-- Untuk mengganti nama aplikasi, ubah nilai pada android:label di bawah -->
     <application
         android:label="NgetrackIn"

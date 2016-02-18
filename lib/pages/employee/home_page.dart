@@ -21,7 +21,7 @@ class _EmployeeHomePageState extends State<EmployeeHomePage> {
   // To add a new menu, add a new page to this list
   final List<Widget> _pages = [
     const HomeEmployeePage(),
-    const TrackEmployeePage(),
+    const TrackEmployeeScreen(),
     const PresenceEmployeePage(),
     const InfoEmployeePage(),
     const AccountEmployeePage(),

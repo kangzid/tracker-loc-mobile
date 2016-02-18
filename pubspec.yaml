@@ -31,6 +31,10 @@ dependencies:
   flutter:
     sdk: flutter
 
+  flutter_map: ^6.1.0
+  latlong2: ^0.9.0
+  geolocator: ^10.1.0
+
   # The following adds the Cupertino Icons font to your application.
   # Use with the CupertinoIcons class for iOS style icons.
   cupertino_icons: ^1.0.8
@@ -38,6 +42,9 @@ dependencies:
   http: 1.1.0
   shared_preferences: 2.2.2
   hugeicons: any
+
+dependency_overrides:
+  geolocator_android: 4.5.1
 
 dev_dependencies:
   flutter_test:
@@ -74,8 +81,6 @@ flutter:
   # Contoh: assets/images/nama_file.png
   assets:
     - assets/images/
-    - assets/icons/admin/
-    - assets/icons/employee/
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/to/resolution-aware-images

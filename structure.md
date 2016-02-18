@@ -1,39 +1,234 @@
 # Project Structure
 
-flutter_application_1
+tracker-loc-mobile
 ├── .dart_tool
+│   ├── chrome-device
+│   │   └── Default
+│   │       ├── AutofillStrikeDatabase
+│   │       │   ├── LOCK
+│   │       │   └── LOG
+│   │       ├── blob_storage
+│   │       │   └── 5e3bd7d8-51b6-4d1e-a176-be439f26a9a3
+│   │       ├── BudgetDatabase
+│   │       │   ├── LOCK
+│   │       │   └── LOG
+│   │       ├── chrome_cart_db
+│   │       │   ├── LOCK
+│   │       │   └── LOG
+│   │       ├── ClientCertificates
+│   │       │   ├── LOCK
+│   │       │   └── LOG
+│   │       ├── commerce_subscription_db
+│   │       │   ├── LOCK
+│   │       │   └── LOG
+│   │       ├── discount_infos_db
+│   │       │   ├── LOCK
+│   │       │   └── LOG
+│   │       ├── discounts_db
+│   │       │   ├── LOCK
+│   │       │   └── LOG
+│   │       ├── Download Service
+│   │       │   ├── EntryDB
+│   │       │   │   ├── LOCK
+│   │       │   │   └── LOG
+│   │       │   └── Files
+│   │       ├── Extension Rules
+│   │       │   ├── 000003.log
+│   │       │   ├── CURRENT
+│   │       │   ├── LOCK
+│   │       │   ├── LOG
+│   │       │   └── MANIFEST-000001
+│   │       ├── Extension Scripts
+│   │       │   ├── 000003.log
+│   │       │   ├── CURRENT
+│   │       │   ├── LOCK
+│   │       │   ├── LOG
+│   │       │   └── MANIFEST-000001
+│   │       ├── Extension State
+│   │       │   ├── 000003.log
+│   │       │   ├── CURRENT
+│   │       │   ├── LOCK
+│   │       │   ├── LOG
+│   │       │   └── MANIFEST-000001
+│   │       ├── Feature Engagement Tracker
+│   │       │   ├── AvailabilityDB
+│   │       │   │   ├── LOCK
+│   │       │   │   └── LOG
+│   │       │   └── EventDB
+│   │       │       ├── LOCK
+│   │       │       └── LOG
+│   │       ├── GCM Store
+│   │       │   ├── Encryption
+│   │       │   │   ├── 000003.log
+│   │       │   │   ├── CURRENT
+│   │       │   │   ├── LOCK
+│   │       │   │   ├── LOG
+│   │       │   │   └── MANIFEST-000001
+│   │       │   ├── 000003.log
+│   │       │   ├── CURRENT
+│   │       │   ├── LOCK
+│   │       │   ├── LOG
+│   │       │   └── MANIFEST-000001
+│   │       ├── Local Storage
+│   │       │   └── leveldb
+│   │       │       ├── 000003.log
+│   │       │       ├── CURRENT
+│   │       │       ├── LOCK
+│   │       │       ├── LOG
+│   │       │       └── MANIFEST-000001
+│   │       ├── Network
+│   │       │   ├── Cookies
+│   │       │   ├── Cookies-journal
+│   │       │   ├── Network Persistent State
+│   │       │   ├── NetworkDataMigrated
+│   │       │   ├── Reporting and NEL
+│   │       │   ├── Reporting and NEL-journal
+│   │       │   ├── TransportSecurity
+│   │       │   ├── Trust Tokens
+│   │       │   └── Trust Tokens-journal
+│   │       ├── optimization_guide_hint_cache_store
+│   │       │   ├── LOCK
+│   │       │   └── LOG
+│   │       ├── parcel_tracking_db
+│   │       │   ├── LOCK
+│   │       │   └── LOG
+│   │       ├── PersistentOriginTrials
+│   │       │   ├── LOCK
+│   │       │   └── LOG
+│   │       ├── Safe Browsing Network
+│   │       │   ├── NetworkDataMigrated
+│   │       │   ├── Safe Browsing Cookies
+│   │       │   └── Safe Browsing Cookies-journal
+│   │       ├── Segmentation Platform
+│   │       │   ├── SegmentInfoDB
+│   │       │   │   ├── LOCK
+│   │       │   │   └── LOG
+│   │       │   ├── SignalDB
+│   │       │   │   ├── LOCK
+│   │       │   │   └── LOG
+│   │       │   └── SignalStorageConfigDB
+│   │       │       ├── LOCK
+│   │       │       └── LOG
+│   │       ├── Service Worker
+│   │       │   ├── Database
+│   │       │   │   ├── 000003.log
+│   │       │   │   ├── CURRENT
+│   │       │   │   ├── LOCK
+│   │       │   │   ├── LOG
+│   │       │   │   └── MANIFEST-000001
+│   │       │   └── ScriptCache
+│   │       │       ├── index-dir
+│   │       │       │   └── the-real-index
+│   │       │       ├── 2cc80dabc69f58b6_0
+│   │       │       ├── 4cb013792b196a35_0
+│   │       │       ├── f1cdccba37924bda_0
+│   │       │       ├── f1cdccba37924bda_1
+│   │       │       └── index
+│   │       ├── Session Storage
+│   │       │   ├── 000003.log
+│   │       │   ├── CURRENT
+│   │       │   ├── LOCK
+│   │       │   ├── LOG
+│   │       │   └── MANIFEST-000001
+│   │       ├── Sessions
+│   │       │   ├── Session_13403714093074055
+│   │       │   └── Tabs_13403715649477735
+│   │       ├── Shared Dictionary
+│   │       │   ├── cache
+│   │       │   │   ├── index-dir
+│   │       │   │   │   └── the-real-index
+│   │       │   │   └── index
+│   │       │   ├── db
+│   │       │   └── db-journal
+│   │       ├── shared_proto_db
+│   │       │   ├── metadata
+│   │       │   │   ├── 000003.log
+│   │       │   │   ├── CURRENT
+│   │       │   │   ├── LOCK
+│   │       │   │   ├── LOG
+│   │       │   │   └── MANIFEST-000001
+│   │       │   ├── 000003.log
+│   │       │   ├── CURRENT
+│   │       │   ├── LOCK
+│   │       │   ├── LOG
+│   │       │   └── MANIFEST-000001
+│   │       ├── Site Characteristics Database
+│   │       │   ├── 000003.log
+│   │       │   ├── CURRENT
+│   │       │   ├── LOCK
+│   │       │   ├── LOG
+│   │       │   └── MANIFEST-000001
+│   │       ├── Sync Data
+│   │       │   └── LevelDB
+│   │       │       ├── 000003.log
+│   │       │       ├── CURRENT
+│   │       │       ├── LOCK
+│   │       │       ├── LOG
+│   │       │       └── MANIFEST-000001
+│   │       ├── WebStorage
+│   │       │   ├── QuotaManager
+│   │       │   └── QuotaManager-journal
+│   │       ├── Account Web Data
+│   │       ├── Account Web Data-journal
+│   │       ├── Affiliation Database
+│   │       ├── Affiliation Database-journal
+│   │       ├── BookmarkMergedSurfaceOrdering
+│   │       ├── BrowsingTopicsSiteData
+│   │       ├── BrowsingTopicsSiteData-journal
+│   │       ├── BrowsingTopicsState
+│   │       ├── DIPS
+│   │       ├── Favicons
+│   │       ├── Favicons-journal
+│   │       ├── heavy_ad_intervention_opt_out.db
+│   │       ├── heavy_ad_intervention_opt_out.db-journal
+│   │       ├── History
+│   │       ├── History-journal
+│   │       ├── LOCK
+│   │       ├── LOG
+│   │       ├── Login Data
+│   │       ├── Login Data For Account
+│   │       ├── Login Data For Account-journal
+│   │       ├── Login Data-journal
+│   │       ├── Network Action Predictor
+│   │       ├── Network Action Predictor-journal
+│   │       ├── passkey_enclave_state
+│   │       ├── Preferences
+│   │       ├── PreferredApps
+│   │       ├── README
+│   │       ├── Secure Preferences
+│   │       ├── ServerCertificate
+│   │       ├── ServerCertificate-journal
+│   │       ├── SharedStorage
+│   │       ├── Shortcuts
+│   │       ├── Shortcuts-journal
+│   │       ├── Top Sites
+│   │       ├── Top Sites-journal
+│   │       ├── trusted_vault.pb
+│   │       ├── Web Data
+│   │       └── Web Data-journal
 │   ├── dartpad
 │   │   └── web_plugin_registrant.dart
 │   ├── flutter_build
-│   │   ├── 5c168e5b828f93a1056aeccef849c0f7
-│   │   │   ├── .filecache
-│   │   │   ├── app.dill
-│   │   │   ├── debug_android_application.stamp
-│   │   │   ├── flutter_assets.d
-│   │   │   ├── gen_dart_plugin_registrant.stamp
-│   │   │   ├── gen_localizations.stamp
-│   │   │   ├── kernel_snapshot_native_assets.stamp
-│   │   │   ├── kernel_snapshot_program.d
-│   │   │   ├── kernel_snapshot_program.stamp
-│   │   │   ├── kernel_snapshot.stamp
-│   │   │   ├── native_assets.d
-│   │   │   ├── native_assets.dill
-│   │   │   ├── native_assets.stamp
-│   │   │   ├── native_assets.yaml
-│   │   │   ├── outputs.json
-│   │   │   └── program.dill
-│   │   └── dart_plugin_registrant.dart
+│   │   └── 8e1e28085a6c252568562c8c5e5eda16
+│   │       ├── .filecache
+│   │       ├── app.dill
+│   │       ├── debug_android_application.stamp
+│   │       ├── flutter_assets.d
+│   │       ├── gen_dart_plugin_registrant.stamp
+│   │       ├── gen_localizations.stamp
+│   │       ├── kernel_snapshot_native_assets.stamp
+│   │       ├── kernel_snapshot_program.d
+│   │       ├── kernel_snapshot_program.stamp
+│   │       ├── kernel_snapshot.stamp
+│   │       ├── native_assets.d
+│   │       ├── native_assets.dill
+│   │       ├── native_assets.stamp
+│   │       ├── native_assets.yaml
+│   │       ├── outputs.json
+│   │       └── program.dill
 │   ├── package_config_subset
 │   ├── package_config.json
 │   └── version
-├── .idea
-│   ├── libraries
-│   │   ├── Dart_SDK.xml
-│   │   └── KotlinJavaRuntime.xml
-│   ├── runConfigurations
-│   │   └── main_dart.xml
-│   ├── modules.xml
-│   └── workspace.xml
 ├── android
 │   ├── .gradle
 │   │   ├── 8.3
@@ -114,18 +309,15 @@ flutter_application_1
 │   │       └── gradle-wrapper.properties
 │   ├── .gitignore
 │   ├── build.gradle
-│   ├── flutter_application_1_android.iml
 │   ├── gradle.properties
 │   ├── gradlew
 │   ├── gradlew.bat
 │   ├── local.properties
 │   └── settings.gradle
 ├── assets
-│   ├── icons
-│   │   ├── admin
-│   │   └── employee
 │   └── images
 │       ├── .placeholder
+│       ├── benner-home.png
 │       └── icon-apk.png
 ├── ios
 │   ├── Flutter
@@ -194,16 +386,17 @@ flutter_application_1
 ├── lib
 │   ├── pages
 │   │   ├── admin
-│   │   │   ├── widgets
+│   │   │   ├── screens
 │   │   │   │   ├── account_admin.dart
 │   │   │   │   ├── info_admin.dart
 │   │   │   │   └── track_admin.dart
 │   │   │   ├── home_admin.dart
 │   │   │   └── home_page.dart
 │   │   ├── auth
+│   │   │   ├── auth_storage.dart
 │   │   │   └── login_page.dart
 │   │   └── employee
-│   │       ├── widgets
+│   │       ├── screens
 │   │       │   ├── account_employee.dart
 │   │       │   ├── home_employee.dart
 │   │       │   ├── info_employee.dart
@@ -287,6 +480,7 @@ flutter_application_1
 │   ├── flutter
 │   │   ├── ephemeral
 │   │   │   └── .plugin_symlinks
+│   │   │       ├── geolocator_windows
 │   │   │       ├── path_provider_windows
 │   │   │       └── shared_preferences_windows
 │   │   ├── CMakeLists.txt
@@ -314,7 +508,6 @@ flutter_application_1
 ├── .gitignore
 ├── .metadata
 ├── analysis_options.yaml
-├── flutter_application_1.iml
 ├── pubspec.lock
 ├── pubspec.yaml
 └── README.md
