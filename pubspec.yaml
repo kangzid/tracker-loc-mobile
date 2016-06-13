@@ -47,6 +47,7 @@ dependencies:
   firebase_core: ^2.24.2
   firebase_remote_config: ^4.3.8
   firebase_database: ^10.4.0
+  lottie: ^3.2.0
 
 dependency_overrides:
   geolocator_android: 4.5.1
@@ -86,6 +87,7 @@ flutter:
   # Contoh: assets/images/nama_file.png
   assets:
     - assets/images/
+    - assets/lottie/
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/to/resolution-aware-images

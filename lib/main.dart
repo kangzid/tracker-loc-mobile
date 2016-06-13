@@ -14,6 +14,7 @@ import 'package:flutter_application_1/pages/admin/screens/employee_page.dart';
 import 'package:flutter_application_1/pages/admin/screens/vehicle_page.dart';
 import 'package:flutter_application_1/config/api_config.dart';
 import 'firebase_options.dart';
+import 'package:lottie/lottie.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -32,8 +33,16 @@ class MyApp extends StatefulWidget {
 }
 
 class _MyAppState extends State<MyApp> {
-  Widget _initialPage =
-      const CircularProgressIndicator(); // Tampilkan loading saat memeriksa token
+  Widget _initialPage = Scaffold(
+    body: Center(
+      child: Lottie.asset(
+        'assets/lottie/loading.json', // Menggunakan file aset lokal
+        width: 200,
+        height: 200,
+        fit: BoxFit.fill,
+      ),
+    ),
+  ); // Tampilkan loading saat memeriksa token
 
   @override
   void initState() {
@@ -43,6 +52,8 @@ class _MyAppState extends State<MyApp> {
 
   Future<void> _checkLoginStatus() async {
     // Initialize Firebase Remote Config
+    await Future.delayed(
+        const Duration(seconds: 4)); // Tampilkan loading selama 4 detik
     await ApiConfig.initialize();
     final SharedPreferences prefs = await SharedPreferences.getInstance();
     final String? token = prefs.getString('token');
