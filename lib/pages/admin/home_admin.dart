@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import '../auth/auth_storage.dart';
+import '../../config/api_config.dart';
 
 class HomeAdminPage extends StatefulWidget {
   const HomeAdminPage({super.key});
@@ -30,7 +31,7 @@ class _HomeAdminPageState extends State<HomeAdminPage> {
     }
 
     final response = await http.get(
-      Uri.parse('https://locatrack.zalfyan.my.id/api/dashboard/stats'),
+      Uri.parse(ApiConfig.dashboardStats),
       headers: {
         'Accept': 'application/json',
         'Authorization': 'Bearer $token',

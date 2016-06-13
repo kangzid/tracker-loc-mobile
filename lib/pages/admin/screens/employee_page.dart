@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
 import 'widgets/employee_list_widget.dart';
+import '../../../config/api_config.dart';
 
 class EmployeePage extends StatefulWidget {
   const EmployeePage({super.key});
@@ -14,7 +15,6 @@ class EmployeePage extends StatefulWidget {
 class _EmployeePageState extends State<EmployeePage> {
   List<dynamic> _employees = [];
   bool _loading = false;
-  final String baseUrl = "https://locatrack.zalfyan.my.id/api/employees";
 
   @override
   void initState() {
@@ -33,7 +33,7 @@ class _EmployeePageState extends State<EmployeePage> {
 
     try {
       final response = await http.get(
-        Uri.parse(baseUrl),
+        Uri.parse(ApiConfig.employees),
         headers: {"Authorization": "Bearer $token"},
       );
 

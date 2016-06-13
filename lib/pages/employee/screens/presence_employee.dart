@@ -7,6 +7,7 @@ import 'package:http/http.dart' as http;
 import 'package:hugeicons/hugeicons.dart';
 import 'package:flutter_application_1/pages/auth/auth_storage.dart';
 import 'package:flutter_application_1/pages/employee/storage/presence_storage.dart';
+import '../../../config/api_config.dart';
 
 class PresenceEmployeePage extends StatefulWidget {
   const PresenceEmployeePage({super.key});
@@ -68,7 +69,7 @@ class _PresenceEmployeePageState extends State<PresenceEmployeePage> {
     if (_token == null) return false;
 
     final url = Uri.parse(
-        'https://locatrack.zalfyan.my.id/api/attendances/check-location');
+        '${ApiConfig.attendances}/check-location');
     try {
       final response = await http.post(
         url,
@@ -185,7 +186,7 @@ class _PresenceEmployeePageState extends State<PresenceEmployeePage> {
     final isInsideOffice = await _checkLocationBeforeAttendance();
     if (!isInsideOffice) return;
 
-    final url = Uri.parse('https://locatrack.zalfyan.my.id/api/attendances');
+    final url = Uri.parse(ApiConfig.attendances);
     try {
       final response = await http.post(
         url,
@@ -352,7 +353,7 @@ class _PresenceEmployeePageState extends State<PresenceEmployeePage> {
     if (_token == null) return;
 
     final url =
-        Uri.parse('https://locatrack.zalfyan.my.id/api/attendances/today');
+        Uri.parse('${ApiConfig.attendances}/today');
     try {
       final response = await http.get(
         url,

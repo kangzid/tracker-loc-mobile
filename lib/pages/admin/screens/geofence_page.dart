@@ -7,6 +7,7 @@ import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:geolocator/geolocator.dart';
 import 'widgets/geofence_list_widget.dart';
+import '../../../config/api_config.dart';
 
 class GeofencePage extends StatefulWidget {
   const GeofencePage({super.key});
@@ -25,7 +26,6 @@ class _GeofencePageState extends State<GeofencePage> {
   bool _searching = false;
   List<Map<String, dynamic>> _searchResults = [];
   Timer? _debounceTimer;
-  final String baseUrl = "https://locatrack.zalfyan.my.id/api/geofences";
 
   @override
   void initState() {
@@ -52,7 +52,7 @@ class _GeofencePageState extends State<GeofencePage> {
 
     try {
       final response = await http.get(
-        Uri.parse(baseUrl),
+        Uri.parse(ApiConfig.geofences),
         headers: {"Authorization": "Bearer $token"},
       );
 
@@ -88,7 +88,7 @@ class _GeofencePageState extends State<GeofencePage> {
 
     try {
       final response = await http.post(
-        Uri.parse(baseUrl),
+        Uri.parse(ApiConfig.geofences),
         headers: {
           "Authorization": "Bearer $token",
           "Content-Type": "application/json",
@@ -194,7 +194,7 @@ class _GeofencePageState extends State<GeofencePage> {
 
     try {
       final response = await http.delete(
-        Uri.parse("$baseUrl/$id"),
+        Uri.parse("${ApiConfig.geofences}/$id"),
         headers: {"Authorization": "Bearer $token"},
       );
 

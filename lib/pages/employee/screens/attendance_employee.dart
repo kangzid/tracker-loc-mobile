@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:table_calendar/table_calendar.dart';
 import '../../auth/auth_storage.dart';
+import '../../../config/api_config.dart';
 import 'package:intl/date_symbol_data_local.dart';
 
 class AttendanceEmployeePage extends StatefulWidget {
@@ -38,7 +39,7 @@ class _AttendanceEmployeePageState extends State<AttendanceEmployeePage> {
 
     try {
       final response = await http.get(
-        Uri.parse('https://locatrack.zalfyan.my.id/api/attendances/monthly'),
+        Uri.parse('${ApiConfig.attendances}/monthly'),
         headers: {'Authorization': 'Bearer $_token'},
       );
 

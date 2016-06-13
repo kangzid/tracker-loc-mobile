@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
 import 'widgets/vehicle_list_widget.dart';
+import '../../../config/api_config.dart';
 
 class VehiclePage extends StatefulWidget {
   const VehiclePage({super.key});
@@ -14,7 +15,6 @@ class VehiclePage extends StatefulWidget {
 class _VehiclePageState extends State<VehiclePage> {
   List<dynamic> _vehicles = [];
   bool _loading = false;
-  final String baseUrl = "https://locatrack.zalfyan.my.id/api/vehicles";
 
   @override
   void initState() {
@@ -33,7 +33,7 @@ class _VehiclePageState extends State<VehiclePage> {
 
     try {
       final response = await http.get(
-        Uri.parse(baseUrl),
+        Uri.parse(ApiConfig.vehicles),
         headers: {"Authorization": "Bearer $token"},
       );
 
@@ -160,7 +160,8 @@ class _VehiclePageState extends State<VehiclePage> {
                 ],
               ),
             ),
-            Icon(Icons.arrow_forward_ios, color: Colors.grey.shade400, size: 18),
+            Icon(Icons.arrow_forward_ios,
+                color: Colors.grey.shade400, size: 18),
           ],
         ),
       ),
@@ -172,7 +173,10 @@ class _VehiclePageState extends State<VehiclePage> {
   }
 
   int _getVehicleTypes() {
-    final types = _vehicles.map((v) => v['vehicle_type']).where((t) => t != null && t.toString().isNotEmpty).toSet();
+    final types = _vehicles
+        .map((v) => v['vehicle_type'])
+        .where((t) => t != null && t.toString().isNotEmpty)
+        .toSet();
     return types.length;
   }
 
@@ -330,10 +334,12 @@ class _VehiclePageState extends State<VehiclePage> {
                       onTap: () {
                         ScaffoldMessenger.of(context).showSnackBar(
                           SnackBar(
-                            content: const Text('Fitur tracking kendaraan segera hadir'),
+                            content: const Text(
+                                'Fitur tracking kendaraan segera hadir'),
                             backgroundColor: Colors.blue,
                             behavior: SnackBarBehavior.floating,
-                            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+                            shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(10)),
                           ),
                         );
                       },
@@ -347,10 +353,12 @@ class _VehiclePageState extends State<VehiclePage> {
                       onTap: () {
                         ScaffoldMessenger.of(context).showSnackBar(
                           SnackBar(
-                            content: const Text('Fitur riwayat perjalanan segera hadir'),
+                            content: const Text(
+                                'Fitur riwayat perjalanan segera hadir'),
                             backgroundColor: Colors.green,
                             behavior: SnackBarBehavior.floating,
-                            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+                            shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(10)),
                           ),
                         );
                       },
@@ -364,10 +372,12 @@ class _VehiclePageState extends State<VehiclePage> {
                       onTap: () {
                         ScaffoldMessenger.of(context).showSnackBar(
                           SnackBar(
-                            content: const Text('Fitur maintenance segera hadir'),
+                            content:
+                                const Text('Fitur maintenance segera hadir'),
                             backgroundColor: Colors.red,
                             behavior: SnackBarBehavior.floating,
-                            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+                            shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(10)),
                           ),
                         );
                       },

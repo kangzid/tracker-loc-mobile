@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
+import '../../../../config/api_config.dart';
 
 class EmployeeListWidget extends StatefulWidget {
   final List<dynamic> employees;
@@ -18,7 +19,6 @@ class EmployeeListWidget extends StatefulWidget {
 }
 
 class _EmployeeListWidgetState extends State<EmployeeListWidget> {
-  final String baseUrl = "https://locatrack.zalfyan.my.id/api/employees";
   final TextEditingController _searchController = TextEditingController();
   List<dynamic> _filteredEmployees = [];
 
@@ -258,7 +258,7 @@ class _EmployeeListWidgetState extends State<EmployeeListWidget> {
 
     try {
       final response = await http.post(
-        Uri.parse(baseUrl),
+        Uri.parse(ApiConfig.employees),
         headers: {
           "Authorization": "Bearer $token",
           "Content-Type": "application/json",
@@ -464,7 +464,7 @@ class _EmployeeListWidgetState extends State<EmployeeListWidget> {
 
     try {
       final response = await http.put(
-        Uri.parse("$baseUrl/$id"),
+        Uri.parse("${ApiConfig.employees}/$id"),
         headers: {
           "Authorization": "Bearer $token",
           "Content-Type": "application/json",
@@ -589,7 +589,7 @@ class _EmployeeListWidgetState extends State<EmployeeListWidget> {
 
     try {
       final response = await http.delete(
-        Uri.parse("$baseUrl/$id"),
+        Uri.parse("${ApiConfig.employees}/$id"),
         headers: {"Authorization": "Bearer $token"},
       );
 

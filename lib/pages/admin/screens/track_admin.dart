@@ -7,6 +7,7 @@ import 'package:latlong2/latlong.dart';
 import 'package:http/http.dart' as http;
 import 'package:intl/intl.dart';
 import '../../auth/auth_storage.dart';
+import '../../../config/api_config.dart';
 
 class TrackAdminPageContent extends StatefulWidget {
   const TrackAdminPageContent({super.key});
@@ -29,7 +30,7 @@ class _TrackAdminPageContentState extends State<TrackAdminPageContent> {
   final LatLng _initialCenter = LatLng(-6.200000, 106.816666);
   final double _initialZoom = 6.0;
 
-  static const String _apiBase = 'https://locatrack.zalfyan.my.id';
+
 
   @override
   void initState() {
@@ -62,7 +63,7 @@ class _TrackAdminPageContentState extends State<TrackAdminPageContent> {
         return;
       }
 
-      final uri = Uri.parse('$_apiBase/api/locations/live');
+      final uri = Uri.parse('${ApiConfig.locations}/live');
       final response = await http.get(
         uri,
         headers: {

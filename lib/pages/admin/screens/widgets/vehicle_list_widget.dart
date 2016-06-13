@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
+import '../../../../config/api_config.dart';
 
 class VehicleListWidget extends StatefulWidget {
   final List<dynamic> vehicles;
@@ -18,7 +19,6 @@ class VehicleListWidget extends StatefulWidget {
 }
 
 class _VehicleListWidgetState extends State<VehicleListWidget> {
-  final String baseUrl = "https://locatrack.zalfyan.my.id/api/vehicles";
   final TextEditingController _searchController = TextEditingController();
   List<dynamic> _filteredVehicles = [];
 
@@ -232,7 +232,7 @@ class _VehicleListWidgetState extends State<VehicleListWidget> {
 
     try {
       final response = await http.post(
-        Uri.parse(baseUrl),
+        Uri.parse(ApiConfig.vehicles),
         headers: {
           "Authorization": "Bearer $token",
           "Content-Type": "application/json",
@@ -392,7 +392,7 @@ class _VehicleListWidgetState extends State<VehicleListWidget> {
 
     try {
       final response = await http.put(
-        Uri.parse("$baseUrl/$id"),
+        Uri.parse("${ApiConfig.vehicles}/$id"),
         headers: {
           "Authorization": "Bearer $token",
           "Content-Type": "application/json",
@@ -517,7 +517,7 @@ class _VehicleListWidgetState extends State<VehicleListWidget> {
 
     try {
       final response = await http.delete(
-        Uri.parse("$baseUrl/$id"),
+        Uri.parse("${ApiConfig.vehicles}/$id"),
         headers: {"Authorization": "Bearer $token"},
       );
 

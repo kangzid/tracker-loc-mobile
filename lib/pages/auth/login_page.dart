@@ -7,6 +7,7 @@ import 'dart:convert';
 import 'package:flutter_application_1/pages/admin/home_page.dart';
 import 'package:flutter_application_1/pages/employee/home_page.dart';
 import 'package:flutter_application_1/pages/auth/auth_storage.dart'; // Import auth_storage.dart
+import '../../config/api_config.dart';
 
 class LoginPage extends StatefulWidget {
   const LoginPage({super.key});
@@ -22,20 +23,18 @@ class _LoginPageState extends State<LoginPage> {
   String? _errorMessage;
   bool _obscurePassword = true;
 
-  static const String _baseUrl = 'https://locatrack.zalfyan.my.id/api';
-  
   @override
   void initState() {
     super.initState();
     _checkAutoLogin();
   }
-  
+
   Future<void> _checkAutoLogin() async {
     final bool isLoggedIn = await AuthStorage().isLoggedIn();
     if (isLoggedIn && mounted) {
       final data = await AuthStorage().getLoginData();
       final String? role = data['user']?['role'];
-      
+
       if (role == 'admin') {
         Navigator.of(context).pushReplacement(
           MaterialPageRoute(builder: (context) => const AdminHomePage()),
@@ -67,7 +66,7 @@ class _LoginPageState extends State<LoginPage> {
 
     try {
       final response = await http.post(
-        Uri.parse('$_baseUrl/login'),
+        Uri.parse(ApiConfig.login),
         headers: <String, String>{
           'Content-Type': 'application/json; charset=UTF-8',
         },

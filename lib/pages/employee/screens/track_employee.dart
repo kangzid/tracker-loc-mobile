@@ -8,6 +8,7 @@ import 'package:http/http.dart' as http;
 import 'package:hugeicons/hugeicons.dart';
 import 'package:flutter_application_1/pages/auth/auth_storage.dart';
 import 'package:flutter_application_1/pages/employee/storage/track_storage.dart';
+import '../../../config/api_config.dart';
 
 class TrackEmployeeScreen extends StatefulWidget {
   const TrackEmployeeScreen({super.key});
@@ -156,7 +157,7 @@ class _TrackEmployeeScreenState extends State<TrackEmployeeScreen> {
   Future<void> _sendLocationToApi(Position position) async {
     if (_token == null || _employeeDbId == null) return;
 
-    final url = Uri.parse('https://locatrack.zalfyan.my.id/api/locations');
+    final url = Uri.parse(ApiConfig.locations);
     try {
       final response = await http.post(
         url,

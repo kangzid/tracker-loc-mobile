@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
+import '../../../../config/api_config.dart';
 
 class GeofenceListWidget extends StatefulWidget {
   final List<dynamic> geofences;
@@ -18,8 +19,6 @@ class GeofenceListWidget extends StatefulWidget {
 }
 
 class _GeofenceListWidgetState extends State<GeofenceListWidget> {
-  final String baseUrl = "https://locatrack.zalfyan.my.id/api/geofences";
-
   Future<String?> _getToken() async {
     final prefs = await SharedPreferences.getInstance();
     return prefs.getString('token');
@@ -53,14 +52,16 @@ class _GeofenceListWidgetState extends State<GeofenceListWidget> {
 
   Future<void> _updateGeofence(Map<String, dynamic> geofence) async {
     final nameCtrl = TextEditingController(text: geofence['name']);
-    final radiusCtrl = TextEditingController(text: geofence['radius']?.toString() ?? '100');
+    final radiusCtrl =
+        TextEditingController(text: geofence['radius']?.toString() ?? '100');
     String type = geofence['type'] ?? 'office';
 
     showDialog(
       context: context,
       builder: (context) => StatefulBuilder(
         builder: (context, setDialogState) => Dialog(
-          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
+          shape:
+              RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
           child: Container(
             padding: const EdgeInsets.all(24),
             child: Column(
@@ -74,13 +75,15 @@ class _GeofenceListWidgetState extends State<GeofenceListWidget> {
                         color: Colors.orange.withOpacity(0.1),
                         borderRadius: BorderRadius.circular(12),
                       ),
-                      child: const Icon(Icons.edit_location, color: Colors.orange, size: 28),
+                      child: const Icon(Icons.edit_location,
+                          color: Colors.orange, size: 28),
                     ),
                     const SizedBox(width: 16),
                     const Expanded(
                       child: Text(
                         "Edit Geofence",
-                        style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+                        style: TextStyle(
+                            fontSize: 20, fontWeight: FontWeight.bold),
                       ),
                     ),
                   ],
@@ -90,8 +93,10 @@ class _GeofenceListWidgetState extends State<GeofenceListWidget> {
                   controller: nameCtrl,
                   decoration: InputDecoration(
                     labelText: "Nama Lokasi",
-                    prefixIcon: const Icon(Icons.label_outline, color: Colors.orange),
-                    border: OutlineInputBorder(borderRadius: BorderRadius.circular(12)),
+                    prefixIcon:
+                        const Icon(Icons.label_outline, color: Colors.orange),
+                    border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(12)),
                   ),
                 ),
                 const SizedBox(height: 16),
@@ -100,8 +105,10 @@ class _GeofenceListWidgetState extends State<GeofenceListWidget> {
                   keyboardType: TextInputType.number,
                   decoration: InputDecoration(
                     labelText: "Radius (meter)",
-                    prefixIcon: const Icon(Icons.radio_button_unchecked, color: Colors.orange),
-                    border: OutlineInputBorder(borderRadius: BorderRadius.circular(12)),
+                    prefixIcon: const Icon(Icons.radio_button_unchecked,
+                        color: Colors.orange),
+                    border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(12)),
                   ),
                 ),
                 const SizedBox(height: 16),
@@ -109,13 +116,17 @@ class _GeofenceListWidgetState extends State<GeofenceListWidget> {
                   value: type,
                   decoration: InputDecoration(
                     labelText: "Tipe Lokasi",
-                    prefixIcon: const Icon(Icons.business, color: Colors.orange),
-                    border: OutlineInputBorder(borderRadius: BorderRadius.circular(12)),
+                    prefixIcon:
+                        const Icon(Icons.business, color: Colors.orange),
+                    border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(12)),
                   ),
                   items: const [
                     DropdownMenuItem(value: "office", child: Text("Office")),
-                    DropdownMenuItem(value: "work_area", child: Text("Work Area")),
-                    DropdownMenuItem(value: "restricted", child: Text("Restricted")),
+                    DropdownMenuItem(
+                        value: "work_area", child: Text("Work Area")),
+                    DropdownMenuItem(
+                        value: "restricted", child: Text("Restricted")),
                   ],
                   onChanged: (val) => setDialogState(() => type = val!),
                 ),
@@ -131,12 +142,15 @@ class _GeofenceListWidgetState extends State<GeofenceListWidget> {
                     const SizedBox(width: 12),
                     Expanded(
                       child: ElevatedButton(
-                        style: ElevatedButton.styleFrom(backgroundColor: Colors.orange),
+                        style: ElevatedButton.styleFrom(
+                            backgroundColor: Colors.orange),
                         onPressed: () async {
                           Navigator.pop(context);
-                          await _performUpdate(geofence['id'], nameCtrl.text, double.tryParse(radiusCtrl.text) ?? 100, type);
+                          await _performUpdate(geofence['id'], nameCtrl.text,
+                              double.tryParse(radiusCtrl.text) ?? 100, type);
                         },
-                        child: const Text("Update", style: TextStyle(color: Colors.white)),
+                        child: const Text("Update",
+                            style: TextStyle(color: Colors.white)),
                       ),
                     ),
                   ],
@@ -149,7 +163,8 @@ class _GeofenceListWidgetState extends State<GeofenceListWidget> {
     );
   }
 
-  Future<void> _performUpdate(int id, String name, double radius, String type) async {
+  Future<void> _performUpdate(
+      int id, String name, double radius, String type) async {
     final token = await _getToken();
     final body = {
       "name": name,
@@ -159,7 +174,7 @@ class _GeofenceListWidgetState extends State<GeofenceListWidget> {
 
     try {
       final response = await http.put(
-        Uri.parse("$baseUrl/$id"),
+        Uri.parse("${ApiConfig.geofences}/$id"),
         headers: {
           "Authorization": "Bearer $token",
           "Content-Type": "application/json",
@@ -169,7 +184,9 @@ class _GeofenceListWidgetState extends State<GeofenceListWidget> {
 
       if (response.statusCode == 200) {
         ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('Geofence berhasil diupdate!'), backgroundColor: Colors.green),
+          const SnackBar(
+              content: Text('Geofence berhasil diupdate!'),
+              backgroundColor: Colors.green),
         );
         widget.onRefresh();
       }
@@ -207,13 +224,15 @@ class _GeofenceListWidgetState extends State<GeofenceListWidget> {
 
     try {
       final response = await http.delete(
-        Uri.parse("$baseUrl/$id"),
+        Uri.parse("${ApiConfig.geofences}/$id"),
         headers: {"Authorization": "Bearer $token"},
       );
 
       if (response.statusCode == 200) {
         ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('Geofence berhasil dihapus'), backgroundColor: Colors.orange),
+          const SnackBar(
+              content: Text('Geofence berhasil dihapus'),
+              backgroundColor: Colors.orange),
         );
         widget.onRefresh();
       }
@@ -224,9 +243,10 @@ class _GeofenceListWidgetState extends State<GeofenceListWidget> {
 
   @override
   Widget build(BuildContext context) {
-    debugPrint("GeofenceListWidget - geofences count: ${widget.geofences.length}");
+    debugPrint(
+        "GeofenceListWidget - geofences count: ${widget.geofences.length}");
     debugPrint("GeofenceListWidget - geofences data: ${widget.geofences}");
-    
+
     return Dialog(
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
       child: Container(
@@ -243,7 +263,8 @@ class _GeofenceListWidgetState extends State<GeofenceListWidget> {
                     color: Colors.blue.withOpacity(0.1),
                     borderRadius: BorderRadius.circular(12),
                   ),
-                  child: const Icon(Icons.list_alt, color: Colors.blue, size: 28),
+                  child:
+                      const Icon(Icons.list_alt, color: Colors.blue, size: 28),
                 ),
                 const SizedBox(width: 16),
                 const Expanded(
@@ -265,9 +286,11 @@ class _GeofenceListWidgetState extends State<GeofenceListWidget> {
                       child: Column(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
-                          Icon(Icons.location_off, size: 64, color: Colors.grey),
+                          Icon(Icons.location_off,
+                              size: 64, color: Colors.grey),
                           SizedBox(height: 16),
-                          Text('Belum ada geofence', style: TextStyle(color: Colors.grey)),
+                          Text('Belum ada geofence',
+                              style: TextStyle(color: Colors.grey)),
                         ],
                       ),
                     )
@@ -275,7 +298,8 @@ class _GeofenceListWidgetState extends State<GeofenceListWidget> {
                       itemCount: widget.geofences.length,
                       itemBuilder: (context, index) {
                         final geo = widget.geofences[index];
-                        final color = _getGeofenceColor(geo['type'] ?? 'office');
+                        final color =
+                            _getGeofenceColor(geo['type'] ?? 'office');
                         return Card(
                           margin: const EdgeInsets.only(bottom: 12),
                           child: ListTile(
@@ -287,20 +311,26 @@ class _GeofenceListWidgetState extends State<GeofenceListWidget> {
                             subtitle: Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
-                                Text('${_getTypeLabel(geo['type'] ?? 'office')} • ${geo['radius'] ?? '100'}m'),
-                                Text('${geo['center_lat'] ?? '0'}, ${geo['center_lng'] ?? '0'}', style: const TextStyle(fontSize: 12)),
+                                Text(
+                                    '${_getTypeLabel(geo['type'] ?? 'office')} • ${geo['radius'] ?? '100'}m'),
+                                Text(
+                                    '${geo['center_lat'] ?? '0'}, ${geo['center_lng'] ?? '0'}',
+                                    style: const TextStyle(fontSize: 12)),
                               ],
                             ),
                             trailing: Row(
                               mainAxisSize: MainAxisSize.min,
                               children: [
                                 IconButton(
-                                  icon: const Icon(Icons.edit, color: Colors.orange),
+                                  icon: const Icon(Icons.edit,
+                                      color: Colors.orange),
                                   onPressed: () => _updateGeofence(geo),
                                 ),
                                 IconButton(
-                                  icon: const Icon(Icons.delete, color: Colors.red),
-                                  onPressed: () => _deleteGeofence(geo['id'], geo['name']),
+                                  icon: const Icon(Icons.delete,
+                                      color: Colors.red),
+                                  onPressed: () =>
+                                      _deleteGeofence(geo['id'], geo['name']),
                                 ),
                               ],
                             ),
