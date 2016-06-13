@@ -4,10 +4,12 @@
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
+import 'package:lottie/lottie.dart';
 import 'package:flutter_application_1/pages/admin/home_page.dart';
 import 'package:flutter_application_1/pages/employee/home_page.dart';
 import 'package:flutter_application_1/pages/auth/auth_storage.dart'; // Import auth_storage.dart
 import '../../config/api_config.dart';
+import '../tracker/gps_tracker_page.dart';
 
 class LoginPage extends StatefulWidget {
   const LoginPage({super.key});
@@ -137,7 +139,7 @@ class _LoginPageState extends State<LoginPage> {
               const SizedBox(height: 20),
               // Judul
               const Text(
-                "StaffTracker",
+                "Staff Tracker",
                 style: TextStyle(
                   fontSize: 20,
                   fontWeight: FontWeight.bold,
@@ -148,7 +150,7 @@ class _LoginPageState extends State<LoginPage> {
               const SizedBox(height: 10),
               // Subjudul
               const Text(
-                "Pantau lokasi karyawan dan kendaraan secara real-time dengan mudah dan akurat.",
+                "Selamat datang di aplikasi Staff Tracker. Silakan login untuk memulai aktivitas kerja.",
                 style: TextStyle(
                   fontSize: 14,
                   color: Colors.grey,
@@ -208,11 +210,23 @@ class _LoginPageState extends State<LoginPage> {
               const SizedBox(height: 24.0),
               // Tombol Login
               _isLoading
-                  ? const CircularProgressIndicator()
+                  ? SizedBox(
+                      height: 50,
+                      child: OverflowBox(
+                        minHeight: 200,
+                        maxHeight: 200,
+                        child: Lottie.asset(
+                          'assets/lottie/loading.json',
+                          width: 200,
+                          height: 200,
+                          fit: BoxFit.contain,
+                        ),
+                      ),
+                    )
                   : SizedBox(
                       width: double.infinity,
                       child: ElevatedButton(
-                        onPressed: _isLoading ? null : _login,
+                        onPressed: _login,
                         style: ElevatedButton.styleFrom(
                           backgroundColor: Colors.blue,
                           padding: const EdgeInsets.symmetric(vertical: 14),
@@ -220,20 +234,10 @@ class _LoginPageState extends State<LoginPage> {
                             borderRadius: BorderRadius.circular(8),
                           ),
                         ),
-                        child: _isLoading
-                            ? const SizedBox(
-                                height: 18,
-                                width: 18,
-                                child: CircularProgressIndicator(
-                                  strokeWidth: 2,
-                                  valueColor: AlwaysStoppedAnimation<Color>(
-                                      Colors.white),
-                                ),
-                              )
-                            : const Text(
-                                'Masuk Sistem',
-                                style: TextStyle(color: Colors.white),
-                              ),
+                        child: const Text(
+                          'Masuk Sistem',
+                          style: TextStyle(color: Colors.white),
+                        ),
                       ),
                     ),
               if (_errorMessage != null) ...[
@@ -262,6 +266,35 @@ class _LoginPageState extends State<LoginPage> {
                   ),
                 ),
               ),
+              const SizedBox(height: 40),
+              // Tombol Mode GPS (Pojok Kanan Bawah)
+              Align(
+                alignment: Alignment.bottomRight,
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    FloatingActionButton.small(
+                      heroTag: "gpsModeBtn",
+                      onPressed: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => const GpsTrackerPage()),
+                        );
+                      },
+                      backgroundColor: Colors.white,
+                      child: const Icon(Icons.map, color: Colors.blue),
+                    ),
+                    const SizedBox(height: 4),
+                    const Text(
+                      "GPS Mode",
+                      style: TextStyle(fontSize: 10, color: Colors.grey),
+                    ),
+                  ],
+                ),
+              ),
+              const SizedBox(height: 10),
+              const SizedBox(height: 20),
               const SizedBox(height: 20),
             ],
           ),

@@ -2,9 +2,9 @@ import 'package:firebase_remote_config/firebase_remote_config.dart';
 
 class ApiConfig {
   static String _baseUrl = 'https://locatrack.zalfyan.my.id/api'; // fallback
-  
+
   static String get baseUrl => _baseUrl;
-  
+
   static Future<void> initialize() async {
     try {
       final remoteConfig = FirebaseRemoteConfig.instance;
@@ -12,7 +12,7 @@ class ApiConfig {
         fetchTimeout: const Duration(seconds: 10),
         minimumFetchInterval: const Duration(hours: 1),
       ));
-      
+
       await remoteConfig.fetchAndActivate();
       _baseUrl = remoteConfig.getString('api_base_url');
     } catch (e) {
@@ -20,7 +20,7 @@ class ApiConfig {
       print('Firebase Remote Config error: $e');
     }
   }
-  
+
   // Endpoints
   static String get dashboardStats => '$baseUrl/dashboard/stats';
   static String get login => '$baseUrl/login';

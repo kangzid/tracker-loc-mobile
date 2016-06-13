@@ -4,6 +4,8 @@ import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
 import 'widgets/employee_list_widget.dart';
 import '../../../config/api_config.dart';
+import 'package:flutter_application_1/pages/admin/screens/widgets/admin_menu_card.dart';
+import 'package:flutter_application_1/pages/admin/screens/widgets/admin_stat_card.dart';
 
 class EmployeePage extends StatefulWidget {
   const EmployeePage({super.key});
@@ -47,125 +49,6 @@ class _EmployeePageState extends State<EmployeePage> {
       debugPrint("Error fetching employees: $e");
     }
     setState(() => _loading = false);
-  }
-
-  Widget _buildStatCard({
-    required IconData icon,
-    required String title,
-    required String value,
-    required Color color,
-  }) {
-    return Container(
-      padding: const EdgeInsets.all(16),
-      decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(16),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black.withOpacity(0.05),
-            blurRadius: 10,
-            offset: const Offset(0, 2),
-          ),
-        ],
-      ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Container(
-            padding: const EdgeInsets.all(10),
-            decoration: BoxDecoration(
-              color: color.withOpacity(0.1),
-              borderRadius: BorderRadius.circular(10),
-            ),
-            child: Icon(icon, color: color, size: 24),
-          ),
-          const SizedBox(height: 12),
-          Text(
-            title,
-            style: const TextStyle(
-              color: Color(0xFF64748B),
-              fontSize: 12,
-              fontWeight: FontWeight.w500,
-            ),
-          ),
-          const SizedBox(height: 4),
-          Text(
-            value,
-            style: const TextStyle(
-              color: Color(0xFF1E293B),
-              fontSize: 24,
-              fontWeight: FontWeight.bold,
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-
-  Widget _buildMenuCard({
-    required IconData icon,
-    required String title,
-    required String subtitle,
-    required Color color,
-    required VoidCallback onTap,
-  }) {
-    return InkWell(
-      onTap: onTap,
-      borderRadius: BorderRadius.circular(16),
-      child: Container(
-        padding: const EdgeInsets.all(16),
-        decoration: BoxDecoration(
-          color: Colors.white,
-          borderRadius: BorderRadius.circular(16),
-          border: Border.all(color: Colors.grey.shade200),
-          boxShadow: [
-            BoxShadow(
-              color: Colors.black.withOpacity(0.03),
-              blurRadius: 8,
-              offset: const Offset(0, 2),
-            ),
-          ],
-        ),
-        child: Row(
-          children: [
-            Container(
-              padding: const EdgeInsets.all(12),
-              decoration: BoxDecoration(
-                color: color.withOpacity(0.1),
-                borderRadius: BorderRadius.circular(12),
-              ),
-              child: Icon(icon, color: color, size: 28),
-            ),
-            const SizedBox(width: 16),
-            Expanded(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    title,
-                    style: const TextStyle(
-                      color: Color(0xFF1E293B),
-                      fontSize: 16,
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
-                  const SizedBox(height: 4),
-                  Text(
-                    subtitle,
-                    style: const TextStyle(
-                      color: Color(0xFF64748B),
-                      fontSize: 13,
-                    ),
-                  ),
-                ],
-              ),
-            ),
-            Icon(Icons.arrow_forward_ios,
-                color: Colors.grey.shade400, size: 18),
-          ],
-        ),
-      ),
-    );
   }
 
   int _getActiveEmployees() {
@@ -263,7 +146,7 @@ class _EmployeePageState extends State<EmployeePage> {
                     Row(
                       children: [
                         Expanded(
-                          child: _buildStatCard(
+                          child: AdminStatCard(
                             icon: Icons.people,
                             title: "Total Karyawan",
                             value: "${_employees.length}",
@@ -272,7 +155,7 @@ class _EmployeePageState extends State<EmployeePage> {
                         ),
                         const SizedBox(width: 12),
                         Expanded(
-                          child: _buildStatCard(
+                          child: AdminStatCard(
                             icon: Icons.check_circle,
                             title: "Aktif",
                             value: "${_getActiveEmployees()}",
@@ -285,7 +168,7 @@ class _EmployeePageState extends State<EmployeePage> {
                     Row(
                       children: [
                         Expanded(
-                          child: _buildStatCard(
+                          child: AdminStatCard(
                             icon: Icons.business,
                             title: "Departemen",
                             value: "${_getDepartmentCount()}",
@@ -294,7 +177,7 @@ class _EmployeePageState extends State<EmployeePage> {
                         ),
                         const SizedBox(width: 12),
                         Expanded(
-                          child: _buildStatCard(
+                          child: AdminStatCard(
                             icon: Icons.today,
                             title: "Hadir Hari Ini",
                             value: "${(_employees.length * 0.85).toInt()}",
@@ -317,7 +200,7 @@ class _EmployeePageState extends State<EmployeePage> {
                     ),
                     const SizedBox(height: 16),
 
-                    _buildMenuCard(
+                    AdminMenuCard(
                       icon: Icons.person_search,
                       title: "Data Karyawan",
                       subtitle: "Lihat dan kelola data lengkap karyawan",
@@ -335,7 +218,7 @@ class _EmployeePageState extends State<EmployeePage> {
 
                     const SizedBox(height: 12),
 
-                    _buildMenuCard(
+                    AdminMenuCard(
                       icon: Icons.assignment,
                       title: "Laporan Kehadiran",
                       subtitle: "Rekap absensi dan kehadiran karyawan",
@@ -357,7 +240,7 @@ class _EmployeePageState extends State<EmployeePage> {
 
                     const SizedBox(height: 12),
 
-                    _buildMenuCard(
+                    AdminMenuCard(
                       icon: Icons.timer,
                       title: "Jam Kerja",
                       subtitle: "Atur dan lihat jadwal kerja karyawan",
@@ -378,7 +261,7 @@ class _EmployeePageState extends State<EmployeePage> {
 
                     const SizedBox(height: 12),
 
-                    _buildMenuCard(
+                    AdminMenuCard(
                       icon: Icons.bar_chart,
                       title: "Performa Karyawan",
                       subtitle: "Analisis kinerja dan produktivitas",
@@ -400,7 +283,7 @@ class _EmployeePageState extends State<EmployeePage> {
 
                     const SizedBox(height: 12),
 
-                    _buildMenuCard(
+                    AdminMenuCard(
                       icon: Icons.description,
                       title: "Dokumen Karyawan",
                       subtitle: "Kelola dokumen dan berkas penting",
@@ -422,7 +305,7 @@ class _EmployeePageState extends State<EmployeePage> {
 
                     const SizedBox(height: 12),
 
-                    _buildMenuCard(
+                    AdminMenuCard(
                       icon: Icons.calendar_today,
                       title: "Cuti & Izin",
                       subtitle: "Kelola permohonan cuti dan izin",

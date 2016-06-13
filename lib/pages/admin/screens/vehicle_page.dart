@@ -4,6 +4,8 @@ import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
 import 'widgets/vehicle_list_widget.dart';
 import '../../../config/api_config.dart';
+import 'package:flutter_application_1/pages/admin/screens/widgets/admin_menu_card.dart';
+import 'package:flutter_application_1/pages/admin/screens/widgets/admin_stat_card.dart';
 
 class VehiclePage extends StatefulWidget {
   const VehiclePage({super.key});
@@ -47,125 +49,6 @@ class _VehiclePageState extends State<VehiclePage> {
       debugPrint("Error fetching vehicles: $e");
     }
     setState(() => _loading = false);
-  }
-
-  Widget _buildStatCard({
-    required IconData icon,
-    required String title,
-    required String value,
-    required Color color,
-  }) {
-    return Container(
-      padding: const EdgeInsets.all(16),
-      decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(16),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black.withOpacity(0.05),
-            blurRadius: 10,
-            offset: const Offset(0, 2),
-          ),
-        ],
-      ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Container(
-            padding: const EdgeInsets.all(10),
-            decoration: BoxDecoration(
-              color: color.withOpacity(0.1),
-              borderRadius: BorderRadius.circular(10),
-            ),
-            child: Icon(icon, color: color, size: 24),
-          ),
-          const SizedBox(height: 12),
-          Text(
-            title,
-            style: const TextStyle(
-              color: Color(0xFF64748B),
-              fontSize: 12,
-              fontWeight: FontWeight.w500,
-            ),
-          ),
-          const SizedBox(height: 4),
-          Text(
-            value,
-            style: const TextStyle(
-              color: Color(0xFF1E293B),
-              fontSize: 24,
-              fontWeight: FontWeight.bold,
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-
-  Widget _buildMenuCard({
-    required IconData icon,
-    required String title,
-    required String subtitle,
-    required Color color,
-    required VoidCallback onTap,
-  }) {
-    return InkWell(
-      onTap: onTap,
-      borderRadius: BorderRadius.circular(16),
-      child: Container(
-        padding: const EdgeInsets.all(16),
-        decoration: BoxDecoration(
-          color: Colors.white,
-          borderRadius: BorderRadius.circular(16),
-          border: Border.all(color: Colors.grey.shade200),
-          boxShadow: [
-            BoxShadow(
-              color: Colors.black.withOpacity(0.03),
-              blurRadius: 8,
-              offset: const Offset(0, 2),
-            ),
-          ],
-        ),
-        child: Row(
-          children: [
-            Container(
-              padding: const EdgeInsets.all(12),
-              decoration: BoxDecoration(
-                color: color.withOpacity(0.1),
-                borderRadius: BorderRadius.circular(12),
-              ),
-              child: Icon(icon, color: color, size: 28),
-            ),
-            const SizedBox(width: 16),
-            Expanded(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    title,
-                    style: const TextStyle(
-                      color: Color(0xFF1E293B),
-                      fontSize: 16,
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
-                  const SizedBox(height: 4),
-                  Text(
-                    subtitle,
-                    style: const TextStyle(
-                      color: Color(0xFF64748B),
-                      fontSize: 13,
-                    ),
-                  ),
-                ],
-              ),
-            ),
-            Icon(Icons.arrow_forward_ios,
-                color: Colors.grey.shade400, size: 18),
-          ],
-        ),
-      ),
-    );
   }
 
   int _getActiveVehicles() {
@@ -260,7 +143,7 @@ class _VehiclePageState extends State<VehiclePage> {
                     Row(
                       children: [
                         Expanded(
-                          child: _buildStatCard(
+                          child: AdminStatCard(
                             icon: Icons.directions_car,
                             title: "Total Kendaraan",
                             value: "${_vehicles.length}",
@@ -269,7 +152,7 @@ class _VehiclePageState extends State<VehiclePage> {
                         ),
                         const SizedBox(width: 12),
                         Expanded(
-                          child: _buildStatCard(
+                          child: AdminStatCard(
                             icon: Icons.check_circle,
                             title: "Aktif",
                             value: "${_getActiveVehicles()}",
@@ -282,7 +165,7 @@ class _VehiclePageState extends State<VehiclePage> {
                     Row(
                       children: [
                         Expanded(
-                          child: _buildStatCard(
+                          child: AdminStatCard(
                             icon: Icons.category,
                             title: "Tipe Kendaraan",
                             value: "${_getVehicleTypes()}",
@@ -291,7 +174,7 @@ class _VehiclePageState extends State<VehiclePage> {
                         ),
                         const SizedBox(width: 12),
                         Expanded(
-                          child: _buildStatCard(
+                          child: AdminStatCard(
                             icon: Icons.location_on,
                             title: "Sedang Beroperasi",
                             value: "${(_getActiveVehicles() * 0.8).toInt()}",
@@ -310,7 +193,7 @@ class _VehiclePageState extends State<VehiclePage> {
                       ),
                     ),
                     const SizedBox(height: 16),
-                    _buildMenuCard(
+                    AdminMenuCard(
                       icon: Icons.directions_car_filled,
                       title: "Data Kendaraan",
                       subtitle: "Lihat dan kelola data lengkap kendaraan",
@@ -326,7 +209,7 @@ class _VehiclePageState extends State<VehiclePage> {
                       },
                     ),
                     const SizedBox(height: 12),
-                    _buildMenuCard(
+                    AdminMenuCard(
                       icon: Icons.map,
                       title: "Tracking Kendaraan",
                       subtitle: "Pantau lokasi kendaraan secara real-time",
@@ -345,7 +228,7 @@ class _VehiclePageState extends State<VehiclePage> {
                       },
                     ),
                     const SizedBox(height: 12),
-                    _buildMenuCard(
+                    AdminMenuCard(
                       icon: Icons.history,
                       title: "Riwayat Perjalanan",
                       subtitle: "Lihat histori perjalanan kendaraan",
@@ -364,7 +247,7 @@ class _VehiclePageState extends State<VehiclePage> {
                       },
                     ),
                     const SizedBox(height: 12),
-                    _buildMenuCard(
+                    AdminMenuCard(
                       icon: Icons.build,
                       title: "Maintenance",
                       subtitle: "Jadwal dan riwayat perawatan kendaraan",

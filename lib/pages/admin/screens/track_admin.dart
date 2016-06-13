@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_map/flutter_map.dart';
 import 'package:latlong2/latlong.dart';
 import 'package:http/http.dart' as http;
+import 'package:firebase_database/firebase_database.dart';
 import '../../auth/auth_storage.dart';
 import '../../../config/api_config.dart';
 import 'widgets/track_status_bar.dart';
@@ -24,7 +25,13 @@ class _TrackAdminPageContentState extends State<TrackAdminPageContent> {
 
   List<dynamic> employees = [];
   List<dynamic> vehicles = [];
+  List<dynamic> _apiVehicles = []; // Store raw API data
+  Map<String, dynamic> _firebaseVehicleLocations =
+      {}; // Store raw Firebase locations
   Timer? _refreshTimer;
+  StreamSubscription? _vehicleSubscription;
+  final DatabaseReference _vehicleRef =
+      FirebaseDatabase.instance.ref().child('vehicles');
   bool _loading = true;
   String? _error;
   bool _showLegend = false;
@@ -42,13 +49,72 @@ class _TrackAdminPageContentState extends State<TrackAdminPageContent> {
   @override
   void dispose() {
     _refreshTimer?.cancel();
+    _vehicleSubscription?.cancel();
     super.dispose();
   }
 
   void _fetchAndSchedule() async {
-    await _fetchLiveLocations();
+    await _fetchLiveLocations(); // Fetch employees
+    _listenToVehicles(); // Listen to Firebase for vehicles
     _refreshTimer = Timer.periodic(const Duration(seconds: 10), (timer) {
       _fetchLiveLocations();
+    });
+  }
+
+  void _listenToVehicles() {
+    _vehicleSubscription = _vehicleRef.onValue.listen((event) {
+      final data = event.snapshot.value;
+      if (data != null && data is Map) {
+        final Map<String, dynamic> loadedLocations = {};
+        data.forEach((key, value) {
+          if (value is Map) {
+            // Key di Firebase biasanya "B1234XYZ" (tanpa spasi),
+            // kita simpan agar bisa dicocokkan nanti.
+            loadedLocations[key] = value;
+          }
+        });
+
+        _firebaseVehicleLocations = loadedLocations;
+        _mergeVehicleData();
+      }
+    });
+  }
+
+  void _mergeVehicleData() {
+    if (!mounted) return;
+
+    final List<dynamic> mergedVehicles = [];
+
+    for (var v in _apiVehicles) {
+      final String rawPlate = v['vehicle_number'] ?? '';
+      // Normalisasi plat nomor dari API agar cocok dengan Firebase Key
+      // Contoh: "B 1234 ABC" -> "B1234ABC"
+      final String normalizedPlate = rawPlate.toUpperCase().replaceAll(' ', '');
+
+      final firebaseData = _firebaseVehicleLocations[normalizedPlate];
+
+      if (firebaseData != null) {
+        // Jika ada di Firebase, pakai koordinat Firebase (Live)
+        mergedVehicles.add({
+          ...v, // Copy data API (brand, model, type, dll)
+          'latitude': firebaseData['latitude'],
+          'longitude': firebaseData['longitude'],
+          'last_location_update': firebaseData['timestamp'],
+          'speed': firebaseData['speed'],
+          'heading': firebaseData['heading'],
+          'is_live': true, // Penanda bahwa ini data live
+        });
+      } else {
+        // Jika tidak ada di Firebase, pakai data API (Static/Last Known)
+        mergedVehicles.add({
+          ...v,
+          'is_live': false,
+        });
+      }
+    }
+
+    setState(() {
+      vehicles = mergedVehicles;
     });
   }
 
@@ -64,34 +130,58 @@ class _TrackAdminPageContentState extends State<TrackAdminPageContent> {
         return;
       }
 
-      final uri = Uri.parse('${ApiConfig.locations}/live');
-      final response = await http.get(
-        uri,
+      // 1. Fetch Employees (Live Location API)
+      final uriEmployees = Uri.parse('${ApiConfig.locations}/live');
+      final responseEmployees = await http.get(
+        uriEmployees,
         headers: {
           'Authorization': 'Bearer $token',
           'Accept': 'application/json',
         },
       );
 
-      if (response.statusCode == 200) {
-        final Map<String, dynamic> payload = json.decode(response.body);
+      // 2. Fetch Vehicles (Master Data API)
+      final uriVehicles = Uri.parse(ApiConfig.vehicles);
+      final responseVehicles = await http.get(
+        uriVehicles,
+        headers: {
+          'Authorization': 'Bearer $token',
+          'Accept': 'application/json',
+        },
+      );
+
+      if (responseEmployees.statusCode == 200 &&
+          responseVehicles.statusCode == 200) {
+        final Map<String, dynamic> payloadEmp =
+            json.decode(responseEmployees.body);
+        final Map<String, dynamic> payloadVeh =
+            json.decode(responseVehicles.body);
+
+        // API Response Vehicles biasanya: { "data": [...] }
+        final List<dynamic> rawVehicles = payloadVeh['data'] ?? [];
+
         setState(() {
-          employees = payload['employees'] ?? [];
-          vehicles = payload['vehicles'] ?? [];
+          employees = payloadEmp['employees'] ?? [];
+          _apiVehicles = rawVehicles;
           _loading = false;
           _error = null;
         });
+
+        // Panggil merge setelah dapat data baru dari API
+        _mergeVehicleData();
       } else {
         setState(() {
-          _error = 'Gagal memuat data (${response.statusCode})';
+          _error = 'Gagal memuat data (API Error)';
           _loading = false;
         });
       }
     } catch (e) {
-      setState(() {
-        _error = 'Error: $e';
-        _loading = false;
-      });
+      if (mounted) {
+        setState(() {
+          _error = 'Error: $e';
+          _loading = false;
+        });
+      }
     }
   }
 
