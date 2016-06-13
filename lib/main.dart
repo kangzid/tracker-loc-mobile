@@ -3,16 +3,21 @@
 // Jangan letakkan kode halaman Home di sini.
 
 import 'package:flutter/material.dart';
-import 'package:shared_preferences/shared_preferences.dart'; // Import shared_preferences
-import 'package:flutter_application_1/pages/admin/home_page.dart'; // Import Admin Home Page
-import 'package:flutter_application_1/pages/employee/home_page.dart'; // Import Employee Home Page
-import 'package:flutter_application_1/pages/auth/login_page.dart'; // Import Login Page
-import 'package:flutter_application_1/pages/admin/screens/geofence_page.dart'; // Import Geofence Page
-import 'package:flutter_application_1/pages/admin/screens/settings_admin.dart'; // Import Settings Admin Page
-import 'package:flutter_application_1/pages/admin/screens/employee_page.dart'; // Import Employee Page
+import 'package:shared_preferences/shared_preferences.dart';
+import 'package:firebase_core/firebase_core.dart';
+import 'package:flutter_application_1/pages/admin/home_page.dart';
+import 'package:flutter_application_1/pages/employee/home_page.dart';
+import 'package:flutter_application_1/pages/auth/login_page.dart';
+import 'package:flutter_application_1/pages/admin/screens/geofence_page.dart';
+import 'package:flutter_application_1/pages/admin/screens/settings_admin.dart';
+import 'package:flutter_application_1/pages/admin/screens/employee_page.dart';
 import 'package:flutter_application_1/pages/admin/screens/vehicle_page.dart';
+import 'package:flutter_application_1/config/api_config.dart';
 
-void main() {
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await Firebase.initializeApp();
+  await ApiConfig.initialize();
   runApp(const MyApp());
 }
 
@@ -33,9 +38,9 @@ class _MyAppState extends State<MyApp> {
     _checkLoginStatus();
   }
 
-  // Fungsi untuk memeriksa status login dan role pengguna
-  // Komentar: Jika ingin mengubah cara pengecekan status login atau role, ubah bagian ini.
   Future<void> _checkLoginStatus() async {
+    // Initialize Firebase Remote Config
+    await ApiConfig.initialize();
     final SharedPreferences prefs = await SharedPreferences.getInstance();
     final String? token = prefs.getString('token');
     final String? role = prefs.getString('user_role');

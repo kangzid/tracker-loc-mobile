@@ -1,14 +1,35 @@
-class ApiConfig {
-  static const String baseUrl = 'https://locatrack.zalfyan.my.id/api';
+import 'package:firebase_remote_config/firebase_remote_config.dart';
 
+class ApiConfig {
+  static String _baseUrl = 'https://locatrack.zalfyan.my.id/api'; // fallback
+  
+  static String get baseUrl => _baseUrl;
+  
+  static Future<void> initialize() async {
+    try {
+      final remoteConfig = FirebaseRemoteConfig.instance;
+      await remoteConfig.setConfigSettings(RemoteConfigSettings(
+        fetchTimeout: const Duration(seconds: 10),
+        minimumFetchInterval: const Duration(hours: 1),
+      ));
+      
+      await remoteConfig.fetchAndActivate();
+      _baseUrl = remoteConfig.getString('api_base_url');
+    } catch (e) {
+      // Gunakan fallback URL jika Firebase gagal
+      print('Firebase Remote Config error: $e');
+    }
+  }
+  
   // Endpoints
-  static const String dashboardStats = '$baseUrl/dashboard/stats';
-  static const String login = '$baseUrl/login';
-  static const String logout = '$baseUrl/logout';
-  static const String employees = '$baseUrl/employees';
-  static const String vehicles = '$baseUrl/vehicles';
-  static const String attendance = '$baseUrl/attendance';
-  static const String attendances = '$baseUrl/attendances';
-  static const String geofences = '$baseUrl/geofences';
-  static const String locations = '$baseUrl/locations';
-  static const String tasks = '$baseUrl/tasks';}
+  static String get dashboardStats => '$baseUrl/dashboard/stats';
+  static String get login => '$baseUrl/login';
+  static String get logout => '$baseUrl/logout';
+  static String get employees => '$baseUrl/employees';
+  static String get vehicles => '$baseUrl/vehicles';
+  static String get attendance => '$baseUrl/attendance';
+  static String get attendances => '$baseUrl/attendances';
+  static String get geofences => '$baseUrl/geofences';
+  static String get locations => '$baseUrl/locations';
+  static String get tasks => '$baseUrl/tasks';
+}

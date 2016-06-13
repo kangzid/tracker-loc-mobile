@@ -39,10 +39,16 @@ class _AccountAdminPageContentState extends State<AccountAdminPageContent> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text("Akun Admin"),
+        title: const Text(
+          "Akun Admin",
+          style: TextStyle(
+            fontWeight: FontWeight.bold,
+            color: Color(0xFF1E293B),
+          ),
+        ),
         backgroundColor: Colors.white,
-        elevation: 1,
-        foregroundColor: Colors.black,
+        elevation: 0,
+        iconTheme: const IconThemeData(color: Color(0xFF1E293B)),
       ),
       body: SingleChildScrollView(
         padding: const EdgeInsets.all(12),
@@ -50,11 +56,12 @@ class _AccountAdminPageContentState extends State<AccountAdminPageContent> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             // 🔹 Card Profile Admin
-            Card(
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(12),
+            Container(
+              decoration: BoxDecoration(
+                color: Colors.white,
+                borderRadius: BorderRadius.circular(14),
+                border: Border.all(color: Colors.grey.shade200),
               ),
-              elevation: 2,
               margin: const EdgeInsets.symmetric(vertical: 8),
               child: Padding(
                 padding: const EdgeInsets.all(16),
