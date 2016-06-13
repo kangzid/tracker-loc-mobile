@@ -1,106 +1,116 @@
-# 📱 Staff Tracker - Mobile Application
+#  Staff Tracker - Mobile Application
 
-![Flutter](https://img.shields.io/badge/Flutter-3.5.4-%2302569B?style=for-the-badge&logo=Flutter&logoColor=white)
-![Dart](https://img.shields.io/badge/Dart-3.0-%230175C2?style=for-the-badge&logo=dart&logoColor=white)
-![Platform](https://img.shields.io/badge/Platform-Android-green?style=for-the-badge&logo=android)
-![License](https://img.shields.io/badge/License-MIT-yellow.svg?style=for-the-badge)
+**Staff Tracker** adalah aplikasi mobile berbasis Android yang dikembangkan untuk membantu pemantauan kehadiran karyawan, lokasi kendaraan operasional, serta aktivitas lapangan secara real-time. Aplikasi ini dirancang untuk mendukung operasional manajemen tenaga kerja dan armada kendaraan secara lebih efisien, terstruktur, dan transparan.
 
-## 📖 About The Application
-
-**Staff Tracker** is a comprehensive mobile solution designed to streamline workforce management. It enables organizations to monitor employee attendance, track vehicle locations in real-time, and manage operational data efficiently.
-
-Built with **Flutter** and **Dart**, the application offers a seamless cross-platform experience with two distinct roles:
-*   **Administrator**: Full control over data oversight, real-time tracking monitoring, and system management.
-*   **Employee**: Simplified interface for daily attendance (check-in/out), task viewing, and profile management.
-
-The app focuses on a modern, clean UI/UX with professional error handling and secure session management.
+Melalui **Staff Tracker**, administrator dapat memonitor aktivitas karyawan dan kendaraan melalui peta interaktif, sementara karyawan dapat melakukan absensi digital serta mengaktifkan mode pelacakan GPS saat menjalankan tugas lapangan.
 
 ---
 
-## 🛠️ Technology Stack
+##  Tujuan Pengembangan
 
-This project leverages a robust stack of modern technologies:
-
-| Category | Technology | Usage |
-|----------|------------|-------|
-| **Core Framework** | [Flutter](https://flutter.dev/) | Cross-platform UI development |
-| **Language** | [Dart](https://dart.dev/) | Application logic |
-| **State Management** | `setState` & `FutureBuilder` | Efficient local state and data fetching |
-| **Networking** | `http` | REST API communication |
-| **Maps & Location** | `flutter_map` & `geolocator` | OpenStreetMap integration & GPS tracking |
-| **Realtime Data** | [Firebase](https://firebase.google.com/) | Live vehicle tracking updates |
-| **Local Storage** | `shared_preferences` | Secure token and session storage |
-| **UI Components** | `mostly_hugeicons` | Premium, consistent iconography |
+Aplikasi ini dikembangkan dengan tujuan:
+- Meningkatkan efisiensi monitoring karyawan lapangan
+- Menyediakan sistem absensi digital berbasis lokasi
+- Mendukung pemantauan kendaraan operasional melalui GPS tracker
+- Menyediakan data aktivitas sebagai bahan evaluasi operasional
+- Mengurangi proses manual dalam pengelolaan kehadiran dan pelacakan
 
 ---
 
-## 🚀 Key Features
+##  Teknologi yang Digunakan
 
-### 🛡️ Administrator Panel
-> Centralized control for managers.
+Aplikasi dibangun menggunakan teknologi modern untuk memastikan performa, stabilitas, dan kemudahan pengembangan.
 
-*   **Dashboard**: Overview of fleet status, active employees, and daily statistics.
-*   **Real-time Tracking**: Monitor vehicle movements live on an interactive map.
-*   **Data Management**: CRUD operations for **Employees** and **Vehicles**.
-*   **Reports**: View attendance logs and tracking history.
-*   **Settings**: Manage account credentials and app preferences.
-
-### 👤 Employee Panel
-> Tools for the field workforce.
-
-*   **Attendance System**: GPS-validated Check-in and Check-out.
-*   **Task Summary**: View daily assigned tasks and progress.
-*   **Profile**: Manage personal information.
-*   **Intuitive Navigation**: Easy access to core features via a modern menu grid.
+| Kategori | Teknologi | Deskripsi |
+|----------|----------|-----------|
+| **Framework** | Flutter | Framework utama untuk pengembangan aplikasi mobile cross-platform |
+| **Language** | Dart | Bahasa pemrograman utama |
+| **Maps** | Flutter Map (OpenStreetMap) | Menampilkan peta interaktif untuk pelacakan lokasi |
+| **Location** | Geolocator | Mengambil koordinat GPS perangkat |
+| **Backend** | Laravel REST API | Pengelolaan data dan autentikasi |
+| **Remote Config** | Firebase | Konfigurasi dan Realtime Data |
+| **Local Storage** | Shared Preferences | Penyimpanan sesi dan data pengguna |
+| **UI Support** | Lottie & HugeIcons | Animasi dan ikon antarmuka |
 
 ---
 
-## 📸 App Screenshots
+## ✨ Fitur Utama
 
-| **Login & Splash** | **Admin Dashboard** | **Employee Dashboard** |
-|:---:|:---:|:---:|
-| <img src="" alt="Login Screen" width="200"/> | <img src="" alt="Admin Home" width="200"/> | <img src="" alt="Employee Home" width="200"/> |
-| *Professional Login UI* | *Stats & Management Menu* | *Attendance & Tasks* |
+###  Modul Administrator
+- Monitoring lokasi karyawan dan kendaraan operasional secara real-time
+- GPS Tracker untuk armada kendaraan aktif
+- Manajemen data karyawan dan kendaraan
+- Dashboard statistik operasional
+- Pengaturan akun dan profil administrator
 
-| **Real-time Tracking** | **Data Management** | **Settings & Dialogue** |
-|:---:|:---:|:---:|
-| <img src="" alt="Tracking Map" width="200"/> | <img src="" alt="Employee List" width="200"/> | <img src="" alt="Logout Dialog" width="200"/> |
-| *Live Map View* | *CRUD Operations* | *Custom Dialogs* |
+###  Modul Karyawan
+- Absensi digital (check-in & check-out)
+- Mode GPS Tracking saat bertugas
+- Riwayat aktivitas dan kehadiran
+- Informasi akun dan status kerja
 
-> *Place your screenshots in the `assets/screenshots/` folder and update the `src` links above.*
-
----
-
-## 📥 Installation
-
-1.  **Clone the repository**
-    ```bash
-    git clone https://github.com/yourusername/tracker-loc-mobile.git
-    cd tracker-loc-mobile
-    ```
-
-2.  **Install Dependencies**
-    ```bash
-    flutter pub get
-    ```
-
-3.  **Run the Application**
-    ```bash
-    flutter run
-    ```
-    *Note: Ensure you have an emulator running or a physical device connected.*
+### 🔐 Keamanan & Pengalaman Pengguna
+- Manajemen sesi dan token otomatis
+- Penanganan error yang informatif dan ramah pengguna
+- Antarmuka modern dengan dialog konfirmasi dan animasi transisi
 
 ---
 
-## 👥 Contributors
+##  GPS Vehicle Tracking
 
-| Name | Role | Responsibility |
-|------|------|----------------|
-| **Zalfyan** | Fullstack Developer | Flutter Mobile App, Backend API, Logic & Integration |
-| **Brillian** | Planner & Designer | System Analysis, Database Design (ERD), UI/UX Design |
+Staff Tracker menyediakan fitur **GPS Vehicle Tracking** untuk memantau kendaraan operasional secara langsung melalui peta interaktif.
+
+Fitur ini memungkinkan administrator untuk:
+- Melihat posisi kendaraan secara real-time
+- Memantau status kendaraan aktif dan nonaktif
+- Mendukung pengawasan distribusi dan operasional lapangan
+- Membantu analisis rute dan efisiensi penggunaan kendaraan
+
+Sistem pelacakan terintegrasi langsung dengan backend dan menerapkan pengelolaan data lokasi yang terkontrol dan aman.
 
 ---
 
-## 📄 License
+##  Arsitektur Aplikasi
 
-Distributed under the MIT License. See `LICENSE` for more information.
+Proyek ini menerapkan **Feature-First Architecture**, di mana struktur kode dikelompokkan berdasarkan fitur (auth, admin, employee, tracking), bukan berdasarkan jenis file.
+
+Pendekatan ini memberikan keuntungan:
+- Struktur kode lebih bersih dan mudah dipahami
+- Skalabilitas lebih baik untuk penambahan fitur baru
+- Pemeliharaan dan refactor menjadi lebih terkontrol
+
+---
+
+##  Pratinjau Aplikasi
+
+Untuk melihat tampilan antarmuka dan alur penggunaan aplikasi **Staff Tracker**, silakan merujuk ke dokumen pratinjau visual yang telah disediakan dalam bentuk PDF.
+
+📄 **Dokumentasi Pratinjau Aplikasi (PDF)**  
+🔗 https://drive.google.com/drive/folders/1gZvLTyfKeo8hMsVjG1sSlNfBiyD2QLvW?usp=drive_link
+
+
+---
+
+## 📦 Informasi Rilis
+
+Riwayat pembaruan dan detail versi dapat dilihat pada dokumentasi rilis:
+- Release v1.1.0 (Latest)
+- Release v1.0.0
+
+---
+
+## 👥 Tim Pengembang — Kelompok 11
+
+| Nama | Peran |
+|-----|------|
+| **Zalfyan** | Fullstack Developer (Flutter & Backend) |
+| **Brillian** | Project Planner & UI/UX Designer |
+
+Proyek ini dikembangkan oleh **Kelompok 11** sebagai bagian dari pengembangan aplikasi mobile dengan fokus pada implementasi sistem tracking, integrasi backend, dan arsitektur aplikasi yang terstruktur.
+
+---
+
+<p align="center">
+  Dibuat oleh Tim Staff Tracker (Kelompok 11)  
+  © 2025 Staff Tracker Project
+</p>

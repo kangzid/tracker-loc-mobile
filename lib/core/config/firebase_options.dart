@@ -66,5 +66,7 @@ class DefaultFirebaseOptions {
     messagingSenderId: '1017310577620',
     projectId: 'locatrack-69ca3',
     storageBucket: 'locatrack-69ca3.firebasestorage.app',
+    databaseURL:
+        'https://locatrack-69ca3-default-rtdb.asia-southeast1.firebasedatabase.app',
   );
 }

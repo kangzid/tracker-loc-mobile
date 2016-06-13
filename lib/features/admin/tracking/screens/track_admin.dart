@@ -40,10 +40,25 @@ class _TrackAdminPageContentState extends State<TrackAdminPageContent> {
   final LatLng _initialCenter = LatLng(-6.200000, 106.816666);
   final double _initialZoom = 6.0;
 
+  bool _isConnected = false;
+
   @override
   void initState() {
     super.initState();
     _fetchAndSchedule();
+    // Monitor connection
+    try {
+      _vehicleRef.root.child(".info/connected").onValue.listen((event) {
+        final connected = event.snapshot.value as bool? ?? false;
+        if (mounted) {
+          setState(() {
+            _isConnected = connected;
+          });
+        }
+      });
+    } catch (e) {
+      debugPrint("Firebase connection monitor error: $e");
+    }
   }
 
   @override
@@ -62,50 +77,52 @@ class _TrackAdminPageContentState extends State<TrackAdminPageContent> {
   }
 
   void _listenToVehicles() {
-    _vehicleSubscription = _vehicleRef.onValue.listen((event) {
-      final data = event.snapshot.value;
-      if (data != null && data is Map) {
-        final Map<String, dynamic> loadedLocations = {};
-        data.forEach((key, value) {
-          if (value is Map) {
-            // Key di Firebase biasanya "B1234XYZ" (tanpa spasi),
-            // kita simpan agar bisa dicocokkan nanti.
-            loadedLocations[key] = value;
-          }
-        });
+    try {
+      _vehicleSubscription = _vehicleRef.onValue.listen((event) {
+        final data = event.snapshot.value;
+        if (data != null && data is Map) {
+          final Map<String, dynamic> loadedLocations = {};
+          data.forEach((key, value) {
+            if (value is Map) {
+              loadedLocations[key] = value;
+            }
+          });
 
-        _firebaseVehicleLocations = loadedLocations;
-        _mergeVehicleData();
+          _firebaseVehicleLocations = loadedLocations;
+          _mergeVehicleData();
+        }
+      });
+    } catch (e) {
+      if (mounted) {
+        setState(() {
+          _error = "Firebase Error: $e";
+        });
       }
-    });
+    }
   }
 
   void _mergeVehicleData() {
+    // ... existing merge logic ...
     if (!mounted) return;
 
     final List<dynamic> mergedVehicles = [];
 
     for (var v in _apiVehicles) {
       final String rawPlate = v['vehicle_number'] ?? '';
-      // Normalisasi plat nomor dari API agar cocok dengan Firebase Key
-      // Contoh: "B 1234 ABC" -> "B1234ABC"
       final String normalizedPlate = rawPlate.toUpperCase().replaceAll(' ', '');
-
       final firebaseData = _firebaseVehicleLocations[normalizedPlate];
 
       if (firebaseData != null) {
-        // Jika ada di Firebase, pakai koordinat Firebase (Live)
         mergedVehicles.add({
-          ...v, // Copy data API (brand, model, type, dll)
+          ...v,
           'latitude': firebaseData['latitude'],
           'longitude': firebaseData['longitude'],
           'last_location_update': firebaseData['timestamp'],
           'speed': firebaseData['speed'],
           'heading': firebaseData['heading'],
-          'is_live': true, // Penanda bahwa ini data live
+          'is_live': true,
         });
       } else {
-        // Jika tidak ada di Firebase, pakai data API (Static/Last Known)
         mergedVehicles.add({
           ...v,
           'is_live': false,
@@ -115,10 +132,17 @@ class _TrackAdminPageContentState extends State<TrackAdminPageContent> {
 
     setState(() {
       vehicles = mergedVehicles;
+      // Append connection status to error if offline, to inform user
+      if (!_isConnected && _firebaseVehicleLocations.isEmpty) {
+        _error = "Offline (Menunggu Koneksi...)";
+      } else if (_error == "Offline (Menunggu Koneksi...)") {
+        _error = null;
+      }
     });
   }
 
   Future<void> _fetchLiveLocations() async {
+    // ... logic same as original ...
     try {
       final auth = await AuthStorage().getLoginData();
       final token = auth['token'] as String?;
@@ -130,7 +154,6 @@ class _TrackAdminPageContentState extends State<TrackAdminPageContent> {
         return;
       }
 
-      // 1. Fetch Employees (Live Location API)
       final uriEmployees = Uri.parse('${ApiConfig.locations}/live');
       final responseEmployees = await http.get(
         uriEmployees,
@@ -140,7 +163,6 @@ class _TrackAdminPageContentState extends State<TrackAdminPageContent> {
         },
       );
 
-      // 2. Fetch Vehicles (Master Data API)
       final uriVehicles = Uri.parse(ApiConfig.vehicles);
       final responseVehicles = await http.get(
         uriVehicles,
@@ -157,7 +179,6 @@ class _TrackAdminPageContentState extends State<TrackAdminPageContent> {
         final Map<String, dynamic> payloadVeh =
             json.decode(responseVehicles.body);
 
-        // API Response Vehicles biasanya: { "data": [...] }
         final List<dynamic> rawVehicles = payloadVeh['data'] ?? [];
 
         setState(() {
@@ -167,7 +188,6 @@ class _TrackAdminPageContentState extends State<TrackAdminPageContent> {
           _error = null;
         });
 
-        // Panggil merge setelah dapat data baru dari API
         _mergeVehicleData();
       } else {
         setState(() {
