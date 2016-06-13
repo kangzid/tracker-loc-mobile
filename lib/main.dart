@@ -13,10 +13,13 @@ import 'package:flutter_application_1/pages/admin/screens/settings_admin.dart';
 import 'package:flutter_application_1/pages/admin/screens/employee_page.dart';
 import 'package:flutter_application_1/pages/admin/screens/vehicle_page.dart';
 import 'package:flutter_application_1/config/api_config.dart';
+import 'firebase_options.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  await Firebase.initializeApp();
+  await Firebase.initializeApp(
+    options: DefaultFirebaseOptions.currentPlatform,
+  );
   await ApiConfig.initialize();
   runApp(const MyApp());
 }
