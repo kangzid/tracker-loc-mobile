@@ -176,7 +176,7 @@ class _SplashPageState extends State<SplashPage> {
                     ),
                   ),
                   child: Text(
-                    "Version 1.0.0",
+                    "Version 1.1.0",
                     style: TextStyle(
                       fontSize: 12,
                       fontWeight: FontWeight.w500,
