@@ -200,9 +200,19 @@ class _AttendanceEmployeePageState extends State<AttendanceEmployeePage> {
                     builder: (context, snapshot) {
                       if (!snapshot.hasData) return const SizedBox.shrink();
                       final data = snapshot.data!;
-                      final total = data.values.fold<int>(0, (a, b) => a + b);
-                      final percent =
-                          total > 0 ? data['present']! / total : 0.0;
+                      final totalDaysInMonth = DateUtils.getDaysInMonth(
+                        _focusedDay.year,
+                        _focusedDay.month,
+                      );
+                      final hadir = data['present']!;
+                      final terlambat = data['late']!;
+                      final absen = data['absent']!;
+                      final izin = data['izin']!;
+
+                      final hadirPercent = hadir / totalDaysInMonth;
+                      final terlambatPercent = terlambat / totalDaysInMonth;
+                      final absenPercent = absen / totalDaysInMonth;
+                      final izinPercent = izin / totalDaysInMonth;
 
                       return Column(
                         crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -218,34 +228,56 @@ class _AttendanceEmployeePageState extends State<AttendanceEmployeePage> {
                                 mainAxisAlignment:
                                     MainAxisAlignment.spaceAround,
                                 children: [
+                                  _buildStat("Hadir", hadir, Colors.green),
                                   _buildStat(
-                                      "Hadir", data['present']!, Colors.green),
-                                  _buildStat("Terlambat", data['late']!,
-                                      Colors.orange),
-                                  _buildStat(
-                                      "Absen", data['absent']!, Colors.red),
-                                  _buildStat(
-                                      "Izin", data['izin']!, Colors.grey),
+                                      "Terlambat", terlambat, Colors.orange),
+                                  _buildStat("Absen", absen, Colors.red),
+                                  _buildStat("Izin", izin, Colors.grey),
                                 ],
                               ),
                             ),
                           ),
 
-                          // === PROGRESS BAR ===
-                          const Text("Persentase Kehadiran",
-                              style: TextStyle(
-                                  fontWeight: FontWeight.bold, fontSize: 15)),
-                          const SizedBox(height: 6),
-                          LinearProgressIndicator(
-                            value: percent,
-                            backgroundColor: Colors.grey.shade200,
-                            color: Colors.green,
-                            minHeight: 8,
-                            borderRadius: BorderRadius.circular(4),
+                          const Text(
+                            "Persentase Kehadiran Bulan Ini",
+                            style: TextStyle(
+                                fontWeight: FontWeight.bold, fontSize: 15),
                           ),
+                          const SizedBox(height: 6),
+
+                          // === MODERN MULTICOLOR BAR ===
+                          ClipRRect(
+                            borderRadius: BorderRadius.circular(6),
+                            child: Row(
+                              children: [
+                                Expanded(
+                                  flex: (hadirPercent * 1000).round(),
+                                  child: Container(
+                                      height: 10, color: Colors.green),
+                                ),
+                                Expanded(
+                                  flex: (terlambatPercent * 1000).round(),
+                                  child: Container(
+                                      height: 10, color: Colors.orange),
+                                ),
+                                Expanded(
+                                  flex: (absenPercent * 1000).round(),
+                                  child:
+                                      Container(height: 10, color: Colors.red),
+                                ),
+                                Expanded(
+                                  flex: (izinPercent * 1000).round(),
+                                  child:
+                                      Container(height: 10, color: Colors.grey),
+                                ),
+                              ],
+                            ),
+                          ),
+
                           const SizedBox(height: 8),
+
                           Text(
-                            "${(percent * 100).toStringAsFixed(1)}% hadir bulan ini",
+                            "${(hadirPercent * 100).toStringAsFixed(1)}% hadir dari $totalDaysInMonth hari",
                             style: const TextStyle(fontSize: 13),
                           ),
                         ],
