@@ -10,6 +10,7 @@ import 'package:flutter_application_1/pages/auth/login_page.dart'; // Import Log
 import 'package:flutter_application_1/pages/admin/screens/geofence_page.dart'; // Import Geofence Page
 import 'package:flutter_application_1/pages/admin/screens/settings_admin.dart'; // Import Settings Admin Page
 import 'package:flutter_application_1/pages/admin/screens/employee_page.dart'; // Import Employee Page
+import 'package:flutter_application_1/pages/admin/screens/vehicle_page.dart';
 
 void main() {
   runApp(const MyApp());
@@ -75,6 +76,7 @@ class _MyAppState extends State<MyApp> {
         '/geofence': (context) => const GeofencePage(),
         '/settings-admin': (context) => const SettingsAdminPage(),
         '/employee': (context) => const EmployeePage(),
+        '/vehicle': (context) => const VehiclePage(),
       },
     );
   }

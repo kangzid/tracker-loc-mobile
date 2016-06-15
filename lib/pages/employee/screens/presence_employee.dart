@@ -4,6 +4,7 @@ import 'package:flutter_map/flutter_map.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:latlong2/latlong.dart';
 import 'package:http/http.dart' as http;
+import 'package:hugeicons/hugeicons.dart';
 import 'package:flutter_application_1/pages/auth/auth_storage.dart';
 import 'package:flutter_application_1/pages/employee/storage/presence_storage.dart';
 
@@ -34,7 +35,7 @@ class _PresenceEmployeePageState extends State<PresenceEmployeePage> {
   void initState() {
     super.initState();
     _loadUserDataAndInitialLocation();
-    _loadLastPresenceFromStorage(); // ✅ baca dari storage
+    _loadLastPresenceFromStorage();
   }
 
   Future<void> _loadUserDataAndInitialLocation() async {
@@ -63,7 +64,6 @@ class _PresenceEmployeePageState extends State<PresenceEmployeePage> {
     }
   }
 
-// ✅ Cek lokasi sebelum presensi
   Future<bool> _checkLocationBeforeAttendance() async {
     if (_token == null) return false;
 
@@ -87,17 +87,40 @@ class _PresenceEmployeePageState extends State<PresenceEmployeePage> {
         if (result['is_in_office'] == true) {
           return true;
         } else {
-          // ❌ Di luar area kantor
           if (mounted) {
             showDialog(
               context: context,
               builder: (ctx) => AlertDialog(
-                title: const Text("Lokasi Tidak Valid"),
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(16),
+                ),
+                title: Row(
+                  children: const [
+                    HugeIcon(
+                      icon: HugeIcons.strokeRoundedLocationRemove01,
+                      color: Colors.red,
+                      size: 24.0,
+                    ),
+                    SizedBox(width: 12),
+                    Text(
+                      "Lokasi Tidak Valid",
+                      style: TextStyle(
+                        fontSize: 18,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                  ],
+                ),
                 content: Text(
-                    result['message'] ?? "Anda berada di luar area kantor."),
+                  result['message'] ?? "Anda berada di luar area kantor.",
+                  style: const TextStyle(fontSize: 14),
+                ),
                 actions: [
                   TextButton(
                     onPressed: () => Navigator.pop(ctx),
+                    style: TextButton.styleFrom(
+                      foregroundColor: Colors.red,
+                    ),
                     child: const Text("OK"),
                   ),
                 ],
@@ -159,11 +182,9 @@ class _PresenceEmployeePageState extends State<PresenceEmployeePage> {
   Future<void> _sendAttendance(String type) async {
     if (_token == null) return;
 
-    // ✅ 1. Cek lokasi kantor dulu
     final isInsideOffice = await _checkLocationBeforeAttendance();
     if (!isInsideOffice) return;
 
-    // ✅ 2. Lanjut kirim presensi
     final url = Uri.parse('https://locatrack.zalfyan.my.id/api/attendances');
     try {
       final response = await http.post(
@@ -193,23 +214,42 @@ class _PresenceEmployeePageState extends State<PresenceEmployeePage> {
           await PresenceStorage().saveLastPresence(successMsg);
           _fetchTodayAttendance();
 
-          // ✅ Pop-up sukses (mirip gaya alert error)
           showDialog(
             context: context,
             builder: (ctx) => AlertDialog(
-              title: const Text(
-                "Presensi Berhasil",
-                style:
-                    TextStyle(fontWeight: FontWeight.bold, color: Colors.green),
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(16),
+              ),
+              title: Row(
+                children: const [
+                  HugeIcon(
+                    icon: HugeIcons.strokeRoundedCheckmarkCircle02,
+                    color: Colors.green,
+                    size: 24.0,
+                  ),
+                  SizedBox(width: 12),
+                  Text(
+                    "Presensi Berhasil",
+                    style: TextStyle(
+                      fontSize: 18,
+                      fontWeight: FontWeight.bold,
+                      color: Colors.green,
+                    ),
+                  ),
+                ],
               ),
               content: Text(
                 type == "check_in"
                     ? "Check-in berhasil! Selamat bekerja 👏"
                     : "Check-out berhasil! Terima kasih atas kerja hari ini 🙌",
+                style: const TextStyle(fontSize: 14),
               ),
               actions: [
                 TextButton(
                   onPressed: () => Navigator.pop(ctx),
+                  style: TextButton.styleFrom(
+                    foregroundColor: Colors.green,
+                  ),
                   child: const Text("OK"),
                 ),
               ],
@@ -221,16 +261,39 @@ class _PresenceEmployeePageState extends State<PresenceEmployeePage> {
             _lastActionStatus = "Gagal $type (${response.statusCode})";
           });
 
-          // ❌ Pop-up gagal (mirip lokasi tidak valid)
           showDialog(
             context: context,
             builder: (ctx) => AlertDialog(
-              title: const Text("Presensi Gagal"),
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(16),
+              ),
+              title: Row(
+                children: const [
+                  HugeIcon(
+                    icon: HugeIcons.strokeRoundedAlert02,
+                    color: Colors.red,
+                    size: 24.0,
+                  ),
+                  SizedBox(width: 12),
+                  Text(
+                    "Presensi Gagal",
+                    style: TextStyle(
+                      fontSize: 18,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                ],
+              ),
               content: Text(
-                  "Terjadi kesalahan saat $type. (${response.statusCode})"),
+                "Terjadi kesalahan saat $type. (${response.statusCode})",
+                style: const TextStyle(fontSize: 14),
+              ),
               actions: [
                 TextButton(
                   onPressed: () => Navigator.pop(ctx),
+                  style: TextButton.styleFrom(
+                    foregroundColor: Colors.red,
+                  ),
                   child: const Text("OK"),
                 ),
               ],
@@ -246,12 +309,36 @@ class _PresenceEmployeePageState extends State<PresenceEmployeePage> {
         showDialog(
           context: context,
           builder: (ctx) => AlertDialog(
-            title: const Text("Kesalahan Jaringan"),
-            content:
-                const Text("Tidak dapat terhubung ke server, coba lagi nanti."),
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(16),
+            ),
+            title: Row(
+              children: const [
+                HugeIcon(
+                  icon: HugeIcons.strokeRoundedWifiOff01,
+                  color: Colors.orange,
+                  size: 24.0,
+                ),
+                SizedBox(width: 12),
+                Text(
+                  "Kesalahan Jaringan",
+                  style: TextStyle(
+                    fontSize: 18,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+              ],
+            ),
+            content: const Text(
+              "Tidak dapat terhubung ke server, coba lagi nanti.",
+              style: TextStyle(fontSize: 14),
+            ),
             actions: [
               TextButton(
                 onPressed: () => Navigator.pop(ctx),
+                style: TextButton.styleFrom(
+                  foregroundColor: Colors.orange,
+                ),
                 child: const Text("OK"),
               ),
             ],
@@ -298,11 +385,18 @@ class _PresenceEmployeePageState extends State<PresenceEmployeePage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text("Presensi Saya"),
+        title: const Text(
+          "Presensi Saya",
+          style: TextStyle(
+            fontWeight: FontWeight.bold,
+            color: Color(0xFF1E293B),
+          ),
+        ),
         backgroundColor: Colors.white,
-        elevation: 1,
+        elevation: 0,
+        iconTheme: const IconThemeData(color: Color(0xFF1E293B)),
       ),
-      backgroundColor: Colors.white,
+      backgroundColor: Colors.grey.shade50,
       body: SingleChildScrollView(
         padding: const EdgeInsets.all(16),
         child: Column(
@@ -320,52 +414,146 @@ class _PresenceEmployeePageState extends State<PresenceEmployeePage> {
   }
 
   Widget _buildEmployeeInfoCard() {
-    return Card(
-      elevation: 2,
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
-      child: Padding(
-        padding: const EdgeInsets.all(16),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text(
-              _name ?? "Loading...",
-              style: const TextStyle(
-                  fontSize: 18,
-                  fontWeight: FontWeight.bold,
-                  color: Colors.black87),
-            ),
-            const SizedBox(height: 4),
-            Text(
-              '${_employeeCode ?? '...'} • ${_position ?? '...'}',
-              style: const TextStyle(fontSize: 14, color: Colors.grey),
-            ),
-            const SizedBox(height: 8),
-            Row(
-              children: [
-                const Text("Presensi Hari Ini: ",
-                    style: TextStyle(fontSize: 14, color: Colors.black54)),
-                if (_todayAttendance == "success")
-                  const Icon(Icons.check_circle, color: Colors.green, size: 20)
-                else if (_todayAttendance == "none")
-                  const Icon(Icons.cancel, color: Colors.red, size: 20)
-                else if (_todayAttendance == "error")
-                  const Icon(Icons.error, color: Colors.orange, size: 20)
-                else
-                  const Text("...", style: TextStyle(color: Colors.grey)),
-              ],
-            ),
-          ],
-        ),
+    return Container(
+      padding: const EdgeInsets.all(14),
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(14),
+        border: Border.all(color: Colors.grey.shade200),
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
+            children: [
+              Container(
+                padding: const EdgeInsets.all(8),
+                decoration: BoxDecoration(
+                  color: Colors.blue.withOpacity(0.1),
+                  borderRadius: BorderRadius.circular(10),
+                ),
+                child: const HugeIcon(
+                  icon: HugeIcons.strokeRoundedUserCircle,
+                  color: Colors.blue,
+                  size: 20.0,
+                ),
+              ),
+              const SizedBox(width: 10),
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      _name ?? "Loading...",
+                      style: const TextStyle(
+                        fontSize: 16,
+                        fontWeight: FontWeight.bold,
+                        color: Color(0xFF1E293B),
+                      ),
+                    ),
+                    const SizedBox(height: 2),
+                    Text(
+                      '${_employeeCode ?? '...'} • ${_position ?? '...'}',
+                      style: TextStyle(
+                        fontSize: 12,
+                        color: Colors.grey.shade600,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ],
+          ),
+          const SizedBox(height: 10),
+          Divider(color: Colors.grey.shade200, height: 1),
+          const SizedBox(height: 10),
+          Row(
+            children: [
+              Text(
+                "Status Presensi: ",
+                style: TextStyle(
+                  fontSize: 12,
+                  color: Colors.grey.shade600,
+                ),
+              ),
+              if (_todayAttendance == "success")
+                Row(
+                  children: const [
+                    HugeIcon(
+                      icon: HugeIcons.strokeRoundedCheckmarkCircle02,
+                      color: Colors.green,
+                      size: 16.0,
+                    ),
+                    SizedBox(width: 4),
+                    Text(
+                      "Sudah Presensi",
+                      style: TextStyle(
+                        color: Colors.green,
+                        fontWeight: FontWeight.w600,
+                        fontSize: 12,
+                      ),
+                    ),
+                  ],
+                )
+              else if (_todayAttendance == "none")
+                Row(
+                  children: const [
+                    HugeIcon(
+                      icon: HugeIcons.strokeRoundedCancelCircle,
+                      color: Colors.red,
+                      size: 16.0,
+                    ),
+                    SizedBox(width: 4),
+                    Text(
+                      "Belum Presensi",
+                      style: TextStyle(
+                        color: Colors.red,
+                        fontWeight: FontWeight.w600,
+                        fontSize: 12,
+                      ),
+                    ),
+                  ],
+                )
+              else if (_todayAttendance == "error")
+                Row(
+                  children: const [
+                    HugeIcon(
+                      icon: HugeIcons.strokeRoundedAlert02,
+                      color: Colors.orange,
+                      size: 16.0,
+                    ),
+                    SizedBox(width: 4),
+                    Text(
+                      "Error",
+                      style: TextStyle(
+                        color: Colors.orange,
+                        fontWeight: FontWeight.w600,
+                        fontSize: 12,
+                      ),
+                    ),
+                  ],
+                )
+              else
+                Text(
+                  "...",
+                  style: TextStyle(color: Colors.grey.shade400),
+                ),
+            ],
+          ),
+        ],
       ),
     );
   }
 
   Widget _buildMapView() {
-    return SizedBox(
-      height: 250,
+    return Container(
+      height: 280,
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(16),
+        border: Border.all(color: Colors.grey.shade200),
+      ),
       child: ClipRRect(
-        borderRadius: BorderRadius.circular(12),
+        borderRadius: BorderRadius.circular(16),
         child: FlutterMap(
           mapController: _mapController,
           options: MapOptions(
@@ -391,41 +579,107 @@ class _PresenceEmployeePageState extends State<PresenceEmployeePage> {
         ElevatedButton(
           onPressed: _hasCheckedIn ? null : () => _sendAttendance("check_in"),
           style: ElevatedButton.styleFrom(
-            padding: const EdgeInsets.symmetric(vertical: 14),
-            shape:
-                RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+            backgroundColor: Colors.blue,
+            foregroundColor: Colors.white,
+            disabledBackgroundColor: Colors.grey.shade300,
+            disabledForegroundColor: Colors.grey.shade500,
+            padding: const EdgeInsets.symmetric(vertical: 16),
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(12),
+            ),
+            elevation: 0,
           ),
-          child: const Text("Check In"),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: const [
+              HugeIcon(
+                icon: HugeIcons.strokeRoundedLogin01,
+                color: Colors.white,
+                size: 20.0,
+              ),
+              SizedBox(width: 8),
+              Text(
+                "Check In",
+                style: TextStyle(
+                  fontSize: 16,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+            ],
+          ),
         ),
-        const SizedBox(height: 8),
+        const SizedBox(height: 12),
         ElevatedButton(
           onPressed: _hasCheckedOut ? null : () => _sendAttendance("check_out"),
           style: ElevatedButton.styleFrom(
             backgroundColor: Colors.red,
-            padding: const EdgeInsets.symmetric(vertical: 14),
-            shape:
-                RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+            foregroundColor: Colors.white,
+            disabledBackgroundColor: Colors.grey.shade300,
+            disabledForegroundColor: Colors.grey.shade500,
+            padding: const EdgeInsets.symmetric(vertical: 16),
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(12),
+            ),
+            elevation: 0,
           ),
-          child: const Text("Check Out"),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: const [
+              HugeIcon(
+                icon: HugeIcons.strokeRoundedLogout01,
+                color: Colors.white,
+                size: 20.0,
+              ),
+              SizedBox(width: 8),
+              Text(
+                "Check Out",
+                style: TextStyle(
+                  fontSize: 16,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+            ],
+          ),
         ),
         const SizedBox(height: 16),
-        Card(
-          elevation: 2,
-          shape:
-              RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
-          child: Padding(
-            padding: const EdgeInsets.all(16),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                const Text("Status Terakhir:",
-                    style: TextStyle(color: Colors.grey)),
-                const SizedBox(height: 4),
-                Text(_lastActionStatus,
-                    style: const TextStyle(
-                        fontSize: 14, fontWeight: FontWeight.bold)),
-              ],
-            ),
+        Container(
+          padding: const EdgeInsets.all(16),
+          decoration: BoxDecoration(
+            color: Colors.white,
+            borderRadius: BorderRadius.circular(16),
+            border: Border.all(color: Colors.grey.shade200),
+          ),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Row(
+                children: [
+                  const HugeIcon(
+                    icon: HugeIcons.strokeRoundedClock01,
+                    color: Colors.blue,
+                    size: 20.0,
+                  ),
+                  const SizedBox(width: 8),
+                  Text(
+                    "Status Terakhir",
+                    style: TextStyle(
+                      fontSize: 13,
+                      color: Colors.grey.shade600,
+                      fontWeight: FontWeight.w500,
+                    ),
+                  ),
+                ],
+              ),
+              const SizedBox(height: 8),
+              Text(
+                _lastActionStatus,
+                style: const TextStyle(
+                  fontSize: 15,
+                  fontWeight: FontWeight.bold,
+                  color: Color(0xFF1E293B),
+                ),
+              ),
+            ],
           ),
         ),
       ],

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:hugeicons/hugeicons.dart';
 import '../../auth/auth_storage.dart'; // Import auth_storage.dart
 import 'attendance_employee.dart';
 
@@ -90,116 +91,251 @@ class _HomeEmployeePageState extends State<HomeEmployeePage> {
 
                   const SizedBox(height: 24),
 
-                  // Banner Slider
+                  // Banner Slider dengan OverflowBox (Edge-to-Edge)
                   SizedBox(
-                    height: 130.0,
-                    child: PageView.builder(
-                      controller: _pageController,
-                      itemCount: 3,
-                      onPageChanged: (index) {
-                        setState(() {
-                          _currentPage = index;
-                        });
-                      },
-                      itemBuilder: (context, index) {
-                        return Container(
-                          margin: const EdgeInsets.symmetric(horizontal: 5.0),
-                          decoration: BoxDecoration(
-                            color: Colors.blue.shade100,
-                            borderRadius: BorderRadius.circular(8),
-                          ),
-                          child: ClipRRect(
-                            borderRadius: BorderRadius.circular(8),
-                            child: Image.asset(
-                              'assets/images/benner-home.png',
-                              fit: BoxFit.cover,
-                            ),
+                    height:
+                        157.43, // Proporsi 1400x600 = 7:3 ratio → untuk lebar ~400px = 171.43px tinggi
+                    child: LayoutBuilder(
+                      builder: (context, constraints) {
+                        return OverflowBox(
+                          maxWidth: constraints.maxWidth +
+                              32, // tambah 16 kiri + 16 kanan
+                          child: PageView.builder(
+                            controller: _pageController,
+                            itemCount: 3,
+                            padEnds: false, // Banner bisa mentok tepi
+                            onPageChanged: (index) {
+                              setState(() {
+                                _currentPage = index;
+                              });
+                            },
+                            itemBuilder: (context, index) {
+                              return AnimatedBuilder(
+                                animation: _pageController,
+                                builder: (context, child) {
+                                  // Efek floating (depth)
+                                  double value = 1.0;
+                                  if (_pageController.position.haveDimensions) {
+                                    value = _pageController.page! - index;
+                                    value = (1 - (value.abs() * 0.3))
+                                        .clamp(0.0, 1.0);
+                                  }
+
+                                  // Hitung apakah ini banner pertama atau terakhir
+                                  final isFirst = index == 0;
+                                  final isLast = index == 2;
+
+                                  return Padding(
+                                    padding: EdgeInsets.only(
+                                      left: isFirst
+                                          ? 16
+                                          : 8, // Banner pertama ada padding kiri
+                                      right: isLast
+                                          ? 16
+                                          : 8, // Banner terakhir ada padding kanan
+                                    ),
+                                    child: Transform.scale(
+                                      scale: Curves.easeOut.transform(value),
+                                      child: ClipRRect(
+                                        borderRadius: BorderRadius.circular(16),
+                                        child: Image.asset(
+                                          'assets/images/benner-home.png',
+                                          fit: BoxFit.cover,
+                                          width: double.infinity,
+                                          height: double.infinity,
+                                        ),
+                                      ),
+                                    ),
+                                  );
+                                },
+                              );
+                            },
                           ),
                         );
                       },
                     ),
                   ),
 
-                  // Dot Indicator
-                  const SizedBox(height: 8),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.start, // rata kiri
-                    children: [
-                      Padding(
-                        padding: const EdgeInsets.only(
-                            left: 8), // kasih jarak biar rapi
-                        child: Row(
-                          children: List.generate(3, (index) {
-                            return Container(
-                              margin: const EdgeInsets.symmetric(horizontal: 4),
-                              width: _currentPage == index ? 12 : 8,
-                              height: _currentPage == index ? 12 : 8,
-                              decoration: BoxDecoration(
-                                color: _currentPage == index
-                                    ? Colors.blue
-                                    : Colors.grey,
-                                shape: BoxShape.circle,
-                              ),
-                            );
-                          }),
-                        ),
-                      ),
-                    ],
+// Dot Indicator (Posisi Kiri)
+                  const SizedBox(height: 12),
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 16),
+                    child: Row(
+                      mainAxisAlignment:
+                          MainAxisAlignment.start, // 👈 Ubah ke kiri
+                      children: List.generate(3, (index) {
+                        return AnimatedContainer(
+                          duration: const Duration(milliseconds: 300),
+                          margin: const EdgeInsets.only(
+                              right: 6), // Jarak antar dot
+                          width: _currentPage == index
+                              ? 24
+                              : 8, // Dot aktif lebih panjang
+                          height: 8,
+                          decoration: BoxDecoration(
+                            color: _currentPage == index
+                                ? const Color(
+                                    0xFF4B3B47) // Warna aktif (sesuai tema app)
+                                : Colors.grey.shade300, // Warna non-aktif
+                            borderRadius:
+                                BorderRadius.circular(4), // Rounded rectangle
+                          ),
+                        );
+                      }),
+                    ),
                   ),
-
                   const SizedBox(height: 24),
 
-                  // Fake Widget untuk Tugas
+                  // Modern Task Cards dengan Icon di Samping (Compact untuk HP)
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
+                      // Card Tugas Hari Ini
                       Expanded(
-                        child: Card(
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(12),
+                        child: Container(
+                          decoration: BoxDecoration(
+                            gradient: const LinearGradient(
+                              colors: [Color(0xFF2196F3), Color(0xFF1976D2)],
+                              begin: Alignment.topLeft,
+                              end: Alignment.bottomRight,
+                            ),
+                            borderRadius: BorderRadius.circular(14),
+                            border: Border.all(
+                              color: const Color(0xFF1976D2),
+                              width: 1.5,
+                            ),
+                            boxShadow: [
+                              BoxShadow(
+                                color: const Color(0xFF2196F3).withOpacity(0.3),
+                                blurRadius: 8,
+                                offset: const Offset(0, 4),
+                              ),
+                            ],
                           ),
-                          elevation: 2,
                           child: Padding(
                             padding: const EdgeInsets.symmetric(
-                                vertical: 8, horizontal: 12), // <--- diperkecil
-                            child: Column(
-                              children: const [
-                                Text("Tugas Hari Ini",
-                                    style: TextStyle(
-                                        fontSize: 14, color: Colors.black54)),
-                                SizedBox(
-                                    height: 4), // jarak teks & angka diperkecil
-                                Text("3",
-                                    style: TextStyle(
-                                        fontSize: 22, // sedikit kecil
-                                        fontWeight: FontWeight.bold,
-                                        color: Colors.blue)),
+                                horizontal: 14, vertical: 12),
+                            child: Row(
+                              children: [
+                                // Icon Container
+                                Container(
+                                  padding: const EdgeInsets.all(8),
+                                  decoration: BoxDecoration(
+                                    color: Colors.white.withOpacity(0.2),
+                                    borderRadius: BorderRadius.circular(10),
+                                  ),
+                                  child: const HugeIcon(
+                                    icon: HugeIcons.strokeRoundedTask01,
+                                    color: Colors.white,
+                                    size: 20,
+                                    strokeWidth: 2,
+                                  ),
+                                ),
+                                const SizedBox(width: 10),
+                                // Text Content
+                                Expanded(
+                                  child: Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    mainAxisSize: MainAxisSize.min,
+                                    children: const [
+                                      Text(
+                                        "Tugas Hari Ini",
+                                        style: TextStyle(
+                                          fontSize: 11,
+                                          color: Colors.white70,
+                                          fontWeight: FontWeight.w500,
+                                        ),
+                                      ),
+                                      SizedBox(height: 2),
+                                      Text(
+                                        "3",
+                                        style: TextStyle(
+                                          fontSize: 26,
+                                          fontWeight: FontWeight.bold,
+                                          color: Colors.white,
+                                          height: 1.1,
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                ),
                               ],
                             ),
                           ),
                         ),
                       ),
-                      const SizedBox(width: 8), // diperkecil dari 12
+                      const SizedBox(width: 12),
+                      // Card Tugas Selesai
                       Expanded(
-                        child: Card(
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(12),
+                        child: Container(
+                          decoration: BoxDecoration(
+                            gradient: const LinearGradient(
+                              colors: [Color(0xFF4CAF50), Color(0xFF388E3C)],
+                              begin: Alignment.topLeft,
+                              end: Alignment.bottomRight,
+                            ),
+                            borderRadius: BorderRadius.circular(14),
+                            border: Border.all(
+                              color: const Color(0xFF2E7D32),
+                              width: 1.5,
+                            ),
+                            boxShadow: [
+                              BoxShadow(
+                                color: const Color(0xFF4CAF50).withOpacity(0.3),
+                                blurRadius: 8,
+                                offset: const Offset(0, 4),
+                              ),
+                            ],
                           ),
-                          elevation: 2,
                           child: Padding(
                             padding: const EdgeInsets.symmetric(
-                                vertical: 8, horizontal: 12),
-                            child: Column(
-                              children: const [
-                                Text("Tugas Selesai",
-                                    style: TextStyle(
-                                        fontSize: 14, color: Colors.black54)),
-                                SizedBox(height: 4),
-                                Text("5",
-                                    style: TextStyle(
-                                        fontSize: 22,
-                                        fontWeight: FontWeight.bold,
-                                        color: Colors.green)),
+                                horizontal: 14, vertical: 12),
+                            child: Row(
+                              children: [
+                                // Icon Container
+                                Container(
+                                  padding: const EdgeInsets.all(8),
+                                  decoration: BoxDecoration(
+                                    color: Colors.white.withOpacity(0.2),
+                                    borderRadius: BorderRadius.circular(10),
+                                  ),
+                                  child: const HugeIcon(
+                                    icon: HugeIcons.strokeRoundedTaskDone01,
+                                    color: Colors.white,
+                                    size: 20,
+                                    strokeWidth: 2,
+                                  ),
+                                ),
+                                const SizedBox(width: 10),
+                                // Text Content
+                                Expanded(
+                                  child: Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    mainAxisSize: MainAxisSize.min,
+                                    children: const [
+                                      Text(
+                                        "Tugas Selesai",
+                                        style: TextStyle(
+                                          fontSize: 11,
+                                          color: Colors.white70,
+                                          fontWeight: FontWeight.w500,
+                                        ),
+                                      ),
+                                      SizedBox(height: 2),
+                                      Text(
+                                        "5",
+                                        style: TextStyle(
+                                          fontSize: 26,
+                                          fontWeight: FontWeight.bold,
+                                          color: Colors.white,
+                                          height: 1.1,
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                ),
                               ],
                             ),
                           ),
@@ -208,6 +344,7 @@ class _HomeEmployeePageState extends State<HomeEmployeePage> {
                     ],
                   ),
 
+// Menu Grid (Tanpa Shadow + Border Biru Tipis)
                   Padding(
                     padding: const EdgeInsets.only(top: 28, left: 4, right: 4),
                     child: Wrap(
@@ -345,7 +482,28 @@ class _HomeEmployeePageState extends State<HomeEmployeePage> {
     return Column(
       mainAxisSize: MainAxisSize.min,
       children: [
-        _buildMenuCard(assetPath, onTap),
+        InkWell(
+          onTap: onTap,
+          borderRadius: BorderRadius.circular(12),
+          child: Container(
+            padding: const EdgeInsets.all(16),
+            decoration: BoxDecoration(
+              color: Colors.white,
+              borderRadius: BorderRadius.circular(24),
+              border: Border.all(
+                color: Colors.blue.withOpacity(0.2), // 👈 Border biru tipis
+                width: 1.5,
+              ),
+              // ❌ HAPUS boxShadow/elevation
+            ),
+            child: Image.asset(
+              assetPath,
+              width: 40,
+              height: 40,
+              fit: BoxFit.contain,
+            ),
+          ),
+        ),
         const SizedBox(height: 6),
         Text(
           title,

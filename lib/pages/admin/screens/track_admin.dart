@@ -612,7 +612,7 @@ class _TrackAdminPageContentState extends State<TrackAdminPageContent> {
 
                     return StatefulBuilder(
                       builder: (context, innerSetState) {
-                        void _filterList(String query) {
+                        void filterList(String query) {
                           innerSetState(() {
                             searchQuery = query.toLowerCase();
                             filteredEmployees = getFilteredEmployees();
@@ -633,26 +633,18 @@ class _TrackAdminPageContentState extends State<TrackAdminPageContent> {
                               ),
                             ],
                           ),
-                          child: Column(
-                            children: [
-                              // 📌 DRAGGABLE HANDLE AREA - Seluruh area bisa di-drag
-                              GestureDetector(
-                                onVerticalDragUpdate: (details) {
-                                  // Biarkan DraggableScrollableSheet handle drag
-                                },
-                                child: Container(
-                                  width: double.infinity,
-                                  padding:
-                                      const EdgeInsets.symmetric(vertical: 16),
-                                  decoration: BoxDecoration(
-                                    color: Colors.white,
-                                    borderRadius: const BorderRadius.vertical(
-                                        top: Radius.circular(24)),
-                                  ),
-                                  child: Column(
-                                    children: [
-                                      // Drag Handle
-                                      Container(
+                          child: CustomScrollView(
+                            controller: scrollController,
+                            slivers: [
+                              // Header Section
+                              SliverToBoxAdapter(
+                                child: Column(
+                                  children: [
+                                    // Drag Handle
+                                    Padding(
+                                      padding: const EdgeInsets.only(
+                                          top: 16, bottom: 12),
+                                      child: Container(
                                         width: 50,
                                         height: 5,
                                         decoration: BoxDecoration(
@@ -661,286 +653,283 @@ class _TrackAdminPageContentState extends State<TrackAdminPageContent> {
                                               BorderRadius.circular(10),
                                         ),
                                       ),
-                                      const SizedBox(height: 12),
-                                      // Title & Badge
-                                      Padding(
-                                        padding: const EdgeInsets.symmetric(
-                                            horizontal: 20),
-                                        child: Row(
-                                          children: [
-                                            Container(
-                                              padding: const EdgeInsets.all(10),
+                                    ),
+                                    // Title & Badge
+                                    Padding(
+                                      padding: const EdgeInsets.symmetric(
+                                          horizontal: 20),
+                                      child: Row(
+                                        children: [
+                                          Container(
+                                            padding: const EdgeInsets.all(10),
+                                            decoration: BoxDecoration(
+                                              gradient: LinearGradient(
+                                                colors: [
+                                                  Colors.blue.shade400,
+                                                  Colors.blue.shade600
+                                                ],
+                                                begin: Alignment.topLeft,
+                                                end: Alignment.bottomRight,
+                                              ),
+                                              borderRadius:
+                                                  BorderRadius.circular(12),
+                                              boxShadow: [
+                                                BoxShadow(
+                                                  color: Colors.blue
+                                                      .withOpacity(0.3),
+                                                  blurRadius: 8,
+                                                  offset: const Offset(0, 2),
+                                                ),
+                                              ],
+                                            ),
+                                            child: const Icon(
+                                              Icons.location_on,
+                                              color: Colors.white,
+                                              size: 24,
+                                            ),
+                                          ),
+                                          const SizedBox(width: 12),
+                                          Expanded(
+                                            child: Column(
+                                              crossAxisAlignment:
+                                                  CrossAxisAlignment.start,
+                                              children: [
+                                                const Text(
+                                                  "Live Tracking",
+                                                  style: TextStyle(
+                                                    fontWeight: FontWeight.bold,
+                                                    fontSize: 18,
+                                                    color: Color(0xFF1E293B),
+                                                  ),
+                                                ),
+                                                Text(
+                                                  "${employees.length + vehicles.length} Lokasi Aktif",
+                                                  style: TextStyle(
+                                                    fontSize: 12,
+                                                    color: Colors.grey.shade600,
+                                                  ),
+                                                ),
+                                              ],
+                                            ),
+                                          ),
+                                          Container(
+                                            padding: const EdgeInsets.symmetric(
+                                              horizontal: 12,
+                                              vertical: 6,
+                                            ),
+                                            decoration: BoxDecoration(
+                                              color:
+                                                  Colors.green.withOpacity(0.1),
+                                              borderRadius:
+                                                  BorderRadius.circular(20),
+                                              border: Border.all(
+                                                color: Colors.green
+                                                    .withOpacity(0.3),
+                                              ),
+                                            ),
+                                            child: Row(
+                                              mainAxisSize: MainAxisSize.min,
+                                              children: [
+                                                Container(
+                                                  width: 8,
+                                                  height: 8,
+                                                  decoration:
+                                                      const BoxDecoration(
+                                                    color: Colors.green,
+                                                    shape: BoxShape.circle,
+                                                  ),
+                                                ),
+                                                const SizedBox(width: 6),
+                                                const Text(
+                                                  "Online",
+                                                  style: TextStyle(
+                                                    color: Colors.green,
+                                                    fontSize: 12,
+                                                    fontWeight: FontWeight.w600,
+                                                  ),
+                                                ),
+                                              ],
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                                    // Divider
+                                    Container(
+                                      height: 1,
+                                      margin: const EdgeInsets.symmetric(
+                                          horizontal: 20, vertical: 12),
+                                      decoration: BoxDecoration(
+                                        gradient: LinearGradient(
+                                          colors: [
+                                            Colors.transparent,
+                                            Colors.grey.shade200,
+                                            Colors.transparent,
+                                          ],
+                                        ),
+                                      ),
+                                    ),
+                                    // Search Field
+                                    Padding(
+                                      padding: const EdgeInsets.symmetric(
+                                          horizontal: 20),
+                                      child: Container(
+                                        decoration: BoxDecoration(
+                                          color: Colors.grey.shade50,
+                                          borderRadius:
+                                              BorderRadius.circular(16),
+                                          border: Border.all(
+                                              color: Colors.grey.shade200),
+                                        ),
+                                        child: TextField(
+                                          decoration: InputDecoration(
+                                            hintText:
+                                                "Cari nama, ID, atau nomor kendaraan...",
+                                            hintStyle: TextStyle(
+                                              color: Colors.grey.shade400,
+                                              fontSize: 14,
+                                            ),
+                                            prefixIcon: Icon(
+                                              Icons.search,
+                                              color: Colors.blue.shade400,
+                                            ),
+                                            suffixIcon: searchQuery.isNotEmpty
+                                                ? IconButton(
+                                                    icon: Icon(
+                                                      Icons.clear,
+                                                      color:
+                                                          Colors.grey.shade400,
+                                                    ),
+                                                    onPressed: () =>
+                                                        filterList(''),
+                                                  )
+                                                : null,
+                                            border: InputBorder.none,
+                                            contentPadding:
+                                                const EdgeInsets.symmetric(
+                                              horizontal: 16,
+                                              vertical: 14,
+                                            ),
+                                          ),
+                                          onChanged: filterList,
+                                        ),
+                                      ),
+                                    ),
+                                    const SizedBox(height: 12),
+                                    // Statistics Cards
+                                    Padding(
+                                      padding: const EdgeInsets.symmetric(
+                                          horizontal: 20),
+                                      child: Row(
+                                        children: [
+                                          Expanded(
+                                            child: Container(
+                                              padding: const EdgeInsets.all(12),
                                               decoration: BoxDecoration(
                                                 gradient: LinearGradient(
                                                   colors: [
-                                                    Colors.blue.shade400,
-                                                    Colors.blue.shade600
+                                                    Colors.blue.shade50,
+                                                    Colors.blue.shade100
+                                                        .withOpacity(0.5),
                                                   ],
-                                                  begin: Alignment.topLeft,
-                                                  end: Alignment.bottomRight,
                                                 ),
                                                 borderRadius:
                                                     BorderRadius.circular(12),
-                                                boxShadow: [
-                                                  BoxShadow(
-                                                    color: Colors.blue
-                                                        .withOpacity(0.3),
-                                                    blurRadius: 8,
-                                                    offset: const Offset(0, 2),
-                                                  ),
-                                                ],
+                                                border: Border.all(
+                                                  color: Colors.blue.shade200
+                                                      .withOpacity(0.5),
+                                                ),
                                               ),
-                                              child: const Icon(
-                                                Icons.location_on,
-                                                color: Colors.white,
-                                                size: 24,
-                                              ),
-                                            ),
-                                            const SizedBox(width: 12),
-                                            Expanded(
                                               child: Column(
-                                                crossAxisAlignment:
-                                                    CrossAxisAlignment.start,
                                                 children: [
-                                                  const Text(
-                                                    "Live Tracking",
+                                                  Icon(Icons.people,
+                                                      color:
+                                                          Colors.blue.shade600,
+                                                      size: 24),
+                                                  const SizedBox(height: 4),
+                                                  Text(
+                                                    "${filteredEmployees.length}",
                                                     style: TextStyle(
+                                                      fontSize: 20,
                                                       fontWeight:
                                                           FontWeight.bold,
-                                                      fontSize: 18,
-                                                      color: Color(0xFF1E293B),
+                                                      color:
+                                                          Colors.blue.shade700,
                                                     ),
                                                   ),
                                                   Text(
-                                                    "${employees.length + vehicles.length} Lokasi Aktif",
+                                                    "Employees",
                                                     style: TextStyle(
-                                                      fontSize: 12,
+                                                      fontSize: 11,
                                                       color:
-                                                          Colors.grey.shade600,
+                                                          Colors.blue.shade600,
                                                     ),
                                                   ),
                                                 ],
                                               ),
                                             ),
-                                            Container(
-                                              padding:
-                                                  const EdgeInsets.symmetric(
-                                                horizontal: 12,
-                                                vertical: 6,
-                                              ),
+                                          ),
+                                          const SizedBox(width: 12),
+                                          Expanded(
+                                            child: Container(
+                                              padding: const EdgeInsets.all(12),
                                               decoration: BoxDecoration(
-                                                color: Colors.green
-                                                    .withOpacity(0.1),
+                                                gradient: LinearGradient(
+                                                  colors: [
+                                                    Colors.red.shade50,
+                                                    Colors.red.shade100
+                                                        .withOpacity(0.5),
+                                                  ],
+                                                ),
                                                 borderRadius:
-                                                    BorderRadius.circular(20),
+                                                    BorderRadius.circular(12),
                                                 border: Border.all(
-                                                  color: Colors.green
-                                                      .withOpacity(0.3),
+                                                  color: Colors.red.shade200
+                                                      .withOpacity(0.5),
                                                 ),
                                               ),
-                                              child: Row(
-                                                mainAxisSize: MainAxisSize.min,
+                                              child: Column(
                                                 children: [
-                                                  Container(
-                                                    width: 8,
-                                                    height: 8,
-                                                    decoration:
-                                                        const BoxDecoration(
-                                                      color: Colors.green,
-                                                      shape: BoxShape.circle,
+                                                  Icon(Icons.directions_car,
+                                                      color:
+                                                          Colors.red.shade600,
+                                                      size: 24),
+                                                  const SizedBox(height: 4),
+                                                  Text(
+                                                    "${filteredVehicles.length}",
+                                                    style: TextStyle(
+                                                      fontSize: 20,
+                                                      fontWeight:
+                                                          FontWeight.bold,
+                                                      color:
+                                                          Colors.red.shade700,
                                                     ),
                                                   ),
-                                                  const SizedBox(width: 6),
-                                                  const Text(
-                                                    "Online",
+                                                  Text(
+                                                    "Vehicles",
                                                     style: TextStyle(
-                                                      color: Colors.green,
-                                                      fontSize: 12,
-                                                      fontWeight:
-                                                          FontWeight.w600,
+                                                      fontSize: 11,
+                                                      color:
+                                                          Colors.red.shade600,
                                                     ),
                                                   ),
                                                 ],
                                               ),
                                             ),
-                                          ],
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                                ),
-                              ),
-
-                              // Divider
-                              Container(
-                                height: 1,
-                                margin:
-                                    const EdgeInsets.symmetric(horizontal: 20),
-                                decoration: BoxDecoration(
-                                  gradient: LinearGradient(
-                                    colors: [
-                                      Colors.transparent,
-                                      Colors.grey.shade200,
-                                      Colors.transparent,
-                                    ],
-                                  ),
-                                ),
-                              ),
-
-                              const SizedBox(height: 12),
-
-                              // 🔍 Search Field
-                              Padding(
-                                padding:
-                                    const EdgeInsets.symmetric(horizontal: 20),
-                                child: Container(
-                                  decoration: BoxDecoration(
-                                    color: Colors.grey.shade50,
-                                    borderRadius: BorderRadius.circular(16),
-                                    border:
-                                        Border.all(color: Colors.grey.shade200),
-                                  ),
-                                  child: TextField(
-                                    decoration: InputDecoration(
-                                      hintText:
-                                          "Cari nama, ID, atau nomor kendaraan...",
-                                      hintStyle: TextStyle(
-                                        color: Colors.grey.shade400,
-                                        fontSize: 14,
-                                      ),
-                                      prefixIcon: Icon(
-                                        Icons.search,
-                                        color: Colors.blue.shade400,
-                                      ),
-                                      suffixIcon: searchQuery.isNotEmpty
-                                          ? IconButton(
-                                              icon: Icon(
-                                                Icons.clear,
-                                                color: Colors.grey.shade400,
-                                              ),
-                                              onPressed: () => _filterList(''),
-                                            )
-                                          : null,
-                                      border: InputBorder.none,
-                                      contentPadding:
-                                          const EdgeInsets.symmetric(
-                                        horizontal: 16,
-                                        vertical: 14,
+                                          ),
+                                        ],
                                       ),
                                     ),
-                                    onChanged: _filterList,
-                                  ),
-                                ),
-                              ),
-
-                              const SizedBox(height: 16),
-
-                              // 📊 Statistics Cards
-                              Padding(
-                                padding:
-                                    const EdgeInsets.symmetric(horizontal: 20),
-                                child: Row(
-                                  children: [
-                                    Expanded(
-                                      child: Container(
-                                        padding: const EdgeInsets.all(12),
-                                        decoration: BoxDecoration(
-                                          gradient: LinearGradient(
-                                            colors: [
-                                              Colors.blue.shade50,
-                                              Colors.blue.shade100
-                                                  .withOpacity(0.5),
-                                            ],
-                                          ),
-                                          borderRadius:
-                                              BorderRadius.circular(12),
-                                          border: Border.all(
-                                            color: Colors.blue.shade200
-                                                .withOpacity(0.5),
-                                          ),
-                                        ),
-                                        child: Column(
-                                          children: [
-                                            Icon(Icons.people,
-                                                color: Colors.blue.shade600,
-                                                size: 24),
-                                            const SizedBox(height: 4),
-                                            Text(
-                                              "${filteredEmployees.length}",
-                                              style: TextStyle(
-                                                fontSize: 20,
-                                                fontWeight: FontWeight.bold,
-                                                color: Colors.blue.shade700,
-                                              ),
-                                            ),
-                                            Text(
-                                              "Employees",
-                                              style: TextStyle(
-                                                fontSize: 11,
-                                                color: Colors.blue.shade600,
-                                              ),
-                                            ),
-                                          ],
-                                        ),
-                                      ),
-                                    ),
-                                    const SizedBox(width: 12),
-                                    Expanded(
-                                      child: Container(
-                                        padding: const EdgeInsets.all(12),
-                                        decoration: BoxDecoration(
-                                          gradient: LinearGradient(
-                                            colors: [
-                                              Colors.red.shade50,
-                                              Colors.red.shade100
-                                                  .withOpacity(0.5),
-                                            ],
-                                          ),
-                                          borderRadius:
-                                              BorderRadius.circular(12),
-                                          border: Border.all(
-                                            color: Colors.red.shade200
-                                                .withOpacity(0.5),
-                                          ),
-                                        ),
-                                        child: Column(
-                                          children: [
-                                            Icon(Icons.directions_car,
-                                                color: Colors.red.shade600,
-                                                size: 24),
-                                            const SizedBox(height: 4),
-                                            Text(
-                                              "${filteredVehicles.length}",
-                                              style: TextStyle(
-                                                fontSize: 20,
-                                                fontWeight: FontWeight.bold,
-                                                color: Colors.red.shade700,
-                                              ),
-                                            ),
-                                            Text(
-                                              "Vehicles",
-                                              style: TextStyle(
-                                                fontSize: 11,
-                                                color: Colors.red.shade600,
-                                              ),
-                                            ),
-                                          ],
-                                        ),
-                                      ),
-                                    ),
+                                    const SizedBox(height: 16),
                                   ],
                                 ),
                               ),
-
-                              const SizedBox(height: 16),
-
-                              // ISI LIST (scrollable)
-                              Expanded(
-                                child: ListView(
-                                  controller: scrollController,
-                                  padding: const EdgeInsets.symmetric(
-                                      horizontal: 20),
-                                  children: [
+                              // List Content
+                              SliverPadding(
+                                padding:
+                                    const EdgeInsets.symmetric(horizontal: 20),
+                                sliver: SliverList(
+                                  delegate: SliverChildListDelegate([
                                     if (filteredEmployees.isNotEmpty) ...[
                                       Row(
                                         children: [
@@ -1322,7 +1311,7 @@ class _TrackAdminPageContentState extends State<TrackAdminPageContent> {
                                       ),
                                     const SizedBox(
                                         height: 80), // Space untuk FAB
-                                  ],
+                                  ]),
                                 ),
                               ),
                             ],

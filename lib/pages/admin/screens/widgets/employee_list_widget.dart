@@ -612,19 +612,23 @@ class _EmployeeListWidgetState extends State<EmployeeListWidget> {
 
   @override
   Widget build(BuildContext context) {
+    final screenSize = MediaQuery.of(context).size;
+    final isSmallScreen = screenSize.width < 360;
+
     return Dialog(
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
       child: Container(
-        width: MediaQuery.of(context).size.width * 0.9,
-        height: MediaQuery.of(context).size.height * 0.8,
+        width: screenSize.width * 0.9,
+        height: screenSize.height * 0.8,
         decoration: BoxDecoration(
           color: Colors.white,
           borderRadius: BorderRadius.circular(20),
         ),
         child: Column(
           children: [
+            // Header Section
             Container(
-              padding: const EdgeInsets.all(20),
+              padding: EdgeInsets.all(isSmallScreen ? 12 : 16),
               decoration: BoxDecoration(
                 color: Colors.white,
                 borderRadius: const BorderRadius.only(
@@ -641,36 +645,42 @@ class _EmployeeListWidgetState extends State<EmployeeListWidget> {
               ),
               child: Column(
                 children: [
+                  // Title Row
                   Row(
                     children: [
                       Container(
-                        padding: const EdgeInsets.all(12),
+                        padding: EdgeInsets.all(isSmallScreen ? 8 : 12),
                         decoration: BoxDecoration(
                           color: Colors.blue.withOpacity(0.1),
                           borderRadius: BorderRadius.circular(12),
                         ),
-                        child: const Icon(Icons.people,
-                            color: Colors.blue, size: 28),
+                        child: Icon(
+                          Icons.people,
+                          color: Colors.blue,
+                          size: isSmallScreen ? 20 : 24,
+                        ),
                       ),
-                      const SizedBox(width: 16),
-                      const Expanded(
+                      SizedBox(width: isSmallScreen ? 8 : 12),
+                      Expanded(
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             Text(
                               "Kelola Karyawan",
                               style: TextStyle(
-                                fontSize: 20,
+                                fontSize: isSmallScreen ? 16 : 18,
                                 fontWeight: FontWeight.bold,
-                                color: Color(0xFF1E293B),
+                                color: const Color(0xFF1E293B),
                               ),
+                              overflow: TextOverflow.ellipsis,
                             ),
                             Text(
                               "Manajemen data karyawan",
                               style: TextStyle(
-                                fontSize: 12,
-                                color: Color(0xFF64748B),
+                                fontSize: isSmallScreen ? 10 : 12,
+                                color: const Color(0xFF64748B),
                               ),
+                              overflow: TextOverflow.ellipsis,
                             ),
                           ],
                         ),
@@ -678,36 +688,61 @@ class _EmployeeListWidgetState extends State<EmployeeListWidget> {
                       Container(
                         decoration: BoxDecoration(
                           color: Colors.blue,
-                          borderRadius: BorderRadius.circular(12),
+                          borderRadius: BorderRadius.circular(10),
                         ),
                         child: IconButton(
                           onPressed: _createEmployee,
-                          icon: const Icon(Icons.add, color: Colors.white),
+                          icon: Icon(
+                            Icons.add,
+                            color: Colors.white,
+                            size: isSmallScreen ? 18 : 20,
+                          ),
+                          padding: EdgeInsets.all(isSmallScreen ? 6 : 8),
+                          constraints: const BoxConstraints(),
                           tooltip: "Tambah Karyawan",
                         ),
                       ),
-                      const SizedBox(width: 8),
+                      SizedBox(width: isSmallScreen ? 4 : 6),
                       IconButton(
                         onPressed: () => Navigator.pop(context),
-                        icon: const Icon(Icons.close, color: Color(0xFF64748B)),
+                        icon: Icon(
+                          Icons.close,
+                          color: const Color(0xFF64748B),
+                          size: isSmallScreen ? 18 : 20,
+                        ),
+                        padding: EdgeInsets.all(isSmallScreen ? 6 : 8),
+                        constraints: const BoxConstraints(),
                       ),
                     ],
                   ),
-                  const SizedBox(height: 16),
+                  SizedBox(height: isSmallScreen ? 10 : 14),
+                  // Search Field
                   TextField(
                     controller: _searchController,
                     decoration: InputDecoration(
-                      hintText:
-                          "Cari karyawan (nama, email, ID, departemen...)",
-                      hintStyle: const TextStyle(color: Color(0xFF94A3B8)),
-                      prefixIcon: const Icon(Icons.search, color: Colors.blue),
+                      hintText: "Cari karyawan...",
+                      hintStyle: TextStyle(
+                        color: const Color(0xFF94A3B8),
+                        fontSize: isSmallScreen ? 12 : 14,
+                      ),
+                      prefixIcon: Icon(
+                        Icons.search,
+                        color: Colors.blue,
+                        size: isSmallScreen ? 18 : 20,
+                      ),
                       suffixIcon: _searchController.text.isNotEmpty
                           ? IconButton(
-                              icon: const Icon(Icons.clear, color: Colors.grey),
+                              icon: Icon(
+                                Icons.clear,
+                                color: Colors.grey,
+                                size: isSmallScreen ? 18 : 20,
+                              ),
                               onPressed: () {
                                 _searchController.clear();
                                 _filterEmployees('');
                               },
+                              padding: const EdgeInsets.all(8),
+                              constraints: const BoxConstraints(),
                             )
                           : null,
                       filled: true,
@@ -725,60 +760,78 @@ class _EmployeeListWidgetState extends State<EmployeeListWidget> {
                         borderSide:
                             const BorderSide(color: Colors.blue, width: 2),
                       ),
-                      contentPadding: const EdgeInsets.symmetric(
-                          horizontal: 16, vertical: 14),
+                      contentPadding: EdgeInsets.symmetric(
+                        horizontal: 12,
+                        vertical: isSmallScreen ? 10 : 12,
+                      ),
+                      isDense: true,
                     ),
+                    style: TextStyle(fontSize: isSmallScreen ? 12 : 14),
                     onChanged: _filterEmployees,
                   ),
                 ],
               ),
             ),
+
+            // Employee List
             Expanded(
               child: _filteredEmployees.isEmpty
                   ? Center(
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          Container(
-                            padding: const EdgeInsets.all(24),
-                            decoration: BoxDecoration(
-                              color: Colors.grey.shade100,
-                              shape: BoxShape.circle,
+                      child: SingleChildScrollView(
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Container(
+                              padding: EdgeInsets.all(isSmallScreen ? 16 : 20),
+                              decoration: BoxDecoration(
+                                color: Colors.grey.shade100,
+                                shape: BoxShape.circle,
+                              ),
+                              child: Icon(
+                                _searchController.text.isNotEmpty
+                                    ? Icons.search_off
+                                    : Icons.person_off,
+                                size: isSmallScreen ? 48 : 56,
+                                color: Colors.grey.shade400,
+                              ),
                             ),
-                            child: Icon(
-                              _searchController.text.isNotEmpty
-                                  ? Icons.search_off
-                                  : Icons.person_off,
-                              size: 64,
-                              color: Colors.grey.shade400,
+                            SizedBox(height: isSmallScreen ? 12 : 16),
+                            Padding(
+                              padding:
+                                  const EdgeInsets.symmetric(horizontal: 24),
+                              child: Text(
+                                _searchController.text.isNotEmpty
+                                    ? 'Karyawan tidak ditemukan'
+                                    : 'Belum ada karyawan',
+                                style: TextStyle(
+                                  color: Colors.grey.shade600,
+                                  fontSize: isSmallScreen ? 14 : 16,
+                                  fontWeight: FontWeight.w500,
+                                ),
+                                textAlign: TextAlign.center,
+                              ),
                             ),
-                          ),
-                          const SizedBox(height: 16),
-                          Text(
-                            _searchController.text.isNotEmpty
-                                ? 'Karyawan tidak ditemukan'
-                                : 'Belum ada karyawan',
-                            style: TextStyle(
-                              color: Colors.grey.shade600,
-                              fontSize: 16,
-                              fontWeight: FontWeight.w500,
+                            const SizedBox(height: 6),
+                            Padding(
+                              padding:
+                                  const EdgeInsets.symmetric(horizontal: 24),
+                              child: Text(
+                                _searchController.text.isNotEmpty
+                                    ? 'Coba kata kunci lain'
+                                    : 'Tambahkan karyawan baru',
+                                style: TextStyle(
+                                  color: Colors.grey.shade500,
+                                  fontSize: isSmallScreen ? 12 : 14,
+                                ),
+                                textAlign: TextAlign.center,
+                              ),
                             ),
-                          ),
-                          const SizedBox(height: 8),
-                          Text(
-                            _searchController.text.isNotEmpty
-                                ? 'Coba kata kunci lain'
-                                : 'Tambahkan karyawan baru',
-                            style: TextStyle(
-                              color: Colors.grey.shade500,
-                              fontSize: 14,
-                            ),
-                          ),
-                        ],
+                          ],
+                        ),
                       ),
                     )
                   : ListView.builder(
-                      padding: const EdgeInsets.all(20),
+                      padding: EdgeInsets.all(isSmallScreen ? 12 : 16),
                       itemCount: _filteredEmployees.length,
                       itemBuilder: (context, index) {
                         final employee = _filteredEmployees[index];
@@ -789,144 +842,187 @@ class _EmployeeListWidgetState extends State<EmployeeListWidget> {
                             : 'U';
 
                         return Container(
-                          margin: const EdgeInsets.only(bottom: 12),
+                          margin:
+                              EdgeInsets.only(bottom: isSmallScreen ? 8 : 10),
                           decoration: BoxDecoration(
                             color: Colors.white,
-                            borderRadius: BorderRadius.circular(16),
+                            borderRadius: BorderRadius.circular(14),
                             border: Border.all(color: Colors.grey.shade200),
                             boxShadow: [
                               BoxShadow(
                                 color: Colors.black.withOpacity(0.03),
-                                blurRadius: 8,
+                                blurRadius: 6,
                                 offset: const Offset(0, 2),
                               ),
                             ],
                           ),
-                          child: ListTile(
-                            contentPadding: const EdgeInsets.symmetric(
-                                horizontal: 16, vertical: 8),
-                            leading: Container(
-                              width: 50,
-                              height: 50,
-                              decoration: BoxDecoration(
-                                gradient: LinearGradient(
-                                  colors: [
-                                    Colors.blue.shade400,
-                                    Colors.blue.shade600
-                                  ],
-                                  begin: Alignment.topLeft,
-                                  end: Alignment.bottomRight,
-                                ),
-                                borderRadius: BorderRadius.circular(12),
-                                boxShadow: [
-                                  BoxShadow(
-                                    color: Colors.blue.withOpacity(0.3),
-                                    blurRadius: 8,
-                                    offset: const Offset(0, 2),
-                                  ),
-                                ],
-                              ),
-                              child: Center(
-                                child: Text(
-                                  initial,
-                                  style: const TextStyle(
-                                    color: Colors.white,
-                                    fontWeight: FontWeight.bold,
-                                    fontSize: 20,
-                                  ),
-                                ),
-                              ),
+                          child: Padding(
+                            padding: EdgeInsets.symmetric(
+                              horizontal: isSmallScreen ? 10 : 12,
+                              vertical: isSmallScreen ? 8 : 10,
                             ),
-                            title: Text(
-                              name,
-                              style: const TextStyle(
-                                fontWeight: FontWeight.bold,
-                                fontSize: 16,
-                                color: Color(0xFF1E293B),
-                              ),
-                            ),
-                            subtitle: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
+                            child: Row(
                               children: [
-                                const SizedBox(height: 4),
-                                Row(
-                                  children: [
-                                    Container(
-                                      padding: const EdgeInsets.symmetric(
-                                          horizontal: 8, vertical: 2),
-                                      decoration: BoxDecoration(
-                                        color: Colors.blue.withOpacity(0.1),
-                                        borderRadius: BorderRadius.circular(6),
+                                // Avatar
+                                Container(
+                                  width: isSmallScreen ? 40 : 46,
+                                  height: isSmallScreen ? 40 : 46,
+                                  decoration: BoxDecoration(
+                                    gradient: LinearGradient(
+                                      colors: [
+                                        Colors.blue.shade400,
+                                        Colors.blue.shade600
+                                      ],
+                                      begin: Alignment.topLeft,
+                                      end: Alignment.bottomRight,
+                                    ),
+                                    borderRadius: BorderRadius.circular(10),
+                                    boxShadow: [
+                                      BoxShadow(
+                                        color: Colors.blue.withOpacity(0.3),
+                                        blurRadius: 6,
+                                        offset: const Offset(0, 2),
                                       ),
-                                      child: Text(
-                                        employee['employee_id'] ?? '',
-                                        style: const TextStyle(
-                                          fontSize: 11,
-                                          color: Colors.blue,
-                                          fontWeight: FontWeight.w600,
-                                        ),
+                                    ],
+                                  ),
+                                  child: Center(
+                                    child: Text(
+                                      initial,
+                                      style: TextStyle(
+                                        color: Colors.white,
+                                        fontWeight: FontWeight.bold,
+                                        fontSize: isSmallScreen ? 16 : 18,
                                       ),
                                     ),
-                                    const SizedBox(width: 8),
-                                    Flexible(
-                                      child: Text(
-                                        employee['department'] ?? '',
+                                  ),
+                                ),
+                                SizedBox(width: isSmallScreen ? 10 : 12),
+
+                                // Employee Info
+                                Expanded(
+                                  child: Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: [
+                                      Text(
+                                        name,
                                         style: TextStyle(
-                                          fontSize: 12,
-                                          color: Colors.grey.shade700,
+                                          fontWeight: FontWeight.bold,
+                                          fontSize: isSmallScreen ? 13 : 15,
+                                          color: const Color(0xFF1E293B),
                                         ),
                                         overflow: TextOverflow.ellipsis,
+                                        maxLines: 1,
+                                      ),
+                                      SizedBox(height: isSmallScreen ? 3 : 4),
+                                      Row(
+                                        children: [
+                                          Container(
+                                            padding: EdgeInsets.symmetric(
+                                              horizontal: isSmallScreen ? 6 : 7,
+                                              vertical: 2,
+                                            ),
+                                            decoration: BoxDecoration(
+                                              color:
+                                                  Colors.blue.withOpacity(0.1),
+                                              borderRadius:
+                                                  BorderRadius.circular(5),
+                                            ),
+                                            child: Text(
+                                              employee['employee_id'] ?? '',
+                                              style: TextStyle(
+                                                fontSize:
+                                                    isSmallScreen ? 9 : 10,
+                                                color: Colors.blue,
+                                                fontWeight: FontWeight.w600,
+                                              ),
+                                            ),
+                                          ),
+                                          const SizedBox(width: 6),
+                                          Flexible(
+                                            child: Text(
+                                              employee['department'] ?? '',
+                                              style: TextStyle(
+                                                fontSize:
+                                                    isSmallScreen ? 10 : 11,
+                                                color: Colors.grey.shade700,
+                                              ),
+                                              overflow: TextOverflow.ellipsis,
+                                              maxLines: 1,
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                      SizedBox(height: isSmallScreen ? 2 : 3),
+                                      Text(
+                                        employee['position'] ?? '',
+                                        style: TextStyle(
+                                          fontSize: isSmallScreen ? 10 : 11,
+                                          color: Colors.grey.shade600,
+                                        ),
+                                        overflow: TextOverflow.ellipsis,
+                                        maxLines: 1,
+                                      ),
+                                      SizedBox(height: isSmallScreen ? 1 : 2),
+                                      Text(
+                                        user['email'] ?? '',
+                                        style: TextStyle(
+                                          fontSize: isSmallScreen ? 9 : 10,
+                                          color: Colors.grey.shade500,
+                                        ),
+                                        overflow: TextOverflow.ellipsis,
+                                        maxLines: 1,
+                                      ),
+                                    ],
+                                  ),
+                                ),
+
+                                // Action Buttons
+                                Column(
+                                  mainAxisSize: MainAxisSize.min,
+                                  children: [
+                                    Container(
+                                      decoration: BoxDecoration(
+                                        color: Colors.blue.withOpacity(0.1),
+                                        borderRadius: BorderRadius.circular(8),
+                                      ),
+                                      child: IconButton(
+                                        icon: Icon(
+                                          Icons.edit,
+                                          color: Colors.blue,
+                                          size: isSmallScreen ? 16 : 18,
+                                        ),
+                                        onPressed: () =>
+                                            _updateEmployee(employee),
+                                        padding: EdgeInsets.all(
+                                            isSmallScreen ? 6 : 8),
+                                        constraints: const BoxConstraints(),
+                                        tooltip: "Edit",
+                                      ),
+                                    ),
+                                    SizedBox(height: isSmallScreen ? 4 : 6),
+                                    Container(
+                                      decoration: BoxDecoration(
+                                        color: Colors.red.withOpacity(0.1),
+                                        borderRadius: BorderRadius.circular(8),
+                                      ),
+                                      child: IconButton(
+                                        icon: Icon(
+                                          Icons.delete,
+                                          color: Colors.red,
+                                          size: isSmallScreen ? 16 : 18,
+                                        ),
+                                        onPressed: () => _deleteEmployee(
+                                          employee['id'],
+                                          name,
+                                        ),
+                                        padding: EdgeInsets.all(
+                                            isSmallScreen ? 6 : 8),
+                                        constraints: const BoxConstraints(),
+                                        tooltip: "Hapus",
                                       ),
                                     ),
                                   ],
-                                ),
-                                const SizedBox(height: 4),
-                                Text(
-                                  employee['position'] ?? '',
-                                  style: TextStyle(
-                                    fontSize: 12,
-                                    color: Colors.grey.shade600,
-                                  ),
-                                ),
-                                const SizedBox(height: 2),
-                                Text(
-                                  user['email'] ?? '',
-                                  style: TextStyle(
-                                    fontSize: 11,
-                                    color: Colors.grey.shade500,
-                                  ),
-                                  overflow: TextOverflow.ellipsis,
-                                ),
-                              ],
-                            ),
-                            trailing: Row(
-                              mainAxisSize: MainAxisSize.min,
-                              children: [
-                                Container(
-                                  decoration: BoxDecoration(
-                                    color: Colors.blue.withOpacity(0.1),
-                                    borderRadius: BorderRadius.circular(8),
-                                  ),
-                                  child: IconButton(
-                                    icon: const Icon(Icons.edit,
-                                        color: Colors.blue, size: 20),
-                                    onPressed: () => _updateEmployee(employee),
-                                    tooltip: "Edit",
-                                  ),
-                                ),
-                                const SizedBox(width: 8),
-                                Container(
-                                  decoration: BoxDecoration(
-                                    color: Colors.red.withOpacity(0.1),
-                                    borderRadius: BorderRadius.circular(8),
-                                  ),
-                                  child: IconButton(
-                                    icon: const Icon(Icons.delete,
-                                        color: Colors.red, size: 20),
-                                    onPressed: () =>
-                                        _deleteEmployee(employee['id'], name),
-                                    tooltip: "Hapus",
-                                  ),
                                 ),
                               ],
                             ),

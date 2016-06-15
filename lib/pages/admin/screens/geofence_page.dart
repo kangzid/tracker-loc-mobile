@@ -5,6 +5,7 @@ import 'package:flutter_map/flutter_map.dart';
 import 'package:latlong2/latlong.dart';
 import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:geolocator/geolocator.dart';
 import 'widgets/geofence_list_widget.dart';
 
 class GeofencePage extends StatefulWidget {
@@ -155,6 +156,24 @@ class _GeofencePageState extends State<GeofencePage> {
       _searchResults = [];
       _searchController.clear();
     });
+  }
+
+  Future<void> _getCurrentLocation() async {
+    try {
+      LocationPermission permission = await Geolocator.checkPermission();
+      if (permission == LocationPermission.denied) {
+        permission = await Geolocator.requestPermission();
+      }
+      
+      if (permission == LocationPermission.whileInUse || permission == LocationPermission.always) {
+        Position position = await Geolocator.getCurrentPosition();
+        _mapController.move(LatLng(position.latitude, position.longitude), 16);
+      }
+    } catch (e) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Gagal mendapatkan lokasi: $e')),
+      );
+    }
   }
 
   Color _getGeofenceColor(String type) {
@@ -712,7 +731,8 @@ class _GeofencePageState extends State<GeofencePage> {
                               color: color.withOpacity(0.2),
                               borderStrokeWidth: 2,
                               borderColor: color,
-                              radius: radius / 2,
+                              radius: radius,
+                              useRadiusInMeter: true,
                             );
                           }).toList(),
                         ),
@@ -748,22 +768,12 @@ class _GeofencePageState extends State<GeofencePage> {
             bottom: 0,
             child: FloatingActionButton.extended(
               heroTag: "add",
-              onPressed: () {
-                ScaffoldMessenger.of(context).showSnackBar(
-                  SnackBar(
-                    content: const Text('Tap pada peta untuk menambah geofence'),
-                    backgroundColor: Colors.blue,
-                    behavior: SnackBarBehavior.floating,
-                    shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(10)),
-                  ),
-                );
-              },
-              backgroundColor: Colors.blue,
+              onPressed: _getCurrentLocation,
+              backgroundColor: Colors.green,
               elevation: 4,
-              icon: const Icon(Icons.add_location_alt, color: Colors.white),
+              icon: const Icon(Icons.my_location, color: Colors.white),
               label: const Text(
-                'Tambah Lokasi',
+                'Lokasi Saya',
                 style: TextStyle(
                   color: Colors.white,
                   fontWeight: FontWeight.w600,

@@ -5,6 +5,7 @@ import 'package:flutter_map/flutter_map.dart';
 import 'package:latlong2/latlong.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:http/http.dart' as http;
+import 'package:hugeicons/hugeicons.dart';
 import 'package:flutter_application_1/pages/auth/auth_storage.dart';
 import 'package:flutter_application_1/pages/employee/storage/track_storage.dart';
 
@@ -19,13 +20,12 @@ class _TrackEmployeeScreenState extends State<TrackEmployeeScreen> {
   final MapController _mapController = MapController();
 
   String? _name;
-  int? _employeeDbId; // <-- PK dari tabel employees
-  String? _employeeCode; // kode pegawai (EMP001)
+  int? _employeeDbId;
+  String? _employeeCode;
   String? _position;
   String? _token;
 
-  LatLng _currentLatLng =
-      const LatLng(-7.797068, 110.370529); // Default Yogyakarta
+  LatLng _currentLatLng = const LatLng(-7.797068, 110.370529);
   Marker? _currentLocationMarker;
   bool _isAutoTracking = false;
   Timer? _trackingTimer;
@@ -35,7 +35,7 @@ class _TrackEmployeeScreenState extends State<TrackEmployeeScreen> {
   void initState() {
     super.initState();
     _loadUserDataAndInitialLocation();
-    _loadLastStatus(); // ambil dari storage
+    _loadLastStatus();
   }
 
   Future<void> _loadLastStatus() async {
@@ -62,7 +62,7 @@ class _TrackEmployeeScreenState extends State<TrackEmployeeScreen> {
       _name = user['name'];
 
       final employee = user['employee'];
-      _employeeDbId = employee['id']; // id numerik dari DB
+      _employeeDbId = employee['id'];
       _employeeCode = employee['employee_id'];
       _position = employee['position'];
 
@@ -167,8 +167,8 @@ class _TrackEmployeeScreenState extends State<TrackEmployeeScreen> {
         body: jsonEncode({
           'latitude': position.latitude,
           'longitude': position.longitude,
-          'trackable_type': 'employee', // FIX → sesuai dokumentasi API
-          'trackable_id': _employeeDbId, // pastikan ini PK numerik employee
+          'trackable_type': 'employee',
+          'trackable_id': _employeeDbId,
           'speed': position.speed,
           'accuracy': position.accuracy,
         }),
@@ -181,7 +181,6 @@ class _TrackEmployeeScreenState extends State<TrackEmployeeScreen> {
           setState(() {
             _lastUpdateStatus = status;
           });
-          // simpan ke storage
           await TrackStorage().saveLastLocation(status);
         } else {
           final status = "Gagal: ${response.statusCode}";
@@ -221,11 +220,18 @@ class _TrackEmployeeScreenState extends State<TrackEmployeeScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Tracker Saya'),
+        title: const Text(
+          'Tracker Saya',
+          style: TextStyle(
+            fontWeight: FontWeight.bold,
+            color: Color(0xFF1E293B),
+          ),
+        ),
         backgroundColor: Colors.white,
-        elevation: 1,
+        elevation: 0,
+        iconTheme: const IconThemeData(color: Color(0xFF1E293B)),
       ),
-      backgroundColor: Colors.white,
+      backgroundColor: Colors.grey.shade50,
       body: SingleChildScrollView(
         padding: const EdgeInsets.all(16.0),
         child: Column(
@@ -243,41 +249,65 @@ class _TrackEmployeeScreenState extends State<TrackEmployeeScreen> {
   }
 
   Widget _buildEmployeeInfoCard() {
-    return Card(
-      elevation: 2,
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
-      child: Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text(
-              _name ?? 'Loading...',
-              style: const TextStyle(
-                fontSize: 18,
-                fontWeight: FontWeight.bold,
-                color: Colors.black87,
-              ),
+    return Container(
+      padding: const EdgeInsets.all(14),
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(14),
+        border: Border.all(color: Colors.grey.shade200),
+      ),
+      child: Row(
+        children: [
+          Container(
+            padding: const EdgeInsets.all(8),
+            decoration: BoxDecoration(
+              color: Colors.blue.withOpacity(0.1),
+              borderRadius: BorderRadius.circular(10),
             ),
-            const SizedBox(height: 4),
-            Text(
-              '${_employeeCode ?? '...'} • ${_position ?? '...'}',
-              style: const TextStyle(
-                fontSize: 14,
-                color: Colors.grey,
-              ),
+            child: const HugeIcon(
+              icon: HugeIcons.strokeRoundedUserCircle,
+              color: Colors.blue,
+              size: 20.0,
             ),
-          ],
-        ),
+          ),
+          const SizedBox(width: 10),
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  _name ?? 'Loading...',
+                  style: const TextStyle(
+                    fontSize: 16,
+                    fontWeight: FontWeight.bold,
+                    color: Color(0xFF1E293B),
+                  ),
+                ),
+                const SizedBox(height: 2),
+                Text(
+                  '${_employeeCode ?? '...'} • ${_position ?? '...'}',
+                  style: TextStyle(
+                    fontSize: 12,
+                    color: Colors.grey.shade600,
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ],
       ),
     );
   }
 
   Widget _buildMapView() {
-    return SizedBox(
-      height: 300,
+    return Container(
+      height: 240,
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(14),
+        border: Border.all(color: Colors.grey.shade200),
+      ),
       child: ClipRRect(
-        borderRadius: BorderRadius.circular(12),
+        borderRadius: BorderRadius.circular(14),
         child: FlutterMap(
           mapController: _mapController,
           options: MapOptions(
@@ -286,8 +316,10 @@ class _TrackEmployeeScreenState extends State<TrackEmployeeScreen> {
           ),
           children: [
             TileLayer(
-              urlTemplate: 'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',
-              subdomains: const ['a', 'b', 'c'],
+              urlTemplate:
+                  'https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png',
+              subdomains: const ['a', 'b', 'c', 'd'],
+              userAgentPackageName: 'com.example.app',
             ),
             if (_currentLocationMarker != null)
               MarkerLayer(markers: [_currentLocationMarker!]),
@@ -301,72 +333,152 @@ class _TrackEmployeeScreenState extends State<TrackEmployeeScreen> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
-        ElevatedButton(
-          onPressed: () => _getCurrentLocation(updateApi: true),
-          style: ElevatedButton.styleFrom(
-            padding: const EdgeInsets.symmetric(vertical: 12),
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(12),
+        // Tombol Update Lokasi
+        Container(
+          decoration: BoxDecoration(
+            gradient: const LinearGradient(
+              colors: [Color(0xFF2196F3), Color(0xFF1976D2)],
+              begin: Alignment.centerLeft,
+              end: Alignment.centerRight,
+            ),
+            borderRadius: BorderRadius.circular(12),
+          ),
+          child: ElevatedButton(
+            onPressed: () => _getCurrentLocation(updateApi: true),
+            style: ElevatedButton.styleFrom(
+              backgroundColor: Colors.transparent,
+              shadowColor: Colors.transparent,
+              padding: const EdgeInsets.symmetric(vertical: 14),
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(12),
+              ),
+            ),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: const [
+                HugeIcon(
+                  icon: HugeIcons.strokeRoundedGps01,
+                  color: Colors.white,
+                  size: 18.0,
+                ),
+                SizedBox(width: 8),
+                Text(
+                  'Update Lokasi Sekarang',
+                  style: TextStyle(
+                    fontSize: 15,
+                    fontWeight: FontWeight.bold,
+                    color: Colors.white,
+                  ),
+                ),
+              ],
             ),
           ),
-          child: const Text('Update Lokasi Sekarang'),
         ),
-        const SizedBox(height: 8),
-        Card(
-          elevation: 2,
-          shape:
-              RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+
+        const SizedBox(height: 12),
+
+        // Card Auto Tracking
+        Container(
+          decoration: BoxDecoration(
+            color: Colors.white,
+            borderRadius: BorderRadius.circular(14),
+            border: Border.all(
+              color: Colors.grey.shade200,
+              width: 1,
+            ),
+          ),
           child: Padding(
-            padding:
-                const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
+            padding: const EdgeInsets.all(14.0),
             child: Column(
               children: [
+                // Toggle Auto Tracking
                 Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    const Text(
-                      'Auto Tracking',
-                      style: TextStyle(fontSize: 16),
+                    Container(
+                      padding: const EdgeInsets.all(8),
+                      decoration: BoxDecoration(
+                        color: _isAutoTracking
+                            ? Colors.green.withOpacity(0.1)
+                            : Colors.grey.shade100,
+                        borderRadius: BorderRadius.circular(10),
+                      ),
+                      child: HugeIcon(
+                        icon: HugeIcons.strokeRoundedLocation01,
+                        color: _isAutoTracking
+                            ? Colors.green.shade700
+                            : Colors.grey.shade600,
+                        size: 20.0,
+                      ),
+                    ),
+                    const SizedBox(width: 10),
+                    const Expanded(
+                      child: Text(
+                        'Auto Tracking',
+                        style: TextStyle(
+                          fontSize: 15,
+                          fontWeight: FontWeight.w600,
+                          color: Color(0xFF1E293B),
+                        ),
+                      ),
                     ),
                     Switch(
                       value: _isAutoTracking,
                       onChanged: _toggleAutoTracking,
+                      activeColor: Colors.green,
                     ),
                   ],
                 ),
-                const Divider(),
-                Padding(
-                  padding: const EdgeInsets.symmetric(vertical: 8.0),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      const Text('Status Auto:',
-                          style: TextStyle(color: Colors.grey)),
-                      Text(
-                        _isAutoTracking ? 'ON' : 'OFF',
-                        style: TextStyle(
-                          fontWeight: FontWeight.bold,
-                          color: _isAutoTracking ? Colors.green : Colors.red,
-                        ),
-                      ),
-                    ],
-                  ),
+
+                const SizedBox(height: 14),
+                Container(
+                  height: 1,
+                  color: Colors.grey.shade200,
                 ),
-                Padding(
-                  padding: const EdgeInsets.symmetric(vertical: 8.0),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      const Text('Lokasi Terakhir:',
-                          style: TextStyle(color: Colors.grey)),
-                      Text(
-                        _lastUpdateStatus,
-                        style: const TextStyle(fontWeight: FontWeight.bold),
-                      ),
-                    ],
-                  ),
+                const SizedBox(height: 14),
+
+                // Status Info
+                _buildInfoRow(
+                  'Status Auto',
+                  _isAutoTracking ? 'ON' : 'OFF',
+                  _isAutoTracking ? Colors.green : Colors.red,
+                ),
+                const SizedBox(height: 10),
+                _buildInfoRow(
+                  'Lokasi Terakhir',
+                  _lastUpdateStatus,
+                  Colors.blue,
                 ),
               ],
+            ),
+          ),
+        ),
+      ],
+    );
+  }
+
+  Widget _buildInfoRow(String label, String value, Color valueColor) {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      children: [
+        Text(
+          label,
+          style: TextStyle(
+            fontSize: 13,
+            color: Colors.grey.shade600,
+          ),
+        ),
+        Container(
+          padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+          decoration: BoxDecoration(
+            color: valueColor.withOpacity(0.1),
+            borderRadius: BorderRadius.circular(8),
+          ),
+          child: Text(
+            value,
+            style: TextStyle(
+              fontSize: 13,
+              fontWeight: FontWeight.bold,
+              color: valueColor,
             ),
           ),
         ),

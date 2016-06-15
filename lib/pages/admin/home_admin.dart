@@ -105,7 +105,7 @@ class _HomeAdminPageState extends State<HomeAdminPage> {
                       const CircleAvatar(
                         radius: 28,
                         backgroundImage:
-                            AssetImage("assets/images/pas-foto.png"),
+                            AssetImage("assets/images/admin-avatar.png"),
                       ),
                     ],
                   ),
@@ -309,36 +309,36 @@ class _HomeAdminPageState extends State<HomeAdminPage> {
       child: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
-          SizedBox(
-            width: 80,
-            height: 80,
-            child: Card(
-              elevation: 2,
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(20),
-              ),
-              color: Colors.white,
-              child: InkWell(
-                borderRadius: BorderRadius.circular(20),
-                onTap: () {
-                  if (title == "Pengaturan") {
-                    Navigator.pushNamed(context, '/settings-admin');
-                  } else if (title == "Data Karyawan") {
-                    Navigator.pushNamed(context, '/employee');
-                  } else {
-                    ScaffoldMessenger.of(context).showSnackBar(
-                      SnackBar(content: Text('$title diklik')),
-                    );
-                  }
-                },
-                child: Center(
-                  child: Image.asset(
-                    assetPath,
-                    width: 38,
-                    height: 38,
-                    fit: BoxFit.contain,
-                  ),
+          InkWell(
+            onTap: () {
+              if (title == "Pengaturan") {
+                Navigator.pushNamed(context, '/settings-admin');
+              } else if (title == "Data Karyawan") {
+                Navigator.pushNamed(context, '/employee');
+              } else if (title == "Data Kendaraan") {
+                Navigator.pushNamed(context, '/vehicle');
+              } else {
+                ScaffoldMessenger.of(context).showSnackBar(
+                  SnackBar(content: Text('$title diklik')),
+                );
+              }
+            },
+            borderRadius: BorderRadius.circular(12),
+            child: Container(
+              padding: const EdgeInsets.all(16),
+              decoration: BoxDecoration(
+                color: Colors.white,
+                borderRadius: BorderRadius.circular(24),
+                border: Border.all(
+                  color: Colors.blue.withOpacity(0.2),
+                  width: 1.5,
                 ),
+              ),
+              child: Image.asset(
+                assetPath,
+                width: 40,
+                height: 40,
+                fit: BoxFit.contain,
               ),
             ),
           ),
@@ -348,6 +348,7 @@ class _HomeAdminPageState extends State<HomeAdminPage> {
             textAlign: TextAlign.center,
             style: const TextStyle(
               fontSize: 12,
+              fontWeight: FontWeight.normal,
               color: Colors.black87,
             ),
           ),
