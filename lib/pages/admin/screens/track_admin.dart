@@ -573,18 +573,18 @@ class _TrackAdminPageContentState extends State<TrackAdminPageContent> {
           // 🧩 Bottom Sheet Daftar Employee & Vehicle
           if (_showListSheet)
             DraggableScrollableSheet(
-              initialChildSize: 0.35,
-              minChildSize: 0.25,
-              maxChildSize: 0.8,
+              initialChildSize: 0.4,
+              minChildSize: 0.15,
+              maxChildSize: 0.85,
               snap: true,
+              snapSizes: const [0.15, 0.4, 0.85],
               builder: (context, scrollController) {
-                // gunakan StatefulBuilder agar bottom sheet punya state lokal
                 return StatefulBuilder(
                   builder: (context, setSheetState) {
-                    // simpan query di luar function agar tidak reset setiap rebuild
                     String searchQuery = '';
+                    List<dynamic> filteredEmployees = employees;
+                    List<dynamic> filteredVehicles = vehicles;
 
-                    // fungsi untuk melakukan filter data
                     List<dynamic> getFilteredEmployees() {
                       if (searchQuery.isEmpty) return employees;
                       return employees.where((e) {
@@ -610,10 +610,6 @@ class _TrackAdminPageContentState extends State<TrackAdminPageContent> {
                       }).toList();
                     }
 
-                    // state sementara untuk rebuild setelah search
-                    List<dynamic> filteredEmployees = employees;
-                    List<dynamic> filteredVehicles = vehicles;
-
                     return StatefulBuilder(
                       builder: (context, innerSetState) {
                         void _filterList(String query) {
@@ -625,82 +621,355 @@ class _TrackAdminPageContentState extends State<TrackAdminPageContent> {
                         }
 
                         return Container(
-                          decoration: const BoxDecoration(
+                          decoration: BoxDecoration(
                             color: Colors.white,
-                            borderRadius:
-                                BorderRadius.vertical(top: Radius.circular(20)),
+                            borderRadius: const BorderRadius.vertical(
+                                top: Radius.circular(24)),
                             boxShadow: [
                               BoxShadow(
-                                color: Colors.black26,
-                                blurRadius: 10,
-                                offset: Offset(0, -2),
+                                color: Colors.black.withOpacity(0.15),
+                                blurRadius: 20,
+                                offset: const Offset(0, -5),
                               ),
                             ],
                           ),
                           child: Column(
                             children: [
-                              // Header
+                              // 📌 DRAGGABLE HANDLE AREA - Seluruh area bisa di-drag
+                              GestureDetector(
+                                onVerticalDragUpdate: (details) {
+                                  // Biarkan DraggableScrollableSheet handle drag
+                                },
+                                child: Container(
+                                  width: double.infinity,
+                                  padding:
+                                      const EdgeInsets.symmetric(vertical: 16),
+                                  decoration: BoxDecoration(
+                                    color: Colors.white,
+                                    borderRadius: const BorderRadius.vertical(
+                                        top: Radius.circular(24)),
+                                  ),
+                                  child: Column(
+                                    children: [
+                                      // Drag Handle
+                                      Container(
+                                        width: 50,
+                                        height: 5,
+                                        decoration: BoxDecoration(
+                                          color: Colors.grey.shade300,
+                                          borderRadius:
+                                              BorderRadius.circular(10),
+                                        ),
+                                      ),
+                                      const SizedBox(height: 12),
+                                      // Title & Badge
+                                      Padding(
+                                        padding: const EdgeInsets.symmetric(
+                                            horizontal: 20),
+                                        child: Row(
+                                          children: [
+                                            Container(
+                                              padding: const EdgeInsets.all(10),
+                                              decoration: BoxDecoration(
+                                                gradient: LinearGradient(
+                                                  colors: [
+                                                    Colors.blue.shade400,
+                                                    Colors.blue.shade600
+                                                  ],
+                                                  begin: Alignment.topLeft,
+                                                  end: Alignment.bottomRight,
+                                                ),
+                                                borderRadius:
+                                                    BorderRadius.circular(12),
+                                                boxShadow: [
+                                                  BoxShadow(
+                                                    color: Colors.blue
+                                                        .withOpacity(0.3),
+                                                    blurRadius: 8,
+                                                    offset: const Offset(0, 2),
+                                                  ),
+                                                ],
+                                              ),
+                                              child: const Icon(
+                                                Icons.location_on,
+                                                color: Colors.white,
+                                                size: 24,
+                                              ),
+                                            ),
+                                            const SizedBox(width: 12),
+                                            Expanded(
+                                              child: Column(
+                                                crossAxisAlignment:
+                                                    CrossAxisAlignment.start,
+                                                children: [
+                                                  const Text(
+                                                    "Live Tracking",
+                                                    style: TextStyle(
+                                                      fontWeight:
+                                                          FontWeight.bold,
+                                                      fontSize: 18,
+                                                      color: Color(0xFF1E293B),
+                                                    ),
+                                                  ),
+                                                  Text(
+                                                    "${employees.length + vehicles.length} Lokasi Aktif",
+                                                    style: TextStyle(
+                                                      fontSize: 12,
+                                                      color:
+                                                          Colors.grey.shade600,
+                                                    ),
+                                                  ),
+                                                ],
+                                              ),
+                                            ),
+                                            Container(
+                                              padding:
+                                                  const EdgeInsets.symmetric(
+                                                horizontal: 12,
+                                                vertical: 6,
+                                              ),
+                                              decoration: BoxDecoration(
+                                                color: Colors.green
+                                                    .withOpacity(0.1),
+                                                borderRadius:
+                                                    BorderRadius.circular(20),
+                                                border: Border.all(
+                                                  color: Colors.green
+                                                      .withOpacity(0.3),
+                                                ),
+                                              ),
+                                              child: Row(
+                                                mainAxisSize: MainAxisSize.min,
+                                                children: [
+                                                  Container(
+                                                    width: 8,
+                                                    height: 8,
+                                                    decoration:
+                                                        const BoxDecoration(
+                                                      color: Colors.green,
+                                                      shape: BoxShape.circle,
+                                                    ),
+                                                  ),
+                                                  const SizedBox(width: 6),
+                                                  const Text(
+                                                    "Online",
+                                                    style: TextStyle(
+                                                      color: Colors.green,
+                                                      fontSize: 12,
+                                                      fontWeight:
+                                                          FontWeight.w600,
+                                                    ),
+                                                  ),
+                                                ],
+                                              ),
+                                            ),
+                                          ],
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                              ),
+
+                              // Divider
+                              Container(
+                                height: 1,
+                                margin:
+                                    const EdgeInsets.symmetric(horizontal: 20),
+                                decoration: BoxDecoration(
+                                  gradient: LinearGradient(
+                                    colors: [
+                                      Colors.transparent,
+                                      Colors.grey.shade200,
+                                      Colors.transparent,
+                                    ],
+                                  ),
+                                ),
+                              ),
+
+                              const SizedBox(height: 12),
+
+                              // 🔍 Search Field
                               Padding(
                                 padding:
-                                    const EdgeInsets.symmetric(vertical: 10),
-                                child: Column(
-                                  children: [
-                                    Container(
-                                      width: 40,
-                                      height: 5,
-                                      decoration: BoxDecoration(
-                                        color: Colors.grey[400],
-                                        borderRadius: BorderRadius.circular(10),
+                                    const EdgeInsets.symmetric(horizontal: 20),
+                                child: Container(
+                                  decoration: BoxDecoration(
+                                    color: Colors.grey.shade50,
+                                    borderRadius: BorderRadius.circular(16),
+                                    border:
+                                        Border.all(color: Colors.grey.shade200),
+                                  ),
+                                  child: TextField(
+                                    decoration: InputDecoration(
+                                      hintText:
+                                          "Cari nama, ID, atau nomor kendaraan...",
+                                      hintStyle: TextStyle(
+                                        color: Colors.grey.shade400,
+                                        fontSize: 14,
+                                      ),
+                                      prefixIcon: Icon(
+                                        Icons.search,
+                                        color: Colors.blue.shade400,
+                                      ),
+                                      suffixIcon: searchQuery.isNotEmpty
+                                          ? IconButton(
+                                              icon: Icon(
+                                                Icons.clear,
+                                                color: Colors.grey.shade400,
+                                              ),
+                                              onPressed: () => _filterList(''),
+                                            )
+                                          : null,
+                                      border: InputBorder.none,
+                                      contentPadding:
+                                          const EdgeInsets.symmetric(
+                                        horizontal: 16,
+                                        vertical: 14,
                                       ),
                                     ),
-                                    const SizedBox(height: 8),
-                                    const Text(
-                                      "Daftar Employee & Vehicle",
-                                      style: TextStyle(
-                                        fontWeight: FontWeight.bold,
-                                        fontSize: 16,
+                                    onChanged: _filterList,
+                                  ),
+                                ),
+                              ),
+
+                              const SizedBox(height: 16),
+
+                              // 📊 Statistics Cards
+                              Padding(
+                                padding:
+                                    const EdgeInsets.symmetric(horizontal: 20),
+                                child: Row(
+                                  children: [
+                                    Expanded(
+                                      child: Container(
+                                        padding: const EdgeInsets.all(12),
+                                        decoration: BoxDecoration(
+                                          gradient: LinearGradient(
+                                            colors: [
+                                              Colors.blue.shade50,
+                                              Colors.blue.shade100
+                                                  .withOpacity(0.5),
+                                            ],
+                                          ),
+                                          borderRadius:
+                                              BorderRadius.circular(12),
+                                          border: Border.all(
+                                            color: Colors.blue.shade200
+                                                .withOpacity(0.5),
+                                          ),
+                                        ),
+                                        child: Column(
+                                          children: [
+                                            Icon(Icons.people,
+                                                color: Colors.blue.shade600,
+                                                size: 24),
+                                            const SizedBox(height: 4),
+                                            Text(
+                                              "${filteredEmployees.length}",
+                                              style: TextStyle(
+                                                fontSize: 20,
+                                                fontWeight: FontWeight.bold,
+                                                color: Colors.blue.shade700,
+                                              ),
+                                            ),
+                                            Text(
+                                              "Employees",
+                                              style: TextStyle(
+                                                fontSize: 11,
+                                                color: Colors.blue.shade600,
+                                              ),
+                                            ),
+                                          ],
+                                        ),
+                                      ),
+                                    ),
+                                    const SizedBox(width: 12),
+                                    Expanded(
+                                      child: Container(
+                                        padding: const EdgeInsets.all(12),
+                                        decoration: BoxDecoration(
+                                          gradient: LinearGradient(
+                                            colors: [
+                                              Colors.red.shade50,
+                                              Colors.red.shade100
+                                                  .withOpacity(0.5),
+                                            ],
+                                          ),
+                                          borderRadius:
+                                              BorderRadius.circular(12),
+                                          border: Border.all(
+                                            color: Colors.red.shade200
+                                                .withOpacity(0.5),
+                                          ),
+                                        ),
+                                        child: Column(
+                                          children: [
+                                            Icon(Icons.directions_car,
+                                                color: Colors.red.shade600,
+                                                size: 24),
+                                            const SizedBox(height: 4),
+                                            Text(
+                                              "${filteredVehicles.length}",
+                                              style: TextStyle(
+                                                fontSize: 20,
+                                                fontWeight: FontWeight.bold,
+                                                color: Colors.red.shade700,
+                                              ),
+                                            ),
+                                            Text(
+                                              "Vehicles",
+                                              style: TextStyle(
+                                                fontSize: 11,
+                                                color: Colors.red.shade600,
+                                              ),
+                                            ),
+                                          ],
+                                        ),
                                       ),
                                     ),
                                   ],
                                 ),
                               ),
 
-                              // 🔍 Search Field
-                              Padding(
-                                padding: const EdgeInsets.symmetric(
-                                    horizontal: 16, vertical: 8),
-                                child: TextField(
-                                  decoration: InputDecoration(
-                                    hintText:
-                                        "Cari nama, ID, atau nomor kendaraan...",
-                                    prefixIcon: const Icon(Icons.search),
-                                    border: OutlineInputBorder(
-                                      borderRadius: BorderRadius.circular(12),
-                                      borderSide: BorderSide(
-                                          color: Colors.grey.shade300),
-                                    ),
-                                    contentPadding: const EdgeInsets.symmetric(
-                                        horizontal: 16, vertical: 0),
-                                  ),
-                                  onChanged: _filterList,
-                                ),
-                              ),
+                              const SizedBox(height: 16),
 
                               // ISI LIST (scrollable)
                               Expanded(
                                 child: ListView(
                                   controller: scrollController,
                                   padding: const EdgeInsets.symmetric(
-                                      horizontal: 16, vertical: 8),
+                                      horizontal: 20),
                                   children: [
                                     if (filteredEmployees.isNotEmpty) ...[
-                                      const Text(
-                                        "👤 Employees",
-                                        style: TextStyle(
-                                            fontSize: 14,
-                                            fontWeight: FontWeight.w600),
+                                      Row(
+                                        children: [
+                                          Container(
+                                            padding: const EdgeInsets.all(6),
+                                            decoration: BoxDecoration(
+                                              color:
+                                                  Colors.blue.withOpacity(0.1),
+                                              borderRadius:
+                                                  BorderRadius.circular(8),
+                                            ),
+                                            child: const Icon(
+                                              Icons.people,
+                                              size: 16,
+                                              color: Colors.blue,
+                                            ),
+                                          ),
+                                          const SizedBox(width: 8),
+                                          const Text(
+                                            "Employees",
+                                            style: TextStyle(
+                                              fontSize: 15,
+                                              fontWeight: FontWeight.bold,
+                                              color: Color(0xFF1E293B),
+                                            ),
+                                          ),
+                                        ],
                                       ),
-                                      const SizedBox(height: 6),
+                                      const SizedBox(height: 12),
                                       ...filteredEmployees.map((e) {
                                         final name =
                                             e['user']?['name'] ?? 'Unknown';
@@ -709,39 +978,176 @@ class _TrackAdminPageContentState extends State<TrackAdminPageContent> {
                                             e['latitude']?.toString() ?? '');
                                         final lon = double.tryParse(
                                             e['longitude']?.toString() ?? '');
-                                        return Card(
-                                          elevation: 1,
-                                          shape: RoundedRectangleBorder(
+                                        final initial = name.isNotEmpty
+                                            ? name[0].toUpperCase()
+                                            : 'U';
+
+                                        return Container(
+                                          margin:
+                                              const EdgeInsets.only(bottom: 10),
+                                          decoration: BoxDecoration(
+                                            color: Colors.white,
                                             borderRadius:
-                                                BorderRadius.circular(10),
+                                                BorderRadius.circular(16),
+                                            border: Border.all(
+                                                color: Colors.grey.shade200),
+                                            boxShadow: [
+                                              BoxShadow(
+                                                color: Colors.black
+                                                    .withOpacity(0.03),
+                                                blurRadius: 8,
+                                                offset: const Offset(0, 2),
+                                              ),
+                                            ],
                                           ),
                                           child: ListTile(
-                                            leading: const Icon(Icons.person,
-                                                color: Colors.blue),
-                                            title: Text(name,
-                                                style: const TextStyle(
-                                                    fontWeight:
-                                                        FontWeight.w500)),
-                                            subtitle: Text("ID: $id"),
+                                            contentPadding:
+                                                const EdgeInsets.symmetric(
+                                              horizontal: 16,
+                                              vertical: 8,
+                                            ),
+                                            leading: Container(
+                                              width: 48,
+                                              height: 48,
+                                              decoration: BoxDecoration(
+                                                gradient: LinearGradient(
+                                                  colors: [
+                                                    Colors.blue.shade400,
+                                                    Colors.blue.shade600
+                                                  ],
+                                                ),
+                                                borderRadius:
+                                                    BorderRadius.circular(12),
+                                                boxShadow: [
+                                                  BoxShadow(
+                                                    color: Colors.blue
+                                                        .withOpacity(0.3),
+                                                    blurRadius: 8,
+                                                    offset: const Offset(0, 2),
+                                                  ),
+                                                ],
+                                              ),
+                                              child: Center(
+                                                child: Text(
+                                                  initial,
+                                                  style: const TextStyle(
+                                                    color: Colors.white,
+                                                    fontWeight: FontWeight.bold,
+                                                    fontSize: 18,
+                                                  ),
+                                                ),
+                                              ),
+                                            ),
+                                            title: Text(
+                                              name,
+                                              style: const TextStyle(
+                                                fontWeight: FontWeight.bold,
+                                                fontSize: 15,
+                                                color: Color(0xFF1E293B),
+                                              ),
+                                            ),
+                                            subtitle: Row(
+                                              children: [
+                                                Container(
+                                                  padding: const EdgeInsets
+                                                      .symmetric(
+                                                    horizontal: 8,
+                                                    vertical: 2,
+                                                  ),
+                                                  decoration: BoxDecoration(
+                                                    color: Colors.blue
+                                                        .withOpacity(0.1),
+                                                    borderRadius:
+                                                        BorderRadius.circular(
+                                                            6),
+                                                  ),
+                                                  child: Text(
+                                                    id,
+                                                    style: const TextStyle(
+                                                      fontSize: 11,
+                                                      color: Colors.blue,
+                                                      fontWeight:
+                                                          FontWeight.w600,
+                                                    ),
+                                                  ),
+                                                ),
+                                                if (lat != null &&
+                                                    lon != null) ...[
+                                                  const SizedBox(width: 8),
+                                                  Icon(
+                                                    Icons.location_on,
+                                                    size: 14,
+                                                    color:
+                                                        Colors.green.shade600,
+                                                  ),
+                                                  const SizedBox(width: 2),
+                                                  Text(
+                                                    "Aktif",
+                                                    style: TextStyle(
+                                                      fontSize: 11,
+                                                      color:
+                                                          Colors.green.shade600,
+                                                      fontWeight:
+                                                          FontWeight.w500,
+                                                    ),
+                                                  ),
+                                                ],
+                                              ],
+                                            ),
+                                            trailing: Container(
+                                              padding: const EdgeInsets.all(8),
+                                              decoration: BoxDecoration(
+                                                color: Colors.blue
+                                                    .withOpacity(0.1),
+                                                borderRadius:
+                                                    BorderRadius.circular(10),
+                                              ),
+                                              child: const Icon(
+                                                Icons.chevron_right,
+                                                color: Colors.blue,
+                                                size: 20,
+                                              ),
+                                            ),
                                             onTap: () {
                                               if (lat != null && lon != null) {
                                                 _mapController.move(
-                                                    LatLng(lat, lon), 15);
+                                                    LatLng(lat, lon), 16);
                                               }
                                             },
                                           ),
                                         );
                                       }),
                                     ],
-                                    const SizedBox(height: 10),
+                                    const SizedBox(height: 16),
                                     if (filteredVehicles.isNotEmpty) ...[
-                                      const Text(
-                                        "🚗 Vehicles",
-                                        style: TextStyle(
-                                            fontSize: 14,
-                                            fontWeight: FontWeight.w600),
+                                      Row(
+                                        children: [
+                                          Container(
+                                            padding: const EdgeInsets.all(6),
+                                            decoration: BoxDecoration(
+                                              color:
+                                                  Colors.red.withOpacity(0.1),
+                                              borderRadius:
+                                                  BorderRadius.circular(8),
+                                            ),
+                                            child: const Icon(
+                                              Icons.directions_car,
+                                              size: 16,
+                                              color: Colors.red,
+                                            ),
+                                          ),
+                                          const SizedBox(width: 8),
+                                          const Text(
+                                            "Vehicles",
+                                            style: TextStyle(
+                                              fontSize: 15,
+                                              fontWeight: FontWeight.bold,
+                                              color: Color(0xFF1E293B),
+                                            ),
+                                          ),
+                                        ],
                                       ),
-                                      const SizedBox(height: 6),
+                                      const SizedBox(height: 12),
                                       ...filteredVehicles.map((v) {
                                         final number =
                                             v['vehicle_number'] ?? '-';
@@ -750,25 +1156,123 @@ class _TrackAdminPageContentState extends State<TrackAdminPageContent> {
                                             v['latitude']?.toString() ?? '');
                                         final lon = double.tryParse(
                                             v['longitude']?.toString() ?? '');
-                                        return Card(
-                                          elevation: 1,
-                                          shape: RoundedRectangleBorder(
+
+                                        return Container(
+                                          margin:
+                                              const EdgeInsets.only(bottom: 10),
+                                          decoration: BoxDecoration(
+                                            color: Colors.white,
                                             borderRadius:
-                                                BorderRadius.circular(10),
+                                                BorderRadius.circular(16),
+                                            border: Border.all(
+                                                color: Colors.grey.shade200),
+                                            boxShadow: [
+                                              BoxShadow(
+                                                color: Colors.black
+                                                    .withOpacity(0.03),
+                                                blurRadius: 8,
+                                                offset: const Offset(0, 2),
+                                              ),
+                                            ],
                                           ),
                                           child: ListTile(
-                                            leading: const Icon(
-                                                Icons.directions_car,
-                                                color: Colors.red),
-                                            title: Text(number,
-                                                style: const TextStyle(
-                                                    fontWeight:
-                                                        FontWeight.w500)),
-                                            subtitle: Text("Model: $model"),
+                                            contentPadding:
+                                                const EdgeInsets.symmetric(
+                                              horizontal: 16,
+                                              vertical: 8,
+                                            ),
+                                            leading: Container(
+                                              width: 48,
+                                              height: 48,
+                                              decoration: BoxDecoration(
+                                                gradient: LinearGradient(
+                                                  colors: [
+                                                    Colors.red.shade400,
+                                                    Colors.red.shade600
+                                                  ],
+                                                ),
+                                                borderRadius:
+                                                    BorderRadius.circular(12),
+                                                boxShadow: [
+                                                  BoxShadow(
+                                                    color: Colors.red
+                                                        .withOpacity(0.3),
+                                                    blurRadius: 8,
+                                                    offset: const Offset(0, 2),
+                                                  ),
+                                                ],
+                                              ),
+                                              child: const Center(
+                                                child: Icon(
+                                                  Icons.directions_car,
+                                                  color: Colors.white,
+                                                  size: 24,
+                                                ),
+                                              ),
+                                            ),
+                                            title: Text(
+                                              number,
+                                              style: const TextStyle(
+                                                fontWeight: FontWeight.bold,
+                                                fontSize: 15,
+                                                color: Color(0xFF1E293B),
+                                              ),
+                                            ),
+                                            subtitle: Row(
+                                              children: [
+                                                Flexible(
+                                                  child: Text(
+                                                    model,
+                                                    style: TextStyle(
+                                                      fontSize: 12,
+                                                      color:
+                                                          Colors.grey.shade600,
+                                                    ),
+                                                    overflow:
+                                                        TextOverflow.ellipsis,
+                                                  ),
+                                                ),
+                                                if (lat != null &&
+                                                    lon != null) ...[
+                                                  const SizedBox(width: 8),
+                                                  Icon(
+                                                    Icons.location_on,
+                                                    size: 14,
+                                                    color:
+                                                        Colors.green.shade600,
+                                                  ),
+                                                  const SizedBox(width: 2),
+                                                  Text(
+                                                    "Aktif",
+                                                    style: TextStyle(
+                                                      fontSize: 11,
+                                                      color:
+                                                          Colors.green.shade600,
+                                                      fontWeight:
+                                                          FontWeight.w500,
+                                                    ),
+                                                  ),
+                                                ],
+                                              ],
+                                            ),
+                                            trailing: Container(
+                                              padding: const EdgeInsets.all(8),
+                                              decoration: BoxDecoration(
+                                                color:
+                                                    Colors.red.withOpacity(0.1),
+                                                borderRadius:
+                                                    BorderRadius.circular(10),
+                                              ),
+                                              child: const Icon(
+                                                Icons.chevron_right,
+                                                color: Colors.red,
+                                                size: 20,
+                                              ),
+                                            ),
                                             onTap: () {
                                               if (lat != null && lon != null) {
                                                 _mapController.move(
-                                                    LatLng(lat, lon), 15);
+                                                    LatLng(lat, lon), 16);
                                               }
                                             },
                                           ),
@@ -777,13 +1281,47 @@ class _TrackAdminPageContentState extends State<TrackAdminPageContent> {
                                     ],
                                     if (filteredEmployees.isEmpty &&
                                         filteredVehicles.isEmpty)
-                                      const Center(
+                                      Center(
                                         child: Padding(
-                                          padding: EdgeInsets.all(20),
-                                          child: Text(
-                                              "Tidak ada hasil yang cocok"),
+                                          padding: const EdgeInsets.all(40),
+                                          child: Column(
+                                            children: [
+                                              Container(
+                                                padding:
+                                                    const EdgeInsets.all(20),
+                                                decoration: BoxDecoration(
+                                                  color: Colors.grey.shade100,
+                                                  shape: BoxShape.circle,
+                                                ),
+                                                child: Icon(
+                                                  Icons.search_off,
+                                                  size: 48,
+                                                  color: Colors.grey.shade400,
+                                                ),
+                                              ),
+                                              const SizedBox(height: 16),
+                                              Text(
+                                                "Tidak ada hasil",
+                                                style: TextStyle(
+                                                  fontSize: 16,
+                                                  fontWeight: FontWeight.w600,
+                                                  color: Colors.grey.shade700,
+                                                ),
+                                              ),
+                                              const SizedBox(height: 8),
+                                              Text(
+                                                "Coba gunakan kata kunci lain",
+                                                style: TextStyle(
+                                                  fontSize: 14,
+                                                  color: Colors.grey.shade500,
+                                                ),
+                                              ),
+                                            ],
+                                          ),
                                         ),
                                       ),
+                                    const SizedBox(
+                                        height: 80), // Space untuk FAB
                                   ],
                                 ),
                               ),
