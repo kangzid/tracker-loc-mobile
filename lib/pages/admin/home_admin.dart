@@ -322,7 +322,9 @@ class _HomeAdminPageState extends State<HomeAdminPage> {
                 borderRadius: BorderRadius.circular(20),
                 onTap: () {
                   if (title == "Pengaturan") {
-                    Navigator.pushNamed(context, '/geofence');
+                    Navigator.pushNamed(context, '/settings-admin');
+                  } else if (title == "Data Karyawan") {
+                    Navigator.pushNamed(context, '/employee');
                   } else {
                     ScaffoldMessenger.of(context).showSnackBar(
                       SnackBar(content: Text('$title diklik')),
