@@ -321,9 +321,13 @@ class _HomeAdminPageState extends State<HomeAdminPage> {
               child: InkWell(
                 borderRadius: BorderRadius.circular(20),
                 onTap: () {
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    SnackBar(content: Text('$title diklik')),
-                  );
+                  if (title == "Pengaturan") {
+                    Navigator.pushNamed(context, '/geofence');
+                  } else {
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      SnackBar(content: Text('$title diklik')),
+                    );
+                  }
                 },
                 child: Center(
                   child: Image.asset(

@@ -7,6 +7,7 @@ import 'package:shared_preferences/shared_preferences.dart'; // Import shared_pr
 import 'package:flutter_application_1/pages/admin/home_page.dart'; // Import Admin Home Page
 import 'package:flutter_application_1/pages/employee/home_page.dart'; // Import Employee Home Page
 import 'package:flutter_application_1/pages/auth/login_page.dart'; // Import Login Page
+import 'package:flutter_application_1/pages/admin/screens/geofence_page.dart'; // Import Geofence Page
 import 'package:intl/date_symbol_data_local.dart';
 
 void main() {
@@ -62,12 +63,15 @@ class _MyAppState extends State<MyApp> {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'StaffTracker', // Nama aplikasi yang sudah diubah
+      title: 'Staff Tracker', // Nama aplikasi yang sudah diubah
       theme: ThemeData(
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
         useMaterial3: true,
       ),
       home: _initialPage, // Halaman awal berdasarkan status login dan role
+      routes: {
+        '/geofence': (context) => const GeofencePage(),
+      },
     );
   }
 }
