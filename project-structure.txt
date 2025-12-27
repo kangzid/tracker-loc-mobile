@@ -1,0 +1,282 @@
+├── android/
+│   ├── app/
+│   │   ├── src/
+│   │   │   ├── debug/
+│   │   │   │   └── AndroidManifest.xml (0.4 KB)
+│   │   │   ├── main/
+│   │   │   │   ├── java/
+│   │   │   │   │   └── io/
+│   │   │   │   │       └── flutter/
+│   │   │   │   │           └── plugins/
+│   │   │   │   │               └── GeneratedPluginRegistrant.java (1.9 KB)
+│   │   │   │   ├── kotlin/
+│   │   │   │   │   └── com/
+│   │   │   │   │       └── example/
+│   │   │   │   │           └── flutter_application_1/
+│   │   │   │   │               └── MainActivity.kt (0.1 KB)
+│   │   │   │   ├── res/
+│   │   │   │   │   ├── drawable/
+│   │   │   │   │   │   └── launch_background.xml (0.4 KB)
+│   │   │   │   │   ├── drawable-v21/
+│   │   │   │   │   │   └── launch_background.xml (0.4 KB)
+│   │   │   │   │   ├── mipmap-hdpi/
+│   │   │   │   │   │   ├── ic_launcher.png (0.5 KB)
+│   │   │   │   │   │   └── launcher_icon.png (10.2 KB)
+│   │   │   │   │   ├── mipmap-mdpi/
+│   │   │   │   │   │   ├── ic_launcher.png (0.4 KB)
+│   │   │   │   │   │   └── launcher_icon.png (5.0 KB)
+│   │   │   │   │   ├── mipmap-xhdpi/
+│   │   │   │   │   │   ├── ic_launcher.png (0.7 KB)
+│   │   │   │   │   │   └── launcher_icon.png (16.6 KB)
+│   │   │   │   │   ├── mipmap-xxhdpi/
+│   │   │   │   │   │   ├── ic_launcher.png (1.0 KB)
+│   │   │   │   │   │   └── launcher_icon.png (33.4 KB)
+│   │   │   │   │   ├── mipmap-xxxhdpi/
+│   │   │   │   │   │   ├── ic_launcher.png (1.4 KB)
+│   │   │   │   │   │   └── launcher_icon.png (55.2 KB)
+│   │   │   │   │   ├── values/
+│   │   │   │   │   │   └── styles.xml (1.0 KB)
+│   │   │   │   │   ├── values-night/
+│   │   │   │   │   │   └── styles.xml (1.0 KB)
+│   │   │   │   │   └── xml/
+│   │   │   │   │       └── network_security_config.xml (0.4 KB)
+│   │   │   │   └── AndroidManifest.xml (2.6 KB)
+│   │   │   └── profile/
+│   │   │       └── AndroidManifest.xml (0.4 KB)
+│   │   ├── build.gradle (1.4 KB)
+│   │   └── google-services.json (0.7 KB)
+│   ├── gradle/
+│   │   └── wrapper/
+│   │       ├── gradle-wrapper.jar (52.4 KB)
+│   │       └── gradle-wrapper.properties (0.2 KB)
+│   ├── build.gradle (0.5 KB)
+│   ├── gradle.properties (0.2 KB)
+│   ├── gradlew (4.9 KB)
+│   ├── gradlew.bat (2.3 KB)
+│   ├── local.properties (0.2 KB)
+│   └── settings.gradle (0.7 KB)
+├── assets/
+│   ├── images/
+│   │   ├── admin-avatar.png (62.5 KB)
+│   │   ├── benner-ho.png (4346.9 KB)
+│   │   ├── benner-home-bc.png (23.4 KB)
+│   │   ├── benner-home.png (5529.5 KB)
+│   │   ├── icon-apk.png (857.2 KB)
+│   │   ├── icon-menu1.png (48.9 KB)
+│   │   ├── icon-menu2.png (53.2 KB)
+│   │   ├── icon-menu3.png (47.4 KB)
+│   │   ├── icon-menu4.png (57.6 KB)
+│   │   ├── icon-menu5.png (48.3 KB)
+│   │   ├── icon-menu6.png (37.9 KB)
+│   │   ├── pas-foto.jpg (239.2 KB)
+│   │   └── pas-foto.png (1235.5 KB)
+│   └── lottie/
+│       └── loading.json (3.3 KB)
+├── doc/
+│   ├── architecture_guide.md (4.6 KB)
+│   └── report.md (3.7 KB)
+├── ios/
+│   ├── Flutter/
+│   │   ├── AppFrameworkInfo.plist (0.8 KB)
+│   │   ├── Debug.xcconfig (0.0 KB)
+│   │   ├── flutter_export_environment.sh (0.5 KB)
+│   │   ├── Generated.xcconfig (0.5 KB)
+│   │   └── Release.xcconfig (0.0 KB)
+│   ├── Runner/
+│   │   ├── Assets.xcassets/
+│   │   │   ├── AppIcon.appiconset/
+│   │   │   │   ├── Contents.json (2.0 KB)
+│   │   │   │   ├── Icon-App-1024x1024@1x.png (872.0 KB)
+│   │   │   │   ├── Icon-App-20x20@1x.png (1.1 KB)
+│   │   │   │   ├── Icon-App-20x20@2x.png (3.7 KB)
+│   │   │   │   ├── Icon-App-20x20@3x.png (7.4 KB)
+│   │   │   │   ├── Icon-App-29x29@1x.png (2.1 KB)
+│   │   │   │   ├── Icon-App-29x29@2x.png (7.0 KB)
+│   │   │   │   ├── Icon-App-29x29@3x.png (14.0 KB)
+│   │   │   │   ├── Icon-App-40x40@1x.png (3.7 KB)
+│   │   │   │   ├── Icon-App-40x40@2x.png (12.2 KB)
+│   │   │   │   ├── Icon-App-40x40@3x.png (24.4 KB)
+│   │   │   │   ├── Icon-App-50x50@1x.png (5.3 KB)
+│   │   │   │   ├── Icon-App-50x50@2x.png (17.8 KB)
+│   │   │   │   ├── Icon-App-57x57@1x.png (6.7 KB)
+│   │   │   │   ├── Icon-App-57x57@2x.png (22.4 KB)
+│   │   │   │   ├── Icon-App-60x60@2x.png (24.4 KB)
+│   │   │   │   ├── Icon-App-60x60@3x.png (49.3 KB)
+│   │   │   │   ├── Icon-App-72x72@1x.png (10.2 KB)
+│   │   │   │   ├── Icon-App-72x72@2x.png (33.4 KB)
+│   │   │   │   ├── Icon-App-76x76@1x.png (11.2 KB)
+│   │   │   │   ├── Icon-App-76x76@2x.png (36.6 KB)
+│   │   │   │   └── Icon-App-83.5x83.5@2x.png (43.3 KB)
+│   │   │   └── LaunchImage.imageset/
+│   │   │       ├── Contents.json (0.4 KB)
+│   │   │       ├── LaunchImage.png (0.1 KB)
+│   │   │       ├── LaunchImage@2x.png (0.1 KB)
+│   │   │       ├── LaunchImage@3x.png (0.1 KB)
+│   │   │       └── README.md (0.3 KB)
+│   │   ├── Base.lproj/
+│   │   │   ├── LaunchScreen.storyboard (2.3 KB)
+│   │   │   └── Main.storyboard (1.6 KB)
+│   │   ├── AppDelegate.swift (0.4 KB)
+│   │   ├── GeneratedPluginRegistrant.h (0.4 KB)
+│   │   ├── GeneratedPluginRegistrant.m (1.6 KB)
+│   │   ├── Info.plist (1.6 KB)
+│   │   └── Runner-Bridging-Header.h (0.0 KB)
+│   ├── Runner.xcodeproj/
+│   │   ├── project.xcworkspace/
+│   │   │   ├── xcshareddata/
+│   │   │   │   ├── IDEWorkspaceChecks.plist (0.2 KB)
+│   │   │   │   └── WorkspaceSettings.xcsettings (0.2 KB)
+│   │   │   └── contents.xcworkspacedata (0.1 KB)
+│   │   ├── xcshareddata/
+│   │   │   └── xcschemes/
+│   │   │       └── Runner.xcscheme (3.6 KB)
+│   │   └── project.pbxproj (23.2 KB)
+│   ├── Runner.xcworkspace/
+│   │   ├── xcshareddata/
+│   │   │   ├── IDEWorkspaceChecks.plist (0.2 KB)
+│   │   │   └── WorkspaceSettings.xcsettings (0.2 KB)
+│   │   └── contents.xcworkspacedata (0.1 KB)
+│   ├── RunnerTests/
+│   │   └── RunnerTests.swift (0.3 KB)
+├── lib/
+│   ├── config/
+│   │   └── api_config.dart (1.3 KB)
+│   ├── pages/
+│   │   ├── admin/
+│   │   │   ├── screens/
+│   │   │   │   ├── widgets/
+│   │   │   │   │   ├── employee_list_widget.dart (41.8 KB)
+│   │   │   │   │   ├── geofence_list_widget.dart (12.1 KB)
+│   │   │   │   │   ├── track_bottom_sheet.dart (18.1 KB)
+│   │   │   │   │   ├── track_legend.dart (3.8 KB)
+│   │   │   │   │   ├── track_marker_builder.dart (7.9 KB)
+│   │   │   │   │   ├── track_status_bar.dart (3.7 KB)
+│   │   │   │   │   └── vehicle_list_widget.dart (38.6 KB)
+│   │   │   │   ├── account_admin.dart (8.5 KB)
+│   │   │   │   ├── employee_page.dart (15.6 KB)
+│   │   │   │   ├── geofence_page.dart (28.7 KB)
+│   │   │   │   ├── info_admin.dart (12.7 KB)
+│   │   │   │   ├── settings_admin.dart (2.5 KB)
+│   │   │   │   ├── track_admin.dart (5.2 KB)
+│   │   │   │   └── vehicle_page.dart (13.6 KB)
+│   │   │   ├── home_admin.dart (12.7 KB)
+│   │   │   └── home_page.dart (2.6 KB)
+│   │   ├── auth/
+│   │   │   ├── auth_storage.dart (4.5 KB)
+│   │   │   └── login_page.dart (9.9 KB)
+│   │   └── employee/
+│   │       ├── screens/
+│   │       │   ├── account_employee.dart (8.2 KB)
+│   │       │   ├── attendance_employee.dart (13.3 KB)
+│   │       │   ├── home_employee.dart (21.5 KB)
+│   │       │   ├── info_employee.dart (14.1 KB)
+│   │       │   ├── presence_employee.dart (20.7 KB)
+│   │       │   └── track_employee.dart (14.0 KB)
+│   │       ├── storage/
+│   │       │   ├── presence_storage.dart (0.6 KB)
+│   │       │   └── track_storage.dart (0.6 KB)
+│   │       └── home_page.dart (3.8 KB)
+│   ├── utils/
+│   │   ├── logout_helper.dart (1.4 KB)
+│   │   └── session_checker.dart (1.1 KB)
+│   ├── firebase_options.dart (2.5 KB)
+│   └── main.dart (3.5 KB)
+├── linux/
+│   ├── flutter/
+│   │   ├── ephemeral/
+│   │   ├── CMakeLists.txt (2.7 KB)
+│   │   ├── generated_plugin_registrant.cc (0.2 KB)
+│   │   ├── generated_plugin_registrant.h (0.3 KB)
+│   │   └── generated_plugins.cmake (0.7 KB)
+│   ├── CMakeLists.txt (5.3 KB)
+│   ├── main.cc (0.2 KB)
+│   ├── my_application.cc (4.3 KB)
+│   └── my_application.h (0.4 KB)
+├── macos/
+│   ├── Flutter/
+│   │   ├── ephemeral/
+│   │   │   ├── flutter_export_environment.sh (0.5 KB)
+│   │   │   └── Flutter-Generated.xcconfig (0.4 KB)
+│   │   ├── Flutter-Debug.xcconfig (0.0 KB)
+│   │   ├── Flutter-Release.xcconfig (0.0 KB)
+│   │   └── GeneratedPluginRegistrant.swift (0.8 KB)
+│   ├── Runner/
+│   │   ├── Assets.xcassets/
+│   │   │   └── AppIcon.appiconset/
+│   │   │       ├── app_icon_1024.png (100.6 KB)
+│   │   │       ├── app_icon_128.png (5.5 KB)
+│   │   │       ├── app_icon_16.png (0.5 KB)
+│   │   │       ├── app_icon_256.png (13.8 KB)
+│   │   │       ├── app_icon_32.png (1.0 KB)
+│   │   │       ├── app_icon_512.png (35.6 KB)
+│   │   │       ├── app_icon_64.png (2.2 KB)
+│   │   │       └── Contents.json (1.3 KB)
+│   │   ├── Base.lproj/
+│   │   │   └── MainMenu.xib (23.2 KB)
+│   │   ├── Configs/
+│   │   │   ├── AppInfo.xcconfig (0.6 KB)
+│   │   │   ├── Debug.xcconfig (0.1 KB)
+│   │   │   ├── Release.xcconfig (0.1 KB)
+│   │   │   └── Warnings.xcconfig (0.6 KB)
+│   │   ├── AppDelegate.swift (0.2 KB)
+│   │   ├── DebugProfile.entitlements (0.3 KB)
+│   │   ├── Info.plist (1.0 KB)
+│   │   ├── MainFlutterWindow.swift (0.4 KB)
+│   │   └── Release.entitlements (0.2 KB)
+│   ├── Runner.xcodeproj/
+│   │   ├── project.xcworkspace/
+│   │   │   └── xcshareddata/
+│   │   │       └── IDEWorkspaceChecks.plist (0.2 KB)
+│   │   ├── xcshareddata/
+│   │   │   └── xcschemes/
+│   │   │       └── Runner.xcscheme (3.6 KB)
+│   │   └── project.pbxproj (25.9 KB)
+│   ├── Runner.xcworkspace/
+│   │   ├── xcshareddata/
+│   │   │   └── IDEWorkspaceChecks.plist (0.2 KB)
+│   │   └── contents.xcworkspacedata (0.1 KB)
+│   ├── RunnerTests/
+│   │   └── RunnerTests.swift (0.3 KB)
+├── public/
+├── src/
+│   ├── components/
+│   │   └── Button.js (0.0 KB)
+│   └── index.js (0.0 KB)
+├── test/
+│   └── widget_test.dart (1.0 KB)
+├── web/
+│   ├── icons/
+│   │   ├── Icon-192.png (5.2 KB)
+│   │   ├── Icon-512.png (8.1 KB)
+│   │   ├── Icon-maskable-192.png (5.5 KB)
+│   │   └── Icon-maskable-512.png (20.5 KB)
+│   ├── favicon.png (0.9 KB)
+│   ├── index.html (1.2 KB)
+│   └── manifest.json (0.9 KB)
+├── windows/
+│   ├── flutter/
+│   │   ├── ephemeral/
+│   │   ├── CMakeLists.txt (3.7 KB)
+│   │   ├── generated_plugin_registrant.cc (0.5 KB)
+│   │   ├── generated_plugin_registrant.h (0.3 KB)
+│   │   └── generated_plugins.cmake (0.8 KB)
+│   ├── runner/
+│   │   ├── resources/
+│   │   │   └── app_icon.ico (33.0 KB)
+│   │   ├── CMakeLists.txt (1.8 KB)
+│   │   ├── flutter_window.cpp (2.1 KB)
+│   │   ├── flutter_window.h (0.9 KB)
+│   │   ├── main.cpp (1.2 KB)
+│   │   ├── resource.h (0.4 KB)
+│   │   ├── runner.exe.manifest (0.6 KB)
+│   │   ├── Runner.rc (3.0 KB)
+│   │   ├── utils.cpp (1.8 KB)
+│   │   ├── utils.h (0.7 KB)
+│   │   ├── win32_window.cpp (8.3 KB)
+│   │   └── win32_window.h (3.4 KB)
+│   └── CMakeLists.txt (4.1 KB)
+├── analysis_options.yaml (1.4 KB)
+├── package.json (0.0 KB)
+├── pubspec.lock (22.0 KB)
+├── pubspec.yaml (4.6 KB)
+└── README.md (0.6 KB)

@@ -1,0 +1,342 @@
+import 'dart:convert';
+import 'package:flutter/material.dart';
+import 'package:flutter_map/flutter_map.dart';
+import 'package:geolocator/geolocator.dart';
+import 'package:latlong2/latlong.dart';
+import 'package:http/http.dart' as http;
+import 'package:hugeicons/hugeicons.dart';
+import 'package:flutter_application_1/features/auth/auth_storage.dart';
+import 'package:flutter_application_1/features/employee/attendance/storage/presence_storage.dart';
+import 'package:flutter_application_1/core/config/api_config.dart';
+import 'package:flutter_application_1/core/widgets/custom_app_bar.dart';
+import '../widgets/presence_info_card.dart';
+import '../widgets/presence_map.dart';
+import '../widgets/presence_controls.dart';
+
+class PresenceEmployeePage extends StatefulWidget {
+  const PresenceEmployeePage({super.key});
+
+  @override
+  State<PresenceEmployeePage> createState() => _PresenceEmployeePageState();
+}
+
+class _PresenceEmployeePageState extends State<PresenceEmployeePage> {
+  final MapController _mapController = MapController();
+
+  String? _name;
+  String? _position;
+  String? _employeeCode;
+  String? _token;
+
+  LatLng _currentLatLng = const LatLng(-7.797068, 110.370529);
+  Marker? _currentLocationMarker;
+  String _lastActionStatus = "Belum ada";
+  String _todayAttendance = "Belum cek";
+
+  bool _hasCheckedIn = false;
+  bool _hasCheckedOut = false;
+
+  @override
+  void initState() {
+    super.initState();
+    _loadUserDataAndInitialLocation();
+    _loadLastPresenceFromStorage();
+  }
+
+  Future<void> _loadUserDataAndInitialLocation() async {
+    final data = await AuthStorage().getLoginData();
+
+    setState(() {
+      _token = data['token'];
+      final user = data['user'];
+      _name = user['name'];
+      final employee = user['employee'];
+      _employeeCode = employee['employee_id'];
+      _position = employee['position'];
+    });
+
+    _updateMarker(_currentLatLng);
+    _getCurrentLocation();
+    _fetchTodayAttendance();
+  }
+
+  Future<void> _loadLastPresenceFromStorage() async {
+    final saved = await PresenceStorage().getLastPresence();
+    if (saved != null) {
+      setState(() {
+        _lastActionStatus = saved;
+      });
+    }
+  }
+
+  Future<bool> _checkLocationBeforeAttendance() async {
+    if (_token == null) return false;
+
+    final url = Uri.parse('${ApiConfig.attendances}/check-location');
+    try {
+      final response = await http.post(
+        url,
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': 'Bearer $_token',
+        },
+        body: jsonEncode({
+          "latitude": _currentLatLng.latitude,
+          "longitude": _currentLatLng.longitude,
+        }),
+      );
+
+      if (response.statusCode == 200) {
+        final result = jsonDecode(response.body);
+        if (result['is_in_office'] == true) {
+          return true;
+        } else {
+          _showErrorDialog("Lokasi Tidak Valid",
+              result['message'] ?? "Anda berada di luar area kantor.");
+          return false;
+        }
+      } else {
+        debugPrint("Check location failed: ${response.body}");
+        return false;
+      }
+    } catch (e) {
+      debugPrint("Error check-location: $e");
+      return false;
+    }
+  }
+
+  Future<void> _getCurrentLocation() async {
+    try {
+      bool serviceEnabled = await Geolocator.isLocationServiceEnabled();
+      if (!serviceEnabled) return;
+
+      LocationPermission permission = await Geolocator.checkPermission();
+      if (permission == LocationPermission.denied) {
+        permission = await Geolocator.requestPermission();
+        if (permission == LocationPermission.denied) return;
+      }
+      if (permission == LocationPermission.deniedForever) return;
+
+      Position position = await Geolocator.getCurrentPosition(
+        desiredAccuracy: LocationAccuracy.high,
+      );
+
+      LatLng newLatLng = LatLng(position.latitude, position.longitude);
+
+      setState(() {
+        _currentLatLng = newLatLng;
+        _updateMarker(newLatLng);
+      });
+
+      _mapController.move(newLatLng, 15.0);
+    } catch (e) {
+      debugPrint("Error get location: $e");
+    }
+  }
+
+  void _updateMarker(LatLng latLng) {
+    setState(() {
+      _currentLocationMarker = Marker(
+        width: 80,
+        height: 80,
+        point: latLng,
+        child: const Icon(Icons.location_pin, color: Colors.blue, size: 40),
+      );
+    });
+  }
+
+  Future<void> _sendAttendance(String type) async {
+    if (_token == null) return;
+
+    final isInsideOffice = await _checkLocationBeforeAttendance();
+    if (!isInsideOffice) return;
+
+    final url = Uri.parse(ApiConfig.attendances);
+    try {
+      final response = await http.post(
+        url,
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': 'Bearer $_token',
+        },
+        body: jsonEncode({
+          "latitude": _currentLatLng.latitude,
+          "longitude": _currentLatLng.longitude,
+          "type": type,
+        }),
+      );
+
+      if (mounted) {
+        if (response.statusCode == 200 || response.statusCode == 201) {
+          final successMsg =
+              "Sukses $type: ${DateTime.now().toLocal().toString().substring(11, 19)}";
+
+          setState(() {
+            _lastActionStatus = successMsg;
+            if (type == "check_in") _hasCheckedIn = true;
+            if (type == "check_out") _hasCheckedOut = true;
+          });
+
+          await PresenceStorage().saveLastPresence(successMsg);
+          _fetchTodayAttendance();
+          _showSuccessDialog(type);
+        } else {
+          setState(() {
+            _lastActionStatus = "Gagal $type (${response.statusCode})";
+          });
+          _showErrorDialog("Presensi Gagal",
+              "Terjadi kesalahan saat $type. (${response.statusCode})");
+        }
+      }
+    } catch (e) {
+      if (mounted) {
+        setState(() {
+          _lastActionStatus = "Error network";
+        });
+        _showErrorDialog("Kesalahan Jaringan",
+            "Tidak dapat terhubung ke server, coba lagi nanti.");
+      }
+    }
+  }
+
+  Future<void> _fetchTodayAttendance() async {
+    if (_token == null) return;
+
+    final url = Uri.parse('${ApiConfig.attendances}/today');
+    try {
+      final response = await http.get(
+        url,
+        headers: {'Authorization': 'Bearer $_token'},
+      );
+
+      if (mounted) {
+        if (response.statusCode == 200) {
+          final data = jsonDecode(response.body);
+
+          setState(() {
+            _todayAttendance = "success";
+            _hasCheckedIn = data['check_in'] != null;
+            _hasCheckedOut = data['check_out'] != null;
+          });
+        } else {
+          setState(() {
+            _todayAttendance = "none";
+          });
+        }
+      }
+    } catch (e) {
+      setState(() {
+        _todayAttendance = "error";
+      });
+    }
+  }
+
+  void _showSuccessDialog(String type) {
+    showDialog(
+      context: context,
+      builder: (ctx) => AlertDialog(
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+        title: Row(
+          children: const [
+            HugeIcon(
+              icon: HugeIcons.strokeRoundedCheckmarkCircle02,
+              color: Colors.green,
+              size: 24.0,
+            ),
+            SizedBox(width: 12),
+            Text(
+              "Presensi Berhasil",
+              style: TextStyle(
+                fontSize: 18,
+                fontWeight: FontWeight.bold,
+                color: Colors.green,
+              ),
+            ),
+          ],
+        ),
+        content: Text(
+          type == "check_in"
+              ? "Check-in berhasil! Selamat bekerja 👏"
+              : "Check-out berhasil! Terima kasih atas kerja hari ini 🙌",
+          style: const TextStyle(fontSize: 14),
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(ctx),
+            style: TextButton.styleFrom(foregroundColor: Colors.green),
+            child: const Text("OK"),
+          ),
+        ],
+      ),
+    );
+  }
+
+  void _showErrorDialog(String title, String message) {
+    showDialog(
+      context: context,
+      builder: (ctx) => AlertDialog(
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+        title: Row(
+          children: const [
+            HugeIcon(
+              icon: HugeIcons.strokeRoundedAlert02,
+              color: Colors.red,
+              size: 24.0,
+            ),
+            SizedBox(width: 12),
+            Text(
+              "Peringatan",
+              style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+            ),
+          ],
+        ),
+        content: Text(message, style: const TextStyle(fontSize: 14)),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(ctx),
+            style: TextButton.styleFrom(foregroundColor: Colors.red),
+            child: const Text("OK"),
+          ),
+        ],
+      ),
+    );
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: const CustomAppBar(
+        title: "Presensi Saya",
+        showBackButton: false,
+      ),
+      backgroundColor: Colors.grey.shade50,
+      body: SingleChildScrollView(
+        padding: const EdgeInsets.all(16),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: [
+            PresenceInfoCard(
+              name: _name ?? "Loading...",
+              employeeCode: _employeeCode ?? "...",
+              position: _position ?? "...",
+              todayAttendanceStatus: _todayAttendance,
+            ),
+            const SizedBox(height: 16),
+            PresenceMap(
+              mapController: _mapController,
+              currentLatLng: _currentLatLng,
+              currentLocationMarker: _currentLocationMarker,
+            ),
+            const SizedBox(height: 16),
+            PresenceControls(
+              hasCheckedIn: _hasCheckedIn,
+              hasCheckedOut: _hasCheckedOut,
+              lastActionStatus: _lastActionStatus,
+              onSendAttendance: _sendAttendance,
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
