@@ -56,14 +56,38 @@ class _GpsTrackerPageState extends State<GpsTrackerPage> {
     return true;
   }
 
+  bool _isConnected = false;
+
+  @override
+  void initState() {
+    super.initState();
+    // Monitor connection status
+    _dbRef.child(".info/connected").onValue.listen((event) {
+      final connected = event.snapshot.value as bool? ?? false;
+      if (mounted) {
+        setState(() {
+          _isConnected = connected;
+        });
+      }
+      debugPrint("Firebase Connected: $connected");
+    });
+  }
+
   void _toggleTracking() async {
     if (_isTracking) {
       // STOP TRACKING
       _positionStream?.cancel();
-      // Update status jadi inactive di Firebase sebelum stop
+
+      // Update status to inactive in Firebase with Timeout to prevent hanging
       if (_plateController.text.isNotEmpty) {
         final plate = _plateController.text.toUpperCase().replaceAll(' ', '');
-        await _dbRef.child('vehicles/$plate').update({'is_active': false});
+        try {
+          await _dbRef
+              .child('vehicles/$plate')
+              .update({'is_active': false}).timeout(const Duration(seconds: 2));
+        } catch (e) {
+          debugPrint("Failed to update status on stop: $e");
+        }
       }
 
       setState(() {
@@ -90,17 +114,21 @@ class _GpsTrackerPageState extends State<GpsTrackerPage> {
 
       // Konfigurasi Stream Lokasi
       const LocationSettings locationSettings = LocationSettings(
-        accuracy: LocationAccuracy.high,
-        distanceFilter: 10, // Update setiap pindah 10 meter
+        accuracy: LocationAccuracy.bestForNavigation,
+        distanceFilter: 5,
       );
 
       _positionStream =
           Geolocator.getPositionStream(locationSettings: locationSettings)
               .listen((Position position) {
-        setState(() {
-          _statusMessage =
-              "Tracking Aktif\nLat: ${position.latitude}\nLng: ${position.longitude}";
-        });
+        final msg =
+            "Status: ${_isConnected ? 'Online' : 'Offline'}\nLat: ${position.latitude}\nLng: ${position.longitude}";
+
+        if (mounted) {
+          setState(() {
+            _statusMessage = msg;
+          });
+        }
 
         // Kirim ke Firebase Realtime Database
         _dbRef.child('vehicles/$plate').set({
@@ -115,10 +143,12 @@ class _GpsTrackerPageState extends State<GpsTrackerPage> {
           debugPrint("Error writing to Firebase: $error");
         });
       }, onError: (e) {
-        setState(() {
-          _statusMessage = "Error GPS: $e";
-          _isTracking = false;
-        });
+        if (mounted) {
+          setState(() {
+            _statusMessage = "Error GPS: $e";
+            _isTracking = false;
+          });
+        }
       });
     }
   }

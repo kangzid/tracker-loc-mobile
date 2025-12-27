@@ -19,14 +19,23 @@ class _SplashPageState extends State<SplashPage> {
   }
 
   Future<void> _initializeApp() async {
-    // 1. Initialize API Config (Remote Config, etc)
-    await ApiConfig.initialize();
+    try {
+      // 1. Initialize API Config (Remote Config, etc)
+      await ApiConfig.initialize();
 
-    // 2. Artificial Delay (optional, for branding)
-    await Future.delayed(const Duration(seconds: 3));
+      // 2. Artificial Delay (optional, for branding)
+      await Future.delayed(const Duration(seconds: 3));
 
-    // 3. Check Auth Status
-    await _checkAuth();
+      // 3. Check Auth Status
+      if (!mounted) return;
+      await _checkAuth();
+    } catch (e) {
+      debugPrint("Splash initialization error: $e");
+      // Fallback: Force navigate to login if anything fails
+      if (mounted) {
+        Navigator.pushReplacementNamed(context, AppRoutes.login);
+      }
+    }
   }
 
   Future<void> _checkAuth() async {
@@ -176,7 +185,7 @@ class _SplashPageState extends State<SplashPage> {
                     ),
                   ),
                   child: Text(
-                    "Version 1.0.0",
+                    "Version 1.1.0",
                     style: TextStyle(
                       fontSize: 12,
                       fontWeight: FontWeight.w500,
